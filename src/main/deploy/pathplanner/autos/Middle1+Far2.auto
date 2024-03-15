@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.36,
+      "y": 5.58
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "NearShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToNote2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "NearShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Down"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

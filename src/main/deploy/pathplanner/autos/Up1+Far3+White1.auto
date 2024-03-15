@@ -1,0 +1,103 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.91,
+      "y": 6.69
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "NearShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "UpToNote4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FarShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note4ToNote1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FarShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note1ToNote2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FarShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note2ToNote3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FarShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Down"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

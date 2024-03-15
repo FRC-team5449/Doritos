@@ -1,0 +1,12 @@
+
+*.class
+*.bin
+*.lock
+*.dll
+*.pdb
+*.dylib
+*.jar
+build/
+.gradle/
+bin/
+build/
