@@ -4,10 +4,17 @@
 
 package com.team5449.frc2024;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 import javax.management.relation.RoleNotFoundException;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.conduit.schema.Joystick;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -40,6 +47,7 @@ import com.team5449.lib.util.TimeDelayedBoolean;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
@@ -135,6 +143,8 @@ public class RobotContainer {
 
     SmartDashboard.putData("Builder Auto Chooser", mAutoChooser);
 
+    mAutoChooser.onChange((mCommand) -> System.out.println(mCommand.getName()));
+
     configureBindings();
   }
 
@@ -197,8 +207,32 @@ public class RobotContainer {
   }
 
 
+  
+
   public Command getAutonomousCommand() {
-    return mAutoChooser.getSelected();
+    final Command nowSelected = mAutoChooser.getSelected();
+    String name = nowSelected.getName();
+    if(!nowSelected.getName().equals("InstantCommand"))
+    {
+      JSONParser parser = new JSONParser();
+      try{
+        Object obj = parser.parse(new FileReader("deploy/pathplanner/autos/"+name+".auto"));
+        JSONObject autoJsonObj = (JSONObject) obj;
+        Pose2d startPose = AutoBuilder.getStartingPoseFromJson(autoJsonObj);
+        System.out.println("Inital heading: "+startPose.getRotation());
+        drivetrainSubsystem.resetHeading(startPose.getRotation().getDegrees());
+      }
+      catch (FileNotFoundException e) {
+        e.printStackTrace();
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
+      catch (ParseException e) {
+        e.printStackTrace();
+      }
+    }
+    return nowSelected;
   }
 
   public DrivetrainSubsystem getDrivetrainSubsystem(){
