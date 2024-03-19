@@ -14,7 +14,9 @@ public class Constants {
     public static final double kEpsilon = 1e-12;
 
     //Gyro Pigeon
-    public static final int pigeonMountPose = 0;
+    public static final double pigeonMountPoseYaw = 0;
+    public static final double pigeonMountPoseRoll = 0;
+    public static final double pigeonMountPosePitch = 0;
     public static final double pigeonError = 0;
 
     //Drivetrain 

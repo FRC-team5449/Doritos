@@ -26,9 +26,9 @@ public class GyroIOPigeon implements GyroIO{
 
         Pigeon2Configuration config = new Pigeon2Configuration();
         MountPoseConfigs mountPoseConfigs = new MountPoseConfigs();
-        mountPoseConfigs.MountPoseYaw = Constants.pigeonMountPose;
-        mountPoseConfigs.MountPoseRoll = 90;
-        mountPoseConfigs.MountPosePitch = 45;
+        mountPoseConfigs.MountPoseYaw = Constants.pigeonMountPoseYaw;
+        mountPoseConfigs.MountPoseRoll = Constants.pigeonMountPoseRoll;
+        mountPoseConfigs.MountPosePitch = Constants.pigeonMountPosePitch;
 
         GyroTrimConfigs gyroTrimConfigs = new GyroTrimConfigs();
         gyroTrimConfigs.GyroScalarZ = Constants.pigeonError;
