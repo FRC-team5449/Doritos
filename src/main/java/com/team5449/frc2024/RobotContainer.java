@@ -71,10 +71,11 @@ public class RobotContainer {
   private TimeDelayedBoolean resetGyroBoolean = new TimeDelayedBoolean();
 
   public final XboxController mDriverController = new XboxController(0);
+  public final XboxController mOperatorController = new XboxController(1);
   //private final edu.wpi.first.wpilibj.Joystick mDriverJoystick = new edu.wpi.first.wpilibj.Joystick(0);
-  public final CommandXboxController mOperatorController = new CommandXboxController(1);
+  //public final CommandXboxController mOperatorController = new CommandXboxController(1);
 
-  private final DigitalInput noteStored = new DigitalInput(9);
+  private final DigitalInput noteStored = new DigitalInput(0);
 
   private final SendableChooser<Command> mAutoChooser;
 
@@ -144,10 +145,10 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    BooleanSupplier conditionShoot = mOperatorController.a();
-    BooleanSupplier conditionIntake = mOperatorController.b();
-    BooleanSupplier conditionReload = mOperatorController.x();
-    BooleanSupplier conditionGoAMP = mOperatorController.y();
+    BooleanSupplier conditionShoot = new Trigger(mOperatorController::getAButton);
+    BooleanSupplier conditionIntake = new Trigger(mOperatorController::getBButton);
+    BooleanSupplier conditionReload = new Trigger(mOperatorController::getXButton);
+    BooleanSupplier conditionGoAMP = new Trigger(mOperatorController::getYButton);
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
     new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 67));//.whileTrue(mAutoAlignCommand);//.o
@@ -159,34 +160,38 @@ public class RobotContainer {
 
     new Trigger(conditionGoAMP).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP))).whileTrue(new AmpCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP,-40));
 
-    mOperatorController.leftTrigger().onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.PRECLIMB)));
-    mOperatorController.rightTrigger().onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.CLIMB)));
-    mOperatorController.leftBumper().whileTrue(new ClimbCommand(climber, 0.7));
-    new Trigger(mDriverController::getLeftBumper).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
-    mOperatorController.rightBumper().whileTrue(new ClimbCommand(climber, -0.7));
-    mOperatorController.povDown().onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
-    mOperatorController.povUp().whileTrue(new AmpCommand(shooter, ()->true,-30));
-    mOperatorController.povLeft().onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.PRETRAP)).alongWith(
+    new Trigger(() -> mOperatorController.getLeftTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.PRECLIMB)));
+    new Trigger(() -> mOperatorController.getRightTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.CLIMB)));
+
+    new Trigger(mOperatorController::getLeftBumper).whileTrue(new ClimbCommand(climber, 0.7));
+
+    //new Trigger(mDriverController::getLeftBumper).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
+
+    new Trigger(mOperatorController::getRightBumper).whileTrue(new ClimbCommand(climber, -0.7));
+    new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
+    new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, ()->true, -40));
+    new Trigger(() -> mOperatorController.getPOV() == 270).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.PRETRAP)).alongWith(
       new InstantCommand(()->shooter.setOpenLoop(-0.2, false))))
       .onFalse(new InstantCommand(()->shooter.setOpenLoop(0, false)));
 
-    mOperatorController.leftStick().onTrue(new InstantCommand(() -> shooter.transit(1))).onFalse(new InstantCommand(() -> shooter.transit(0)));
+    new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> shooter.transit(1))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
     new Trigger(() -> mDriverController.getRightBumper()).whileTrue(mAutoAlignCommand);
 
     new Trigger(noteStored::get).onTrue(new WaitCommand(
       new InstantCommand(() -> {
         mDriverController.setRumble(RumbleType.kBothRumble, 0.5);
-      }), 1
+        mOperatorController.setRumble(RumbleType.kBothRumble, 0.5);
+      }), 0.5
     ).andThen(
       new InstantCommand(() -> {
         mDriverController.setRumble(RumbleType.kBothRumble, 0);
+        mOperatorController.setRumble(RumbleType.kBothRumble, 0);
       })
-    ))//.andThen(
-      // () -> {
-      //   mDriverController.setRumble(RumbleType.kBothRumble, 0);
-      // }
-    .onTrue(Commands.print("1111111"));
+    ));
+
+    new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
+    new Trigger(mOperatorController::getRightStickButton).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
 
     
   }

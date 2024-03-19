@@ -26,8 +26,8 @@ private final Shooter mShooter;
   public void execute() {
     mShooter.setAmpShooting(speed);
     
-    SmartDashboard.putBoolean("isShooterAMP", mShooter.isShooterAtSetpoint(speed));
-    if(mShooter.isShooterAtSetpoint(speed) && isArmSet.getAsBoolean())
+    SmartDashboard.putBoolean("isShooterAMP", mShooter.isShooterAtSetpoint());
+    if(mShooter.isShooterAtSetpoint() && isArmSet.getAsBoolean())
     {
       mShooter.transit(1);
     }

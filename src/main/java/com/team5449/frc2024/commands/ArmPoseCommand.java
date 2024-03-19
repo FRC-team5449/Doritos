@@ -120,6 +120,14 @@ static{
     }
   }
 
+  public void offsetBy(double offset)
+  {
+    if(mSystemState == ArmSystemState.SHOOTING)
+    {
+      mSystemState.armPose += offset;
+    }
+  }
+
   private static int ArmSystemState_LoadCount = 0;
 
   public enum ArmSystemState{

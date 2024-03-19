@@ -26,10 +26,8 @@ public class Shooter extends SubsystemBase {
   private final StatusSignal<Double> mUpShooterVelocity;
   private final StatusSignal<Double> mLowShooterVelocity;
   private final TalonFX transit;
-
-
-
-  
+  private double upShooterSetpoint;
+  private double lowShooterSetpoint;
 
   public Shooter() {
 
@@ -37,6 +35,9 @@ public class Shooter extends SubsystemBase {
     mLowShooter = new TalonFX(Ports.kShooterLowId, Ports.kCANBusFDName);
     mUpShooterVelocity = mUpShooter.getVelocity();
     mLowShooterVelocity = mLowShooter.getVelocity();
+
+    upShooterSetpoint = 0;
+    lowShooterSetpoint = 0;
 
     transit = new TalonFX(Ports.kTransId, Ports.kCANBusFDName);
     configureTalons();
@@ -53,8 +54,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShootRPM(double speed){
-    mUpShooter.setControl(velocityControl.withVelocity(speed));
-    mLowShooter.setControl(new Follower(Ports.kShooterUpId, true));
+    upShooterSetpoint = speed;
+    lowShooterSetpoint = -speed;
+
+    updateSetpoint();
   }
 
   public void setOpenLoop(double percent, boolean isDifferent){
@@ -63,22 +66,30 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setAmpShooting(double speed){
-    mUpShooter.setControl(velocityControl.withVelocity(speed));
+    upShooterSetpoint = speed;
+    updateSetpoint();
     //mLowShooter.setControl(new Follower(Ports.kShooterUpId, false));
   }
 
-  public boolean isShooterAtSetpoint(double setpoint){
-    return Util.epsilonEquals(setpoint, mUpShooterVelocity.asSupplier().get(), 5) && Util.epsilonEquals(setpoint, mLowShooterVelocity.asSupplier().get(), 5);
+  public boolean isShooterAtSetpoint(){
+    return Util.epsilonEquals(upShooterSetpoint, mUpShooterVelocity.asSupplier().get(), 5) && Util.epsilonEquals(lowShooterSetpoint, mLowShooterVelocity.asSupplier().get(), 5);
   }
 
   public void transit(double percent){
     transit.set(percent);
   }
+  
+  private void updateSetpoint()
+  {
+    SmartDashboard.putNumber("lowShooterSetpoint", lowShooterSetpoint);
+    SmartDashboard.putNumber("upShooterSetpoint", upShooterSetpoint);
+    mUpShooter.setControl(velocityControl.withVelocity(upShooterSetpoint));
+    mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint));
+  }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("ShooterSpeed", mUpShooterVelocity.asSupplier().get());
-
-
+    SmartDashboard.putNumber("upShooterSpeed", mUpShooterVelocity.asSupplier().get());
+    SmartDashboard.putNumber("lowShooterSpeed", mLowShooterVelocity.asSupplier().get());
   }
 }
