@@ -432,6 +432,7 @@ public class DrivetrainSubsystem extends SubsystemBase{
     }
 
     public void resetHeading(double degrees){
+        System.out.println("Setted heading: "+degrees);
         yawOffset = degrees;
     }
 
