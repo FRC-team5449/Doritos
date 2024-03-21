@@ -68,6 +68,8 @@ public class Shooter extends SubsystemBase {
   public void setAmpShooting(double speed){
     upShooterSetpoint = speed;
     updateSetpoint();
+    lowShooterSetpoint = 0;
+    mLowShooter.set(0);
     //mLowShooter.setControl(new Follower(Ports.kShooterUpId, false));
   }
 
