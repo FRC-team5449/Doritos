@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "UpToNote2N"
+                  "pathName": "UpToNote2F"
                 }
               }
             ]
@@ -64,7 +64,7 @@
         {
           "type": "named",
           "data": {
-            "name": "MiddleShoot"
+            "name": "FarShoot"
           }
         },
         {
@@ -80,7 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "MiddleToNote3N"
+                  "pathName": "MiddleToNote3F"
                 }
               }
             ]
@@ -89,7 +89,7 @@
         {
           "type": "named",
           "data": {
-            "name": "MiddleShoot"
+            "name": "FarShoot"
           }
         },
         {
