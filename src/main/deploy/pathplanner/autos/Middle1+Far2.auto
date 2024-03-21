@@ -24,21 +24,28 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Arm Down"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm Down"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MiddleToNote2"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleToNote2"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "NearShoot"
+            "name": "MiddleShoot"
           }
         },
         {

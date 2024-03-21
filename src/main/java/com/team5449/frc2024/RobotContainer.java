@@ -246,6 +246,7 @@ public class RobotContainer {
   private void pathPlannerRegisterCommand(){
     NamedCommands.registerCommand("Intake", new WaitCommand(new IntakeCommand(shooter, intake), 1.3).alongWith(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE))));
     NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65), 2).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
+    NamedCommands.registerCommand("MiddleShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75), 2).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.235))));
     NamedCommands.registerCommand("FarShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75), 3).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.192))));
     NamedCommands.registerCommand("Arm Down", new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
   }
