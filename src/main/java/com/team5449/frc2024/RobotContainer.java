@@ -8,9 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-
-import javax.management.relation.RoleNotFoundException;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,6 +37,8 @@ import com.team5449.frc2024.subsystems.score.Arm;
 import com.team5449.frc2024.subsystems.score.Climber;
 import com.team5449.frc2024.subsystems.score.Intake;
 import com.team5449.frc2024.subsystems.score.Shooter;
+import com.team5449.frc2024.subsystems.vision.Led;
+import com.team5449.frc2024.subsystems.vision.Led.Color;
 import com.team5449.frc2024.subsystems.vision.VisionIO;
 import com.team5449.frc2024.subsystems.vision.VisionIOLimelight;
 import com.team5449.frc2024.subsystems.vision.VisionSubsystem;
@@ -50,7 +49,9 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -97,6 +98,8 @@ public class RobotContainer {
   private final GyroIOPigeon mPigeon;
 
   public RobotContainer() {
+
+    
     vision = new VisionSubsystem(new VisionIO[]{
       new VisionIOLimelight("limelight", new Transform3d())
     });
@@ -161,7 +164,7 @@ public class RobotContainer {
     BooleanSupplier conditionGoAMP = new Trigger(mOperatorController::getYButton);
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
-    new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 67));//.whileTrue(mAutoAlignCommand);//.o
+    new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 80));//.whileTrue(mAutoAlignCommand);//.o
 
     new Trigger(conditionIntake).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
     new Trigger(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE && conditionIntake.getAsBoolean()==true).whileTrue(new IntakeCommand(shooter, intake));
@@ -184,7 +187,7 @@ public class RobotContainer {
       new InstantCommand(()->shooter.setOpenLoop(-0.2, false))))
       .onFalse(new InstantCommand(()->shooter.setOpenLoop(0, false)));
 
-    new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> shooter.transit(1))).onFalse(new InstantCommand(() -> shooter.transit(0)));
+    //new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> shooter.transit(1))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
     new Trigger(() -> mDriverController.getRightBumper()).whileTrue(mAutoAlignCommand);
 
@@ -202,6 +205,7 @@ public class RobotContainer {
 
     new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
     new Trigger(mOperatorController::getRightStickButton).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
+    new Trigger(mOperatorController::getLeftStickButton).and(mOperatorController::getRightStickButton).onTrue(new InstantCommand(armPoseCommand::resetOffset));
 
     
   }
@@ -216,11 +220,11 @@ public class RobotContainer {
     {
       JSONParser parser = new JSONParser();
       try{
-        Object obj = parser.parse(new FileReader("deploy/pathplanner/autos/"+name+".auto"));
-        JSONObject autoJsonObj = (JSONObject) obj;
-        Pose2d startPose = AutoBuilder.getStartingPoseFromJson(autoJsonObj);
+        Object obj = parser.parse(new FileReader("/home/lvuser/deploy/pathplanner/autos/"+name+".auto"));
+        JSONObject autoJsonObj = (JSONObject)obj;
+        Pose2d startPose = AutoBuilder.getStartingPoseFromJson((JSONObject)autoJsonObj.get("startingPose"));
         System.out.println("Inital heading: "+startPose.getRotation());
-        drivetrainSubsystem.resetHeading(startPose.getRotation().getDegrees());
+        drivetrainSubsystem.resetHeading(DriverStation.getAlliance().get()==Alliance.Blue?startPose.getRotation().getDegrees():180-startPose.getRotation().getDegrees());
       }
       catch (FileNotFoundException e) {
         e.printStackTrace();
@@ -241,7 +245,7 @@ public class RobotContainer {
 
   private void pathPlannerRegisterCommand(){
     NamedCommands.registerCommand("Intake", new WaitCommand(new IntakeCommand(shooter, intake), 1.3).alongWith(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE))));
-    NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 50), 2).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.24))));
+    NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65), 2).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
     NamedCommands.registerCommand("FarShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75), 3).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.192))));
     NamedCommands.registerCommand("Arm Down", new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
   }

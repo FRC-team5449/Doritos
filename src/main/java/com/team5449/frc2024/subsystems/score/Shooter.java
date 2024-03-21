@@ -29,7 +29,7 @@ public class Shooter extends SubsystemBase {
   private double upShooterSetpoint;
   private double lowShooterSetpoint;
 
-  public Shooter() {
+  public Shooter(){
 
     mUpShooter = new TalonFX(Ports.kShooterUpId, Ports.kCANBusFDName);
     mLowShooter = new TalonFX(Ports.kShooterLowId, Ports.kCANBusFDName);
@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
 
   public void setShootRPM(double speed){
     upShooterSetpoint = speed;
-    lowShooterSetpoint = -speed;
+    lowShooterSetpoint = -speed*0.6;
 
     updateSetpoint();
   }

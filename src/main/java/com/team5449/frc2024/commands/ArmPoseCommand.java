@@ -27,6 +27,8 @@ private final GenericEntry mStateName = mTab.add("ArmSystemState", mSystemState.
 
 private static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> mShooterRPMTreeMap = new InterpolatingTreeMap<>();
 
+private double offset = 0;
+
 static{
   mShooterRPMTreeMap.put(new InterpolatingDouble(1.533),new InterpolatingDouble(0.235));
   mShooterRPMTreeMap.put(new InterpolatingDouble(1.83),new InterpolatingDouble(0.23));
@@ -81,6 +83,7 @@ static{
         mSystemState.armPose = shootingArmPose(botToTarget);
         //CConsole.stdout.log("Setted armpose", mSystemState, "= shootingArmPose(", botToTarget, ") =", mSystemState.armPose);
       }
+      mSystemState.armPose += offset;
       //OnArmPoseUpdate();
 
     // if(mPos.getDouble(mSystemState.armPose)!=mSystemState.armPose)
@@ -124,8 +127,15 @@ static{
   {
     if(mSystemState == ArmSystemState.SHOOTING)
     {
-      mSystemState.armPose += offset;
+      this.offset += offset;
+      System.out.println("Offset by "+offset+" (now = "+this.offset+")");
     }
+  }
+  public void setOffset(double offset) {
+      this.offset = offset;
+  }
+  public void resetOffset(){
+    setOffset(0);
   }
 
   private static int ArmSystemState_LoadCount = 0;

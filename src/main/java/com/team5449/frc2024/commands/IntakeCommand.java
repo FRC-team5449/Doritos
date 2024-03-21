@@ -26,7 +26,7 @@ public class IntakeCommand extends Command {
   @Override
   public void execute() {
     mIntake.setIntakeSpeed(1);
-    mShooter.setOpenLoop(-0.2, true);
+    mShooter.setOpenLoop(-0.3, true);
     mShooter.transit(-0.8);
   }
 
@@ -34,7 +34,7 @@ public class IntakeCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     mIntake.setIntakeSpeed(0);
-    mShooter.setShootRPM(0);
+    mShooter.setOpenLoop(0, false);
     mShooter.transit(0);
   }
 

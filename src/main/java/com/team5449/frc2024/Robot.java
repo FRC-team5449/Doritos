@@ -7,6 +7,8 @@ package com.team5449.frc2024;
 
 import org.littletonrobotics.junction.LoggedRobot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 /*import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;*/
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,9 +26,10 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
-    //UsbCamera camera =  CameraServer.startAutomaticCapture();
+    //TODO Do not comment it
+    UsbCamera camera = CameraServer.startAutomaticCapture();
 
-    //camera.setResolution(320, 240);
+    camera.setResolution(320, 240);
 
 
   }
@@ -52,6 +55,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

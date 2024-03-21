@@ -30,7 +30,7 @@ private final Intake mIntake;
   @Override
   public void end(boolean interrupted) {
     mIntake.setIntakeSpeed(0);
-    mShooter.setShootRPM(0);
+    mShooter.setOpenLoop(0, false);
     mShooter.transit(0);
   }
 
