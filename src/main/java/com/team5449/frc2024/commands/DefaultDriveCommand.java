@@ -31,7 +31,7 @@ public class DefaultDriveCommand extends Command{
 
     private ChassisSpeeds targetVelocity;
 
-    private boolean preValue = false;
+    private boolean preValue = true;
 
     public DefaultDriveCommand(DrivetrainSubsystem subsystem,       
         DoubleSupplier xVelocitySupplier,

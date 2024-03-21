@@ -83,6 +83,10 @@ public class AutoAlign extends Command {
     }
 
     adjustAngleToTartget = Math.atan2(botToTargetY, botToTargetX);
+    if(DriverStation.getAlliance().get() == Alliance.Red)
+    {
+      adjustAngleToTartget += Math.PI;
+    }
     omegaController.setSetpoint(adjustAngleToTartget);
 
     SmartDashboard.putNumber("Adjust Angle", Units.radiansToDegrees(adjustAngleToTartget));
