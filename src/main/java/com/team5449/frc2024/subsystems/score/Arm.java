@@ -59,6 +59,8 @@ public class Arm extends SubsystemBase {
 
     mConfig.Slot1.kP = 1.5;
 
+    mConfig.Slot2.kP = 7.5;
+
     mConfig.Feedback.FeedbackRemoteSensorID = 12;
     mConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     mConfig.Feedback.FeedbackRotorOffset = -0.57763671875;
@@ -93,6 +95,12 @@ public class Arm extends SubsystemBase {
     position = Util.limit(Constants.maxArmPosition, Constants.minArmPosition, position);
     setPoint = position;
     motionMagicDutyCycle = motionMagicDutyCycle.withSlot(1);
+  }
+
+  public void setAutoArmDown(double position){
+    position = Util.limit(Constants.maxArmPosition, Constants.minArmPosition, position);
+    setPoint = position;
+    motionMagicDutyCycle = motionMagicDutyCycle.withSlot(2);
   }
 
   @Override

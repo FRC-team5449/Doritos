@@ -58,7 +58,7 @@ public class Robot extends LoggedRobot {
 
 
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.schedule();
+      m_autonomousCommand.schedule();
       //TODO: remove after test 
     }
   }
