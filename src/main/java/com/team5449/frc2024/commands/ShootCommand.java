@@ -7,28 +7,35 @@ package com.team5449.frc2024.commands;
 import java.util.function.BooleanSupplier;
 
 import com.team5449.frc2024.subsystems.score.Shooter;
+
+import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ShootCommand extends Command {
   private final Shooter mShooter;
   private final BooleanSupplier isArmSet;
+  private final BooleanConsumer onShoot;
 
-  // private boolean isTransitRunning;
-  // private boolean isNoteOuted;
+  private boolean isTransitRunning;
+  private boolean isNoteOuted;
 
   private double shooterSetpoint;
-  public ShootCommand(Shooter shooter, BooleanSupplier isArmPositionSet, double setpoint) {
+  public ShootCommand(Shooter shooter, BooleanSupplier isArmPositionSet, double setpoint, BooleanConsumer onShoot) {
     mShooter = shooter;
     isArmSet = isArmPositionSet;
     shooterSetpoint = setpoint;
+    this.onShoot = onShoot;
+  }
+  public ShootCommand(Shooter shooter, BooleanSupplier isArmPositionSet, double setpoint) {
+    this(shooter, isArmPositionSet, setpoint, (e)->{});
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // isTransitRunning = false;
-    // isNoteOuted = false;
+    isTransitRunning = false;
+    isNoteOuted = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,19 +46,21 @@ public class ShootCommand extends Command {
 
     SmartDashboard.putBoolean("isShooterAtSetpoint", mShooter.isShooterAtSetpoint());
 
-    // if(!mShooter.isShooterAtSetpoint() && isTransitRunning)
-    // {
-    //   mShooter.transit(0);
-    //   isTransitRunning = false;
-    //   isNoteOuted = true;
-    //   System.out.println("Shoot!!!");
-    // }
+    if(!mShooter.isShooterAtSetpoint() && isTransitRunning)
+    {
+      mShooter.transit(0);
+      isTransitRunning = false;
+      isNoteOuted = true;
+      System.out.println("Shoot!!!");
+      onShoot.accept(isNoteOuted);
+    }
     if(mShooter.isShooterAtSetpoint() && isArmSet.getAsBoolean() /*&& !isTransitRunning*/){
       mShooter.transit(1);
-      //isTransitRunning = true;
+      isTransitRunning = true;
     }
     else{
       mShooter.transit(0);
+      isTransitRunning = false;
     }
   }
 
@@ -67,8 +76,8 @@ public class ShootCommand extends Command {
   public boolean isFinished() {
     return false;
   }
-  // public boolean isNoteShooted()
-  // {
-  //   return isNoteOuted;
-  // }
+  public boolean isNoteShooted()
+  {
+    return isNoteOuted;
+  }
 }

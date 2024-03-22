@@ -48,8 +48,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -246,13 +248,23 @@ public class RobotContainer {
 
   private final TimeDelayedBoolean mNoteOutHelper = new TimeDelayedBoolean();
   private final BooleanSupplier isNoteOut = () -> {
-    return mNoteOutHelper.update(!noteStored.get(),1);
+    final boolean ans = mNoteOutHelper.update(!noteStored.get(), 0.2);
+    if(!noteStored.get())
+    {
+      System.out.println("Shoot in SENSOR in "+Timer.getFPGATimestamp());
+    }
+    return ans;
+  };
+  private final BooleanConsumer mPrintNote = (e) -> {
+    if(e){
+      System.out.println("Shoot in MOTOR in "+Timer.getFPGATimestamp());
+    }
   };
   private void pathPlannerRegisterCommand(){
     NamedCommands.registerCommand("Intake", new WaitCommand(new IntakeCommand(shooter, intake), 10, noteStored::get).alongWith(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE))));
-    NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65), 10, isNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
-    NamedCommands.registerCommand("MiddleShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75), 10, isNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.22))));
-    NamedCommands.registerCommand("FarShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75), 10, isNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.1958))));
+    NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65, mPrintNote), 10, isNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
+    NamedCommands.registerCommand("MiddleShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75, mPrintNote), 10, isNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.22))));
+    NamedCommands.registerCommand("FarShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75, mPrintNote), 10, isNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.1958))));
     NamedCommands.registerCommand("Arm Down", new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.ARMDOWN)));
   }
 
