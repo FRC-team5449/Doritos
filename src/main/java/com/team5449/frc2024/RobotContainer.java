@@ -224,7 +224,7 @@ public class RobotContainer {
         JSONObject autoJsonObj = (JSONObject)obj;
         Pose2d startPose = AutoBuilder.getStartingPoseFromJson((JSONObject)autoJsonObj.get("startingPose"));
         System.out.println("Inital heading: "+startPose.getRotation());
-        drivetrainSubsystem.resetHeading(startPose.getRotation().getDegrees()/*DriverStation.getAlliance().get()==Alliance.Blue?startPose.getRotation().getDegrees():180-startPose.getRotation().getDegrees()*/);
+        drivetrainSubsystem.resetHeading(DriverStation.getAlliance().get()==Alliance.Blue ? -startPose.getRotation().getRadians() : startPose.getRotation().getRadians());
         //TODO: test if works
       }
       catch (FileNotFoundException e) {
