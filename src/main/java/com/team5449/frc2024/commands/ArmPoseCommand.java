@@ -96,6 +96,9 @@ static{
     if(mSystemState == ArmSystemState.PRETRAP){
       mArm.setArmClimbPosition(mSystemState.armPose);
     }
+    else if(mSystemState == ArmSystemState.ARMDOWN){
+      mArm.setAutoArmDown(mSystemState.armPose);
+    }
     else{
       mArm.setArmPosition(mSystemState.armPose);
     }
@@ -151,6 +154,7 @@ static{
     PRECLIMB(0.22),
     CLIMB(0.085),
     PRETRAP(0.22),
+    ARMDOWN(0.02),
     TRAP(0.37);
     
     public double armPose;
