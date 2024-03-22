@@ -10,6 +10,12 @@ public class TimeDelayedBoolean {
     private Timer t = new Timer();
     private boolean m_old = false;
 
+    /**
+     * Update the feed value
+     * @param value The new value
+     * @param timeout Delay in seconds you want to make changes take effect.
+     * @return The delayed value
+     */
     public boolean update(boolean value, double timeout) {
         if (!m_old && value) {
             t.reset();
