@@ -431,9 +431,13 @@ public class DrivetrainSubsystem extends SubsystemBase{
         }
     }
 
-    public void resetHeading(double degrees){
-        System.out.println("Setted heading: "+degrees);
-        yawOffset = degrees;
+    /**
+     * Set specific angle of pigeon's yaw to zero, doesn't change the postive direction (counterclockwise)
+     * @param radians The angle in radians.
+     */
+    public void resetHeading(double radians){
+        System.out.println("Setted heading: "+radians+" rad");
+        yawOffset += radians;
     }
 
     public Pose2d getProjectedPose(double latency) {
