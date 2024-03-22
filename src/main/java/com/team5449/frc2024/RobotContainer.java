@@ -182,7 +182,7 @@ public class RobotContainer {
 
     new Trigger(mOperatorController::getRightBumper).whileTrue(new ClimbCommand(climber, -0.7));
     new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
-    new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, ()->true, -40));
+    new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, ()->true, -60));
     new Trigger(() -> mOperatorController.getPOV() == 270).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.PRETRAP)).alongWith(
       new InstantCommand(()->shooter.setOpenLoop(-0.2, false))))
       .onFalse(new InstantCommand(()->shooter.setOpenLoop(0, false)));
