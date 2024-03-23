@@ -39,7 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "MiddleShoot"
+            "name": "NearShoot"
           }
         },
         {
@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "UpToNote2F"
+                  "pathName": "UpToNote2N"
                 }
               }
             ]
@@ -64,7 +64,7 @@
         {
           "type": "named",
           "data": {
-            "name": "MiddleShoot"
+            "name": "NearShoot"
           }
         },
         {
