@@ -24,7 +24,7 @@ public class Constants {
     public static final double trackBaseMeters = 0.54;
     public static final double driveBaseRadius = Math.hypot(wheelBaseMeters / 2, trackBaseMeters / 2);
 
-    public static final double maxVelocityMeterPerSec = 4;
+    public static final double maxVelocityMeterPerSec = 9.8;
     public static final double maxAccelerationMeterPerSecSq = 100;
 
 
