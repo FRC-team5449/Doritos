@@ -24,14 +24,14 @@ public class Constants {
     public static final double trackBaseMeters = 0.54;
     public static final double driveBaseRadius = Math.hypot(wheelBaseMeters / 2, trackBaseMeters / 2);
 
-    public static final double maxVelocityMeterPerSec = 7;
+    public static final double maxVelocityMeterPerSec = 8;
     public static final double maxAccelerationMeterPerSecSq = 100;
 
 
     public static final double maxAutoVelocityMeterPerSec = 2;
     public static final double maxAutoAccelerationMeterPerSecSq = 100;
 
-    public static final double maxAngularVelocityRadPerSec = 6; //maxVelocityMeterPerSec / Math.hypot(wheelBaseMeters / 2, trackBaseMeters / 2);
+    public static final double maxAngularVelocityRadPerSec = 10; //maxVelocityMeterPerSec / Math.hypot(wheelBaseMeters / 2, trackBaseMeters / 2);
 
     public static final int driveCurrentLimit = 70;
     public static final int steerCurrentLimit = 30;
