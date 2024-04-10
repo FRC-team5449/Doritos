@@ -168,8 +168,8 @@ public class RobotContainer {
 
     new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 90));//.whileTrue(mAutoAlignCommand);//.o
 
-    new Trigger(conditionIntake).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING)));
-    new Trigger(() -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING && conditionIntake.getAsBoolean()==true).whileTrue(new IntakeCommand(shooter, intake));
+    new Trigger(conditionIntake).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
+    new Trigger(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE && conditionIntake.getAsBoolean()==true).whileTrue(new IntakeCommand(shooter, intake));
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
