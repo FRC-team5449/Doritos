@@ -27,7 +27,7 @@ public class IntakeCommand extends Command {
   public void execute() {
     mIntake.setIntakeSpeed(1);
     mShooter.setOpenLoop(-0.3, true);
-    mShooter.transit(-0.8);
+    mShooter.transit(-1);
   }
 
   // Called once the command ends or is interrupted.

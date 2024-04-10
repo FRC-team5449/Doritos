@@ -168,12 +168,15 @@ public class RobotContainer {
 
     new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 80));//.whileTrue(mAutoAlignCommand);//.o
 
-    new Trigger(conditionIntake).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
-    new Trigger(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE && conditionIntake.getAsBoolean()==true).whileTrue(new IntakeCommand(shooter, intake));
+    new Trigger(conditionIntake).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP)));
+    new Trigger(() -> armPoseCommand.getArmState() == ArmSystemState.AMP && conditionIntake.getAsBoolean()==true).whileTrue(new IntakeCommand(shooter, intake));
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
-    new Trigger(conditionGoAMP).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP))).whileTrue(new AmpCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP,-40));
+    new Trigger(conditionGoAMP).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP))).whileTrue(
+      //new AmpCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP,-40)
+      new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP, 80)
+      );
 
     new Trigger(() -> mOperatorController.getLeftTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.PRECLIMB)));
     new Trigger(() -> mOperatorController.getRightTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.CLIMB)));
