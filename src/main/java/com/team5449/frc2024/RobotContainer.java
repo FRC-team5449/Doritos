@@ -166,10 +166,10 @@ public class RobotContainer {
     BooleanSupplier conditionGoAMP = new Trigger(mOperatorController::getYButton);
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
-    new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 80));//.whileTrue(mAutoAlignCommand);//.o
+    new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 90));//.whileTrue(mAutoAlignCommand);//.o
 
-    new Trigger(conditionIntake).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP)));
-    new Trigger(() -> armPoseCommand.getArmState() == ArmSystemState.AMP && conditionIntake.getAsBoolean()==true).whileTrue(new IntakeCommand(shooter, intake));
+    new Trigger(conditionIntake).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING)));
+    new Trigger(() -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING && conditionIntake.getAsBoolean()==true).whileTrue(new IntakeCommand(shooter, intake));
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
