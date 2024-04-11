@@ -24,16 +24,16 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private SaveLimelightPNG mSave;
+  private SaveLimelightPNG mSave = new SaveLimelightPNG();
 
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    //m_robotContainer = new RobotContainer();
 
     //TODO Do not comment it
-    UsbCamera camera = CameraServer.startAutomaticCapture();
+    /*UsbCamera camera = CameraServer.startAutomaticCapture();
 
-    camera.setResolution(320, 240);
+    camera.setResolution(320, 240);*/
 
     mSave.start();
   }
@@ -65,7 +65,6 @@ public class Robot extends LoggedRobot {
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-      //TODO: remove after test 
     }
   }
 
