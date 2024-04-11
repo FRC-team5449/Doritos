@@ -48,16 +48,14 @@ public class SaveLimelightPNG extends Thread{
 	public void save(String path, BooleanConsumer callback)
 	{
 		synchronized(savePath){
-			synchronized(saveCallback){
-				imageCaptured = false;
-				demandSave = true;
-				savePath = path;
-				if(callback==null)
-				{
-					saveCallback = (e)->{};
-				}else{
-					saveCallback = callback;
-				}
+			imageCaptured = false;
+			demandSave = true;
+			savePath = path;
+			if(callback==null)
+			{
+				saveCallback = (e)->{};
+			}else{
+				saveCallback = callback;
 			}
 		}
 	}
@@ -108,7 +106,7 @@ public class SaveLimelightPNG extends Thread{
 				while (!interrupted() && stream != null) {
 					while (System.currentTimeMillis() - lastRepaint < 10) {
 						stream.skip(stream.available());
-						Thread.sleep(1);
+						Thread.sleep(10-(System.currentTimeMillis() - lastRepaint));
 					}
 					lastRepaint = System.currentTimeMillis();
 					stream.skip(stream.available());
@@ -120,16 +118,14 @@ public class SaveLimelightPNG extends Thread{
 			        
 			        ByteArrayInputStream tmpStream = new ByteArrayInputStream(imageBuffer.toByteArray());
 			        imageToDraw = ImageIO.read(tmpStream);
-			        System.err.println("Image captured: " + Boolean.toString(imageCaptured));
+			        //System.err.println("Image captured: " + Boolean.toString(imageCaptured));
 					synchronized(savePath){
-						synchronized(saveCallback){
-							if (demandSave && !imageCaptured) {
-								saveCallback.accept(save(savePath));
-								demandSave = false;
-								imageCaptured = true;
-								SmartDashboard.putBoolean("Image Captured", imageCaptured);
-								//interrupt();
-							}
+						if (demandSave && !imageCaptured) {
+							saveCallback.accept(save(savePath));
+							demandSave = false;
+							imageCaptured = true;
+							SmartDashboard.putBoolean("Image Captured", imageCaptured);
+							//interrupt();
 						}
 					}
 				}
