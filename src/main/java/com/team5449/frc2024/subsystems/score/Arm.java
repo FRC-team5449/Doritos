@@ -67,8 +67,8 @@ public class Arm extends SubsystemBase {
     mConfig.Feedback.RotorToSensorRatio = 192 * 0.75;
 
     CANcoderConfiguration mEncoderConfig = new CANcoderConfiguration();
-    mEncoderConfig.MagnetSensor.MagnetOffset = -0.274902296875;
-    mEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    mEncoderConfig.MagnetSensor.MagnetOffset = 0.708984375;
+    mEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
 
     mArmMaster.getConfigurator().apply(mConfig);
