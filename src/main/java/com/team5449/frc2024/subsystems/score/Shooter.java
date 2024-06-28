@@ -52,8 +52,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShootRPM(double speed){
-    upShooterSetpoint = speed;
-    lowShooterSetpoint = -speed*0.6;
+    upShooterSetpoint = speed*0.8;
+    lowShooterSetpoint = -speed;
 
     updateSetpoint();
   }
