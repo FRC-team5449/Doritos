@@ -12,8 +12,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax mIntake1;
+  private static final Intake mInstance = new Intake();
+  public static Intake getInstance(){
+    return mInstance;
+  }
   /** Creates a new Intake. */
-  public Intake() {
+  private Intake() {
     mIntake1 = new CANSparkMax(6, MotorType.kBrushless);
     mIntake1.setInverted(true);
   }

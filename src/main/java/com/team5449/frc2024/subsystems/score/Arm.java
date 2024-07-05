@@ -84,7 +84,7 @@ public class Arm extends SubsystemBase {
     position = Util.limit(Constants.maxArmPosition, Constants.minArmPosition, position);
     setPoint = position;
     motionMagicDutyCycle = motionMagicDutyCycle.withSlot(0);
-    SmartDashboard.putNumber("Arm Setpoint / Rot", setPoint);
+    SmartDashboard.putNumber("Arm/Setpoint(Rot)", setPoint);
   }
 
   public boolean isArmAtSetpoint(){
@@ -108,6 +108,6 @@ public class Arm extends SubsystemBase {
     mArmMaster.setControl(motionMagicDutyCycle.withPosition(setPoint));
     mArmSlave.setControl(new Follower(Ports.kArmMasterId, true));
 
-    SmartDashboard.putNumber("Arm Position", armPosition.asSupplier().get());
+    SmartDashboard.putNumber("Arm/Position", armPosition.asSupplier().get());
   }
 }

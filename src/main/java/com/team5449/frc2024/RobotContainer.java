@@ -42,6 +42,7 @@ import com.team5449.frc2024.subsystems.vision.Led.Color;
 import com.team5449.frc2024.subsystems.vision.VisionIO;
 import com.team5449.frc2024.subsystems.vision.VisionIOLimelight;
 import com.team5449.frc2024.subsystems.vision.VisionSubsystem;
+import com.team5449.lib.util.ControllerUtil;
 import com.team5449.lib.util.TimeDelayedBoolean;
 
 import edu.wpi.first.math.MathUtil;
@@ -83,6 +84,8 @@ public class RobotContainer {
 
   public final XboxController mDriverController = new XboxController(0);
   public final XboxController mOperatorController = new XboxController(1);
+  public final ControllerUtil mOperatorControllerU = new ControllerUtil(mOperatorController);
+  
   //private final edu.wpi.first.wpilibj.Joystick mDriverJoystick = new edu.wpi.first.wpilibj.Joystick(0);
   //public final CommandXboxController mOperatorController = new CommandXboxController(1);
 
@@ -98,6 +101,13 @@ public class RobotContainer {
   private final RotateCommand mRotateCommand;
 
   private final GyroIOPigeon mPigeon;
+
+  public BooleanSupplier conditionShoot = mOperatorControllerU.toCond(Constants.ControlConds.shoot);
+  public BooleanSupplier conditionIntake = mOperatorControllerU.toCond(Constants.ControlConds.intake);
+  //public Trigger RLst = new Trigger(() -> (mOperatorController.getRightBumper() ^ mOperatorController.getLeftBumper())).debounce(0.1);
+  public BooleanSupplier conditionReload = mOperatorControllerU.toCond(Constants.ControlConds.reload);//() -> mOperatorController.getXButton() && !RLst.getAsBoolean() && !mOperatorController.getRightBumper();
+  public BooleanSupplier conditionGoAMP = mOperatorControllerU.toCond(Constants.ControlConds.amp);
+  public BooleanSupplier conditionOverShoot = mOperatorControllerU.toCond(Constants.ControlConds.overshoot);//new Trigger(RLst).negate().and(mOperatorController::getRightBumper).and(mOperatorController::getXButton);
 
   public RobotContainer() {
 
@@ -136,8 +146,8 @@ public class RobotContainer {
       drivetrainSubsystem.setPathAuto();
 
 
-    shooter = new Shooter();
-    intake = new Intake();
+    shooter = Shooter.getInstance();
+    intake = Intake.getInstance();
 
     mOrientToTargetCommand = new OrientToTargetCommand(drivetrainSubsystem, vision);
     mAutoAlignCommand = new AutoAlign(drivetrainSubsystem, vision);
@@ -160,10 +170,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    BooleanSupplier conditionShoot = new Trigger(mOperatorController::getAButton);
-    BooleanSupplier conditionIntake = new Trigger(mOperatorController::getBButton);
-    BooleanSupplier conditionReload = new Trigger(mOperatorController::getXButton);
-    BooleanSupplier conditionGoAMP = new Trigger(mOperatorController::getYButton);
+    
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
     new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 90));//.whileTrue(mAutoAlignCommand);//.o
@@ -173,19 +180,18 @@ public class RobotContainer {
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
-    new Trigger(conditionGoAMP).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP))).whileTrue(
-      //new AmpCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP,-40)
-      new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP, 80)
-      );
+    new Trigger(conditionOverShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 80));
+
+    new Trigger(conditionGoAMP).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP))).whileTrue(new AmpCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP,-40));
 
     new Trigger(() -> mOperatorController.getLeftTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.PRECLIMB)));
     new Trigger(() -> mOperatorController.getRightTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.CLIMB)));
 
-    new Trigger(mOperatorController::getLeftBumper).whileTrue(new ClimbCommand(climber, 0.7));
+    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.scalestring1)).whileTrue(new ClimbCommand(climber, 0.7));
 
     //new Trigger(mDriverController::getLeftBumper).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
-    new Trigger(mOperatorController::getRightBumper).whileTrue(new ClimbCommand(climber, -0.7));
+    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.scalestring2)).whileTrue(new ClimbCommand(climber, -0.7));
     new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
     new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, ()->true, -60));
     new Trigger(() -> mOperatorController.getPOV() == 270).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.PRETRAP)).alongWith(

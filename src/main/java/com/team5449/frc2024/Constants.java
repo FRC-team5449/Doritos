@@ -1,5 +1,7 @@
 package com.team5449.frc2024;
 
+import com.team5449.lib.util.ControllerUtil;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -8,6 +10,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
 public class Constants {
+
     public static final boolean isOfficialbot = true;
 
     public static final double kLooperDt = 0.02;
@@ -149,6 +152,21 @@ public class Constants {
         public static final int kClimbLftId = 7;
         
 
+    }
+
+    public static final double ControlTimeout = 0.05;
+
+    public static class ControlConds{
+        public static final int shoot = ControllerUtil.GetXboxVal("A");
+        public static final int intake = ControllerUtil.GetXboxVal("B");
+        public static final int reload = ControllerUtil.GetXboxVal("X");
+        public static final int amp = ControllerUtil.GetXboxVal("Y");
+        public static final int scalestring1 = ControllerUtil.GetXboxVal("LeftBumper");
+        public static final int scalestring2 = ControllerUtil.GetXboxVal("RightBumper");
+        public static final int overshoot = reload | scalestring1 | scalestring2;
+        public static final int offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
+        public static final int offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
+        public static final int ResetArmOffset = offsetArmUp | offsetArmDown;
     }
 
     public static enum checkTarget

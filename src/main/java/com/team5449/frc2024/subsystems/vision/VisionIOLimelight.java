@@ -84,6 +84,7 @@ public class VisionIOLimelight implements VisionIO{
         // calculates total latency
         double latency = fieldData[6] / 1000;
 
+        SmartDashboard.putBoolean("Vision/HasTarget", inputs.hasTarget);
         if (inputs.hasTarget) {
             inputs.timestamp = Timer.getFPGATimestamp() - latency;
 

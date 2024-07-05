@@ -8,6 +8,7 @@ package com.team5449.frc2024;
 import org.littletonrobotics.junction.LoggedRobot;
 
 //import com.team5449.lib.SaveLimelightPNG;
+import com.team5449.lib.util.ControllerUtil;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -45,6 +46,9 @@ public class Robot extends LoggedRobot {
     if(DriverStation.getAlliance().isPresent()){
       SmartDashboard.putBoolean("Alliance Choice", DriverStation.getAlliance().get() != Alliance.Red);
     }
+
+    SmartDashboard.putBoolean("Reload", m_robotContainer.conditionReload.getAsBoolean());
+    SmartDashboard.putBoolean("OverShoot", m_robotContainer.conditionOverShoot.getAsBoolean());
   }
 
   @Override

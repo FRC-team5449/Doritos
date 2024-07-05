@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class DefaultDriveCommand extends Command{
     private final DrivetrainSubsystem drivetrain;
 
-    private final double ROTATION_COEFFICIENT = 0.6;
+    private final double ROTATION_COEFFICIENT = 1;
 
     public static final double ANGULAR_VELOCITY_COEFFICIENT = 0.085;
 

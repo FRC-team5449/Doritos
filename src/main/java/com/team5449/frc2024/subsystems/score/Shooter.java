@@ -26,8 +26,9 @@ public class Shooter extends SubsystemBase {
   private final TalonFX transit;
   private double upShooterSetpoint;
   private double lowShooterSetpoint;
+  private static final Shooter mInstance = new Shooter();
 
-  public Shooter(){
+  private Shooter(){
 
     mUpShooter = new TalonFX(Ports.kShooterUpId, Ports.kCANBusFDName);
     mLowShooter = new TalonFX(Ports.kShooterLowId, Ports.kCANBusFDName);
@@ -39,6 +40,9 @@ public class Shooter extends SubsystemBase {
 
     transit = new TalonFX(Ports.kTransId, Ports.kCANBusFDName);
     configureTalons();
+  }
+  public static Shooter getInstance(){
+    return mInstance;
   }
 
   private void configureTalons(){
@@ -52,7 +56,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShootRPM(double speed){
-    upShooterSetpoint = speed*0.8;
+    upShooterSetpoint = speed;
     lowShooterSetpoint = -speed;
 
     updateSetpoint();
@@ -81,15 +85,15 @@ public class Shooter extends SubsystemBase {
   
   private void updateSetpoint()
   {
-    SmartDashboard.putNumber("lowShooterSetpoint", lowShooterSetpoint);
-    SmartDashboard.putNumber("upShooterSetpoint", upShooterSetpoint);
+    SmartDashboard.putNumber("Shooter/lowSetpoint", lowShooterSetpoint);
+    SmartDashboard.putNumber("Shooter/upSetpoint", upShooterSetpoint);
     mUpShooter.setControl(velocityControl.withVelocity(upShooterSetpoint));
     mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint));
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("upShooterSpeed", mUpShooterVelocity.asSupplier().get());
-    SmartDashboard.putNumber("lowShooterSpeed", mLowShooterVelocity.asSupplier().get());
+    SmartDashboard.putNumber("Shooter/upSpeed", mUpShooterVelocity.asSupplier().get());
+    SmartDashboard.putNumber("Shooter/lowSpeed", mLowShooterVelocity.asSupplier().get());
   }
 }
