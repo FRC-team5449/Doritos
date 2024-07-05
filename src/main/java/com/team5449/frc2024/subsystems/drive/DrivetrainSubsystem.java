@@ -425,6 +425,10 @@ public class DrivetrainSubsystem extends SubsystemBase{
         }
     }
 
+    public void offsetHeading(double rad){ // CW: postive
+        yawOffset += rad;
+    }
+
     public void resetHeading(){
         synchronized (gyroInputs){
             yawOffset = gyroInputs.yaw;

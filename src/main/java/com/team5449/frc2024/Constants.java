@@ -1,5 +1,7 @@
 package com.team5449.frc2024;
 
+import java.util.function.BooleanSupplier;
+
 import com.team5449.lib.util.ControllerUtil;
 
 import edu.wpi.first.math.Matrix;
@@ -157,7 +159,14 @@ public class Constants {
     public static final double ControlTimeout = 0.05;
 
     public static class ControlConds{
-        public static final int shoot = ControllerUtil.GetXboxVal("A");
+        // Driver
+        // public static final int SwitchHeadNReset = ControllerUtil.GetXboxVal("B"); // It is calling getBButton instead of getBButtonPressed
+        public static final int AutoAlignStage = ControllerUtil.GetXboxVal("Y");
+        public static final int CounterClkwRotatePos90Deg = ControllerUtil.GetXboxVal("LeftBumper");
+        public static final int ClkwRotatePos90Deg = ControllerUtil.GetXboxVal("RightBumper");
+
+        // Operator
+        public static final int shoot = ControllerUtil.GetXboxVal("A", 0);
         public static final int intake = ControllerUtil.GetXboxVal("B");
         public static final int reload = ControllerUtil.GetXboxVal("X");
         public static final int amp = ControllerUtil.GetXboxVal("Y");
@@ -167,6 +176,7 @@ public class Constants {
         public static final int offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
         public static final int offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
         public static final int ResetArmOffset = offsetArmUp | offsetArmDown;
+        public static final int forceShoot = shoot | reload;
     }
 
     public static enum checkTarget

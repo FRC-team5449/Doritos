@@ -18,8 +18,11 @@ public class ControllerUtil {
     {
         return ControllerUtil.GetButton(Controller);
     }
+    public static int GetXboxVal(String key, int CompMethod){
+        return (1<<(XboxController.Button.valueOf("k"+key).value-1))|CompMethod<<16;
+    }
     public static int GetXboxVal(String key){
-        return 1<<(XboxController.Button.valueOf("k"+key).value-1);
+        return GetXboxVal(key, 1);
     }
     public static int GetButton(GenericHID Controller)
     {
@@ -31,8 +34,8 @@ public class ControllerUtil {
         }
         return res;
     }
-    private static int btnstate,btnoldst=0,resbtnst=0;
-    private static double ts=0,cs=0;
+    private int btnstate,btnoldst=0,resbtnst=0;
+    private double ts=0,cs=0;
     public BooleanSupplier toCond(int cond)
     {
         return () -> {
@@ -47,10 +50,18 @@ public class ControllerUtil {
                     }
                 }
             }
-            // SmartDashboard.putNumber("resbtnst",resbtnst);
-            // SmartDashboard.putNumber("btnstate",btnstate);
-            // SmartDashboard.putNumber("btnoldst",btnoldst);
-            return cond==resbtnst;
+            SmartDashboard.putNumber("resbtnst/"+String.valueOf(Controller.getPort()),resbtnst);
+            SmartDashboard.putNumber("btnstate/"+String.valueOf(Controller.getPort()),btnstate);
+            SmartDashboard.putNumber("btnoldst/"+String.valueOf(Controller.getPort()),btnoldst);
+            switch (cond>>16) {
+                case 0:
+                    return (cond&resbtnst)!=0;
+                case 1:
+                    return (cond&0xFFFF)==resbtnst;
+                default:
+                    return false;
+            }
+            
         };
     }
 }

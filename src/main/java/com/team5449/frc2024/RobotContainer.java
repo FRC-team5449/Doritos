@@ -83,6 +83,7 @@ public class RobotContainer {
   private TimeDelayedBoolean resetGyroBoolean = new TimeDelayedBoolean();
 
   public final XboxController mDriverController = new XboxController(0);
+  public final ControllerUtil mDriverControllerU = new ControllerUtil(mDriverController);
   public final XboxController mOperatorController = new XboxController(1);
   public final ControllerUtil mOperatorControllerU = new ControllerUtil(mOperatorController);
   
@@ -140,7 +141,7 @@ public class RobotContainer {
       () -> -adjustJoystickValue(xLimiter.calculate(mDriverController.getLeftY())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(yLimiter.calculate(mDriverController.getLeftX())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(omegaLimiter.calculate(mDriverController.getRightX())) * drivetrainSubsystem.getMaxAngularVelocityRadPerSec()/* + mRotateCommand.calcRotVel()*/,
-      () -> mDriverController.getBButtonPressed(),
+      mDriverController::getBButtonPressed,
       () -> {boolean reset = resetGyroBoolean.update(mDriverController.getAButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
 
       drivetrainSubsystem.setPathAuto();
@@ -189,7 +190,7 @@ public class RobotContainer {
 
     new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.scalestring1)).whileTrue(new ClimbCommand(climber, 0.7));
 
-    //new Trigger(mDriverController::getLeftBumper).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
+    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.forceShoot)).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
     new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.scalestring2)).whileTrue(new ClimbCommand(climber, -0.7));
     new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
@@ -200,7 +201,7 @@ public class RobotContainer {
 
     //new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> shooter.transit(1))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
-    new Trigger(() -> mDriverController.getRightBumper()).whileTrue(mAutoAlignCommand);
+    new Trigger(mDriverControllerU.toCond(Constants.ControlConds.AutoAlignStage)).whileTrue(mAutoAlignCommand);
 
     new Trigger(noteStored::get).onTrue(new WaitCommand(
       new InstantCommand(() -> {
@@ -214,11 +215,12 @@ public class RobotContainer {
       })
     ));
 
-    new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
-    new Trigger(mOperatorController::getRightStickButton).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
-    new Trigger(mOperatorController::getLeftStickButton).and(mOperatorController::getRightStickButton).onTrue(new InstantCommand(armPoseCommand::resetOffset));
+    new Trigger(mDriverControllerU.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
+    new Trigger(mDriverControllerU.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
 
-    
+    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.offsetArmUp)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
+    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.offsetArmDown)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
+    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.ResetArmOffset)).onTrue(new InstantCommand(armPoseCommand::resetOffset));
   }
 
 
