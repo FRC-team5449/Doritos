@@ -181,7 +181,7 @@ public class RobotContainer {
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
-    new Trigger(conditionOverShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 80));
+    new Trigger(conditionOverShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 78));
 
     new Trigger(conditionGoAMP).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP))).whileTrue(new AmpCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP,-40));
 
