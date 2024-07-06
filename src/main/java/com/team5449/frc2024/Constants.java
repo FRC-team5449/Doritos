@@ -160,23 +160,23 @@ public class Constants {
 
     public static class ControlConds{
         // Driver
-        // public static final int SwitchHeadNReset = ControllerUtil.GetXboxVal("B"); // It is calling getBButton instead of getBButtonPressed
-        public static final int AutoAlignStage = ControllerUtil.GetXboxVal("Y");
-        public static final int CounterClkwRotatePos90Deg = ControllerUtil.GetXboxVal("LeftBumper");
-        public static final int ClkwRotatePos90Deg = ControllerUtil.GetXboxVal("RightBumper");
+        // public static final long SwitchHeadNReset = ControllerUtil.GetXboxVal("B"); // It is calling getBButton instead of getBButtonPressed
+        public static final long AutoAlignStage = ControllerUtil.GetXboxVal("Y");
+        public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetXboxVal("LeftBumper");
+        public static final long ClkwRotatePos90Deg = ControllerUtil.GetXboxVal("RightBumper");
 
         // Operator
-        public static final int shoot = ControllerUtil.GetXboxVal("A", 0);
-        public static final int intake = ControllerUtil.GetXboxVal("B");
-        public static final int reload = ControllerUtil.GetXboxVal("X");
-        public static final int amp = ControllerUtil.GetXboxVal("Y");
-        public static final int scalestring1 = ControllerUtil.GetXboxVal("LeftBumper");
-        public static final int scalestring2 = ControllerUtil.GetXboxVal("RightBumper");
-        public static final int overshoot = reload | scalestring1 | scalestring2;
-        public static final int offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
-        public static final int offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
-        public static final int ResetArmOffset = offsetArmUp | offsetArmDown;
-        public static final int forceShoot = shoot | reload;
+        public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
+        public static final long intake = ControllerUtil.GetXboxVal("B");
+        public static final long reload = ControllerUtil.GetXboxVal("X");
+        public static final long amp = ControllerUtil.GetXboxVal("Y");
+        public static final long scalestring1 = ControllerUtil.GetXboxVal("LeftBumper");
+        public static final long scalestring2 = ControllerUtil.GetXboxVal("RightBumper");
+        public static final long overshoot = reload | scalestring1 | scalestring2;
+        public static final long offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
+        public static final long offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
+        public static final long ResetArmOffset = offsetArmUp | offsetArmDown;
+        public static final long forceShoot = shoot | reload;
     }
 
     public static enum checkTarget
