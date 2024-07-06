@@ -199,8 +199,6 @@ public class RobotContainer {
       new InstantCommand(()->shooter.setOpenLoop(-0.2, false))))
       .onFalse(new InstantCommand(()->shooter.setOpenLoop(0, false)));
 
-    //new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> shooter.transit(1))).onFalse(new InstantCommand(() -> shooter.transit(0)));
-
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.AutoAlignStage)).whileTrue(mAutoAlignCommand);
 
     new Trigger(noteStored::get).onTrue(new WaitCommand(
