@@ -1,5 +1,6 @@
 package com.team5449.lib.util;
 
+import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 
 import com.team5449.frc2024.Constants;
@@ -19,8 +20,24 @@ public class ControllerUtil {
     {
         return ControllerUtil.GetButton(ControllerPort);
     }
+    private static HashMap<String, String> replaceMap = new HashMap<String, String>();
+    static{
+        replaceMap.put("LB", "LeftBumper");
+        replaceMap.put("RB", "RightBumper");
+        replaceMap.put("LS", "LeftStick");
+        replaceMap.put("RS", "RightStick");
+        replaceMap.put("Bk", "Back");
+        replaceMap.put("St", "Start");
+    }
     public static long GetXboxVal(int port, String key, int CompMethod){
-        return (1L<<(XboxController.Button.valueOf("k"+key).value-1))|(((long)CompMethod)<<40)|(((long)port&0xF)<<32);
+        String t=replaceMap.get(key);
+        if(t!=null){key=t;}
+        try {
+            return (1L<<(XboxController.Button.valueOf("k"+key).value-1))|(((long)CompMethod)<<40)|(((long)port&0xF)<<32);
+        } catch (IllegalArgumentException e) {
+            DriverStation.reportError("Illeagal key "+key+". Please check your spelling.", false);
+            return 1<<63;
+        }
     }
     public static long GetXboxVal(int port, String key){
         return GetXboxVal(port, key, 1);
