@@ -7,7 +7,7 @@ package com.team5449.frc2024;
 
 import org.littletonrobotics.junction.LoggedRobot;
 
-import com.team5449.lib.SaveLimelightPNG;
+//import com.team5449.lib.SaveLimelightPNG;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -24,7 +24,7 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private SaveLimelightPNG mSave = new SaveLimelightPNG();
+  //private SaveLimelightPNG mSave = new SaveLimelightPNG();
 
   @Override
   public void robotInit() {
@@ -35,7 +35,7 @@ public class Robot extends LoggedRobot {
 
     camera.setResolution(320, 240);*/
 
-    mSave.start();
+    //mSave.start();
   }
 
   @Override
@@ -55,7 +55,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledExit() {
-    mSave.save("/home/lvuser/Images/path.png", null);
+    //mSave.save("/home/lvuser/Images/path.png", null);
   }
 
   @Override
@@ -83,7 +83,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
-    
   }
 
   @Override
