@@ -137,7 +137,7 @@ static{
     setOffset(0);
   }
 
-  private static int ArmSystemState_LoadCount = 0;
+  //private static int ArmSystemState_LoadCount = 0;
 
   public enum ArmSystemState{
     IDLE(0.03),
@@ -159,10 +159,11 @@ static{
     
     private ArmSystemState(double armPose){
         this.armPose = armPose;
-        java.lang.reflect.Field[] fields = this.getClass().getDeclaredFields();
+        /*java.lang.reflect.Field[] fields = this.getClass().getDeclaredFields();
         //TODO: unpredictable bug may caused by field's order doesn't match the initalized.
         PrintString = fields[ArmSystemState_LoadCount].getName();
-        ArmSystemState_LoadCount++;
+        ArmSystemState_LoadCount++;*/
+        PrintString=this.name();
 	  }
 
     @Override
