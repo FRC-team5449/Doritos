@@ -83,9 +83,9 @@ public class RobotContainer {
   private TimeDelayedBoolean resetGyroBoolean = new TimeDelayedBoolean();
 
   public final XboxController mDriverController = new XboxController(0);
-  public final ControllerUtil mDriverControllerU = new ControllerUtil(mDriverController);
+  // public final ControllerUtil mDriverControllerU = new ControllerUtil(mDriverController);
   public final XboxController mOperatorController = new XboxController(1);
-  public final ControllerUtil mOperatorControllerU = new ControllerUtil(mOperatorController);
+  // public final ControllerUtil mOperatorControllerU = new ControllerUtil(mOperatorController);
   
   //private final edu.wpi.first.wpilibj.Joystick mDriverJoystick = new edu.wpi.first.wpilibj.Joystick(0);
   //public final CommandXboxController mOperatorController = new CommandXboxController(1);
@@ -103,12 +103,12 @@ public class RobotContainer {
 
   private final GyroIOPigeon mPigeon;
 
-  public BooleanSupplier conditionShoot = mOperatorControllerU.toCond(Constants.ControlConds.shoot);
-  public BooleanSupplier conditionIntake = mOperatorControllerU.toCond(Constants.ControlConds.intake);
+  public BooleanSupplier conditionShoot = ControllerUtil.toCond(Constants.ControlConds.shoot);
+  public BooleanSupplier conditionIntake = ControllerUtil.toCond(Constants.ControlConds.intake);
   //public Trigger RLst = new Trigger(() -> (mOperatorController.getRightBumper() ^ mOperatorController.getLeftBumper())).debounce(0.1);
-  public BooleanSupplier conditionReload = mOperatorControllerU.toCond(Constants.ControlConds.reload);//() -> mOperatorController.getXButton() && !RLst.getAsBoolean() && !mOperatorController.getRightBumper();
-  public BooleanSupplier conditionGoAMP = mOperatorControllerU.toCond(Constants.ControlConds.amp);
-  public BooleanSupplier conditionOverShoot = mOperatorControllerU.toCond(Constants.ControlConds.overshoot);//new Trigger(RLst).negate().and(mOperatorController::getRightBumper).and(mOperatorController::getXButton);
+  public BooleanSupplier conditionReload = ControllerUtil.toCond(Constants.ControlConds.reload);//() -> mOperatorController.getXButton() && !RLst.getAsBoolean() && !mOperatorController.getRightBumper();
+  public BooleanSupplier conditionGoAMP = ControllerUtil.toCond(Constants.ControlConds.amp);
+  public BooleanSupplier conditionOverShoot = ControllerUtil.toCond(Constants.ControlConds.overshoot);//new Trigger(RLst).negate().and(mOperatorController::getRightBumper).and(mOperatorController::getXButton);
 
   public RobotContainer() {
 
@@ -188,11 +188,11 @@ public class RobotContainer {
     new Trigger(() -> mOperatorController.getLeftTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.PRECLIMB)));
     new Trigger(() -> mOperatorController.getRightTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.CLIMB)));
 
-    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.scalestring1)).whileTrue(new ClimbCommand(climber, 0.7));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.scalestring1)).whileTrue(new ClimbCommand(climber, 0.7));
 
-    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.forceShoot)).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceShoot)).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
-    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.scalestring2)).whileTrue(new ClimbCommand(climber, -0.7));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.scalestring2)).whileTrue(new ClimbCommand(climber, -0.7));
     new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
     new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, ()->true, -60));
     new Trigger(() -> mOperatorController.getPOV() == 270).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.PRETRAP)).alongWith(
@@ -201,7 +201,7 @@ public class RobotContainer {
 
     //new Trigger(mOperatorController::getLeftStickButton).onTrue(new InstantCommand(() -> shooter.transit(1))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
-    new Trigger(mDriverControllerU.toCond(Constants.ControlConds.AutoAlignStage)).whileTrue(mAutoAlignCommand);
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.AutoAlignStage)).whileTrue(mAutoAlignCommand);
 
     new Trigger(noteStored::get).onTrue(new WaitCommand(
       new InstantCommand(() -> {
@@ -215,12 +215,12 @@ public class RobotContainer {
       })
     ));
 
-    new Trigger(mDriverControllerU.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
-    new Trigger(mDriverControllerU.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
 
-    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.offsetArmUp)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
-    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.offsetArmDown)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
-    new Trigger(mOperatorControllerU.toCond(Constants.ControlConds.ResetArmOffset)).onTrue(new InstantCommand(armPoseCommand::resetOffset));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmUp)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmDown)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.ResetArmOffset)).onTrue(new InstantCommand(armPoseCommand::resetOffset));
   }
 
 

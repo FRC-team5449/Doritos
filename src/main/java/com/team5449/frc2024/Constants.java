@@ -159,13 +159,21 @@ public class Constants {
     public static final double ControlTimeout = 0.05;
 
     public static class ControlConds{
+        public static final int DriverPort = 0;
+        public static final int OperatorPort = 1;
         // Driver
+        static{
+            ControllerUtil.setControlPort(DriverPort);
+        }
         // public static final long SwitchHeadNReset = ControllerUtil.GetXboxVal("B"); // It is calling getBButton instead of getBButtonPressed
         public static final long AutoAlignStage = ControllerUtil.GetXboxVal("Y");
         public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetXboxVal("LeftBumper");
         public static final long ClkwRotatePos90Deg = ControllerUtil.GetXboxVal("RightBumper");
 
         // Operator
+        static{
+            ControllerUtil.setControlPort(OperatorPort);
+        }
         public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
         public static final long intake = ControllerUtil.GetXboxVal("B");
         public static final long reload = ControllerUtil.GetXboxVal("X");

@@ -19,11 +19,21 @@ public class ControllerUtil {
     {
         return ControllerUtil.GetButton(ControllerPort);
     }
+    public static long GetXboxVal(int port, String key, int CompMethod){
+        return (1L<<(XboxController.Button.valueOf("k"+key).value-1))|(((long)CompMethod)<<40)|(((long)port&0xF)<<32);
+    }
+    public static long GetXboxVal(int port, String key){
+        return GetXboxVal(port, key, 1);
+    }
+    private static int nowport=0;
     public static long GetXboxVal(String key, int CompMethod){
-        return (1L<<(XboxController.Button.valueOf("k"+key).value-1))|(((long)CompMethod)<<32);
+        return GetXboxVal(nowport, key, CompMethod);
     }
     public static long GetXboxVal(String key){
         return GetXboxVal(key, 1);
+    }
+    public static void setControlPort(int port){
+        nowport=port;
     }
     public static int GetButtonCnt(int ControllerPort){
         return DriverStation.getStickButtonCount(ControllerPort);
@@ -39,30 +49,39 @@ public class ControllerUtil {
         return res;*/
         return DriverStation.getStickButtons(ControllerPort);
     }
-    private int btnstate,btnoldst=0,resbtnst=0;
-    private double ts=0,cs=0;
-    public BooleanSupplier toCond(long cond)
+    private static class Status{
+        public int btnstate,btnoldst=0,resbtnst=0;
+        public double ts=0,cs=0;
+    }
+    static Status st[]=new Status[DriverStation.kJoystickPorts];
+    static{
+        for(int i=0;i<DriverStation.kJoystickPorts;i++){
+            st[i]=new Status();
+        }
+    }
+    public static BooleanSupplier toCond(long cond)
     {
         return () -> {
-            if(Timer.getFPGATimestamp()-ts>Constants.kLooperDt){
-                btnstate=GetButton();
-                if(btnoldst!=btnstate){
-                    btnoldst=btnstate;
-                    cs=Timer.getFPGATimestamp();
+            int port=((int)(cond>>32))&0xF;
+            if(Timer.getFPGATimestamp()-st[port].ts>Constants.kLooperDt){
+                st[port].btnstate=GetButton(port);
+                if(st[port].btnoldst!=st[port].btnstate){
+                    st[port].btnoldst=st[port].btnstate;
+                    st[port].cs=Timer.getFPGATimestamp();
                 }else{
-                    if(Timer.getFPGATimestamp()-cs>Constants.ControlTimeout){
-                        resbtnst=btnstate;
+                    if(Timer.getFPGATimestamp()-st[port].cs>Constants.ControlTimeout){
+                        st[port].resbtnst=st[port].btnstate;
                     }
                 }
             }
-            SmartDashboard.putNumber("ControllerUtil/resbtnst/"+String.valueOf(ControllerPort),resbtnst);
-            SmartDashboard.putNumber("ControllerUtil/btnstate/"+String.valueOf(ControllerPort),btnstate);
-            SmartDashboard.putNumber("ControllerUtil/btnoldst/"+String.valueOf(ControllerPort),btnoldst);
-            switch ((int)(cond>>32)) {
+            SmartDashboard.putNumber("ControllerUtil/resbtnst/"+String.valueOf(port),st[port].resbtnst);
+            SmartDashboard.putNumber("ControllerUtil/btnstate/"+String.valueOf(port),st[port].btnstate);
+            SmartDashboard.putNumber("ControllerUtil/btnoldst/"+String.valueOf(port),st[port].btnoldst);
+            switch ((int)(cond>>40)) {
                 case 0:
-                    return (((int)cond)&resbtnst)!=0;
+                    return (((int)cond)&(st[port].resbtnst))!=0;
                 case 1:
-                    return ((int)cond)==resbtnst;
+                    return ((int)cond)==st[port].resbtnst;
                 default:
                     return false;
             }
