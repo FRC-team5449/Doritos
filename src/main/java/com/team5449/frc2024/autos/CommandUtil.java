@@ -4,15 +4,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.*;
-import netscape.javascript.JSObject;
 
-import java.util.function.BooleanSupplier;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /** Utility class for building commands used in autos */
-public class CommandU {
+public class CommandUtil {
   /**
    * Wraps a command with a functional command that calls the command's initialize, execute, end,
    * and isFinished methods. This allows a command in the event map to be reused multiple times in
@@ -74,8 +72,8 @@ public class CommandU {
   }
 
   private static Command branchedCommandFromData(JSONObject dataJson) {
-    for(var bJson : (JSONArray) dataJson.get("branches")) {
-        JSONObject branchJson=(JSONObject) bJson;
+    for(var branchObj : (JSONArray) dataJson.get("branches")) {
+        JSONObject branchJson=(JSONObject) branchObj;
         if(AutoConditions.getCondition((String) branchJson.get("condition"))) {
             return commandFromJson((JSONObject) branchJson.get("command"),false);
         }
