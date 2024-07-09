@@ -8,7 +8,7 @@ package com.team5449.frc2024.subsystems.score;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.team5449.frc2024.Constants.Ports;
@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Shooter extends SubsystemBase {
   private final TalonFX mUpShooter;
   private final TalonFX mLowShooter;
-  private final VelocityTorqueCurrentFOC velocityControl = new VelocityTorqueCurrentFOC(0, 0, 0, 0, false, false, false);
+  private final VelocityDutyCycle velocityControl = new VelocityDutyCycle(0);
   private final StatusSignal<Double> mUpShooterVelocity;
   private final StatusSignal<Double> mLowShooterVelocity;
   private final TalonFX transit;
@@ -56,7 +56,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShootRPM(double speed){
-    upShooterSetpoint = speed;
+    upShooterSetpoint = speed*0.8;
     lowShooterSetpoint = -speed;
 
     updateSetpoint();
