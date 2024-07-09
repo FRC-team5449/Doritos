@@ -10,7 +10,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoConditions {
     private static HashMap<String, BooleanSupplier> conditions=new HashMap<>();
-
+    /**
+   * Registers a condition with the given name.
+   *
+   * @param name the name of the command
+   * @param condition the condition to register
+   */
     public static void registerCondition(String name, BooleanSupplier condition) {
         conditions.put(name, condition);
     }
@@ -24,7 +29,7 @@ public class AutoConditions {
       return conditions.get(name).getAsBoolean();
     } else {
       DriverStation.reportWarning(
-          "PathPlanner is requesting a condition that has not been provided.",
+          "PathPlanner is requesting a condition that has not been registered.",
           false);
       return false;
     }
