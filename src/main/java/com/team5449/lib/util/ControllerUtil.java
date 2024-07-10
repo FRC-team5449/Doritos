@@ -36,7 +36,7 @@ public class ControllerUtil {
             return (1L<<(XboxController.Button.valueOf("k"+key).value-1))|(((long)CompMethod)<<40)|(((long)port&0xF)<<32);
         } catch (IllegalArgumentException e) {
             DriverStation.reportError("Illeagal key "+key+". Please check your spelling.", false);
-            return 1<<63;
+            return 1L<<63;
         }
     }
     public static long GetXboxVal(int port, String key){
