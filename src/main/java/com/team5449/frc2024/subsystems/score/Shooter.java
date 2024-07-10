@@ -48,15 +48,17 @@ public class Shooter extends SubsystemBase {
   private void configureTalons(){
     TalonFXConfiguration mConfiguration = new TalonFXConfiguration();
     mConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    mConfiguration.Slot0.kP = 5;
-    mConfiguration.Slot0.kI = 0.1;
-    mConfiguration.Slot0.kD = 0.01;
+    mConfiguration.Slot0.kP = 0.01;
+    mConfiguration.Slot0.kI = 0.01;
+    mConfiguration.Slot0.kV = 0.001;
+    mConfiguration.Slot0.kS = 0.13;
     mLowShooter.getConfigurator().apply(mConfiguration);
+    mConfiguration.Slot0.kS = 0.16;
     mUpShooter.getConfigurator().apply(mConfiguration);
   }
 
   public void setShootRPM(double speed){
-    upShooterSetpoint = speed*0.8;
+    upShooterSetpoint = speed;
     lowShooterSetpoint = -speed;
 
     updateSetpoint();
@@ -64,13 +66,14 @@ public class Shooter extends SubsystemBase {
 
   public void setOpenLoop(double percent, boolean isDifferent){
     mUpShooter.set(percent);
-    mLowShooter.setControl(new Follower(Ports.kShooterUpId, isDifferent));
+    mLowShooter.set(isDifferent?-percent:percent);
+    //mLowShooter.setControl(new Follower(Ports.kShooterUpId, isDifferent));
   }
 
   public void setAmpShooting(double speed){
     upShooterSetpoint = speed;
-    updateSetpoint();
     lowShooterSetpoint = 0;
+    updateSetpoint();
     mLowShooter.set(0);
     //mLowShooter.setControl(new Follower(Ports.kShooterUpId, false));
   }
