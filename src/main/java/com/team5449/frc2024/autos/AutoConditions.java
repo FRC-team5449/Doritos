@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoConditions {
     private static HashMap<String, BooleanSupplier> conditions=new HashMap<>();
+    
     /**
    * Registers a condition with the given name.
    *
@@ -17,7 +18,14 @@ public class AutoConditions {
    * @param condition the condition to register
    */
     public static void registerCondition(String name, BooleanSupplier condition) {
-        conditions.put(name, condition);
+        if(!conditions.containsKey("none")){
+          conditions.put("true", ()->true);
+        }
+        if(name=="true"){
+          throw new RuntimeException("do not register the key [true].");
+        } else {
+          conditions.put(name, condition);
+        }
     }
 
     public static boolean hasCondition(String name) {

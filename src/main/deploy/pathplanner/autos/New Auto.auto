@@ -1,16 +1,16 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 2,
-      "y": 2
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New Path"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -18,9 +18,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "branched",
           "data": {
-            "pathName": "Note4ToNote1"
+            "branches": [
+              {
+                "condition": "isIntakingNote"
+                "command": {
+                  "type": "path",
+                  "data": {
+                    "pathName": "New New New Path"
+                  }
+                }
+              },
+              {
+                "condition": "true"
+                "command": {
+                  "type": "path",
+                  "data": {
+                  "pathName": "New New Path"
+                  }
+                }
+              }
+            ]
           }
         }
       ]

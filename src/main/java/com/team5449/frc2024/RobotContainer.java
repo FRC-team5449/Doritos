@@ -7,6 +7,7 @@ package com.team5449.frc2024;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 import org.json.simple.JSONObject;
@@ -14,9 +15,12 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.conduit.schema.Joystick;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import com.team5449.frc2024.autos.AutoBuilder;
+import com.team5449.frc2024.autos.AutoConditions;
+import com.pathplanner.lib.auto.CommandUtil;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.team5449.frc2024.Constants.Ports;
+import com.team5449.frc2024.autos.AutoBuilder;
 import com.team5449.frc2024.autos.autocommands.WaitCommand;
 import com.team5449.frc2024.commands.AmpCommand;
 import com.team5449.frc2024.commands.ArmPoseCommand;
@@ -65,7 +69,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 public class RobotContainer {
-
   private final DrivetrainSubsystem drivetrainSubsystem;
   private final VisionSubsystem vision;
   private final Shooter shooter;
@@ -142,7 +145,7 @@ public class RobotContainer {
     mOrientToTargetCommand = new OrientToTargetCommand(drivetrainSubsystem, vision);
     mAutoAlignCommand = new AutoAlign(drivetrainSubsystem, vision);
 
-    pathPlannerRegisterCommand();
+    pathPlannerRegisterCommands();
 
     mAutoChooser = AutoBuilder.buildAutoChooser();
 
@@ -212,9 +215,6 @@ public class RobotContainer {
     
   }
 
-
-  
-
   public Command getAutonomousCommand() {
     final Command nowSelected = mAutoChooser.getSelected();
     String name = nowSelected.getName();
@@ -260,12 +260,15 @@ public class RobotContainer {
       System.out.println("Shoot in MOTOR in "+Timer.getFPGATimestamp());
     }*/
   };
-  private void pathPlannerRegisterCommand(){
+  private void pathPlannerRegisterCommands(){
     NamedCommands.registerCommand("Intake", new WaitCommand(new IntakeCommand(shooter, intake), 10, noteStored::get).alongWith(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE))));
     NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
     NamedCommands.registerCommand("MiddleShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.22))));
     NamedCommands.registerCommand("FarShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 80, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.196))));
     NamedCommands.registerCommand("Arm Down", new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.ARMDOWN)));
+  }
+  private void pathPlannerRegisterConditions(){
+    AutoConditions.registerCondition("isIntakingNote", ()->intake.getCurrent()>Intake.intakeCurrentThresholdAmps);
   }
 
 }
