@@ -6,8 +6,10 @@ package com.team5449.frc2024.subsystems.score;
 
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
+import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -47,13 +49,18 @@ public class Shooter extends SubsystemBase {
 
   private void configureTalons(){
     TalonFXConfiguration mConfiguration = new TalonFXConfiguration();
+    SlotConfigs mConfig = new SlotConfigs();
     mConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    mConfiguration.Slot0.kP = 0.01;
-    mConfiguration.Slot0.kI = 0.01;
-    mConfiguration.Slot0.kV = 0.001;
-    mConfiguration.Slot0.kS = 0.13;
+    mConfig.kP = 0.1;
+    mConfig.kI = 0.1;
+    mConfig.kV = 0.1;
+    mConfig.kS = 0.13;
+    mConfig.kA = 0.15;
+    mConfig.kD = 0.01;
+    mConfiguration.Slot0 = Slot0Configs.from(mConfig);
+    mConfiguration.Slot1 = Slot1Configs.from(mConfig);
+    mConfiguration.Slot1.kS = 0.16;
     mLowShooter.getConfigurator().apply(mConfiguration);
-    mConfiguration.Slot0.kS = 0.16;
     mUpShooter.getConfigurator().apply(mConfiguration);
   }
 
@@ -90,8 +97,8 @@ public class Shooter extends SubsystemBase {
   {
     SmartDashboard.putNumber("Shooter/lowSetpoint", lowShooterSetpoint);
     SmartDashboard.putNumber("Shooter/upSetpoint", upShooterSetpoint);
-    mUpShooter.setControl(velocityControl.withVelocity(upShooterSetpoint));
-    mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint));
+    mUpShooter.setControl(velocityControl.withVelocity(upShooterSetpoint).withSlot(0));
+    mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint).withSlot(1));
   }
 
   @Override
