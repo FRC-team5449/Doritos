@@ -1,6 +1,5 @@
 package com.team5449.frc2024.autos;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.*;
@@ -44,7 +43,7 @@ public class CommandUtil {
         return waitCommandFromData(data);
       case "named":
         return namedCommandFromData(data);
-    case "branched":
+      case "branched":
         return branchedCommandFromData(data);
       case "path":
         return pathCommandFromData(data, loadChoreoPaths);

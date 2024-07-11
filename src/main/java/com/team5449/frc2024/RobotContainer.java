@@ -146,7 +146,7 @@ public class RobotContainer {
     mAutoAlignCommand = new AutoAlign(drivetrainSubsystem, vision);
 
     pathPlannerRegisterCommands();
-
+    pathPlannerRegisterConditions();
     mAutoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Builder Auto Chooser", mAutoChooser);

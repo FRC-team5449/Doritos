@@ -74,7 +74,6 @@ public class AutoBuilder {
       DriverStation.reportError(
           "Auto builder has already been configured. This is likely in error.", true);
     }
-
     AutoBuilder.pathFollowingCommandBuilder =
         (path) ->
             new FollowPathHolonomic(

@@ -68,6 +68,7 @@ static{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("isArmatShootPose", getArmState()==ArmSystemState.SHOOTING);
     double botToTarget = mVision.getStageDistance(0);
     SmartDashboard.putNumber("Dist", botToTarget);
 
