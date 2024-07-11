@@ -33,6 +33,7 @@ public class Arm extends SubsystemBase {
   //private DynamicMotionMagicDutyCycle dynamicMotion = new DynamicMotionMagicDutyCycle(0, 0, 0, 0, isArmAtSetpoint(), 0, 0, isArmAtSetpoint(), isArmAtSetpoint(), isArmAtSetpoint())
   private StatusSignal<Double> armPosition;
   private double setPoint;
+  private static final double ManualOffset = 0.708740234375-0.6083984375;
   
 
   public Arm() {
@@ -54,8 +55,9 @@ public class Arm extends SubsystemBase {
     mConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
     mConfig.MotionMagic.MotionMagicCruiseVelocity = 0.75;
     mConfig.MotionMagic.MotionMagicAcceleration = 7.5;
-    mConfig.Slot0.kP = 6.5;
-    mConfig.Slot0.kG = 0;
+    mConfig.Slot0.kP = 6;
+    mConfig.Slot0.kG = 0.028;
+    mConfig.Slot0.kS = 0.025390625;
 
     mConfig.Slot1.kP = 1.5;
 
@@ -67,7 +69,7 @@ public class Arm extends SubsystemBase {
     mConfig.Feedback.RotorToSensorRatio = 192 * 0.75;
 
     CANcoderConfiguration mEncoderConfig = new CANcoderConfiguration();
-    mEncoderConfig.MagnetSensor.MagnetOffset = 0.708984375;
+    mEncoderConfig.MagnetSensor.MagnetOffset = 0.6083984375;
     mEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
 
@@ -80,11 +82,16 @@ public class Arm extends SubsystemBase {
     mArmMaster.setControl(new DutyCycleOut(percent));
   }
 
-  public void setArmPosition(double position){
+  private void setArmPositionCommon(double position){
     position = Util.limit(Constants.maxArmPosition, Constants.minArmPosition, position);
+    position -= ManualOffset;
     setPoint = position;
+  }
+
+  public void setArmPosition(double position){
+    setArmPositionCommon(position);
     motionMagicDutyCycle = motionMagicDutyCycle.withSlot(0);
-    SmartDashboard.putNumber("Arm Setpoint / Rot", setPoint);
+    SmartDashboard.putNumber("Arm/Setpoint(Rot)", setPoint+ManualOffset);
   }
 
   public boolean isArmAtSetpoint(){
@@ -92,14 +99,12 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmClimbPosition(double position){
-    position = Util.limit(Constants.maxArmPosition, Constants.minArmPosition, position);
-    setPoint = position;
+    setArmPositionCommon(position);
     motionMagicDutyCycle = motionMagicDutyCycle.withSlot(1);
   }
 
   public void setAutoArmDown(double position){
-    position = Util.limit(Constants.maxArmPosition, Constants.minArmPosition, position);
-    setPoint = position;
+    setArmPositionCommon(position);
     motionMagicDutyCycle = motionMagicDutyCycle.withSlot(2);
   }
 
@@ -108,6 +113,6 @@ public class Arm extends SubsystemBase {
     mArmMaster.setControl(motionMagicDutyCycle.withPosition(setPoint));
     mArmSlave.setControl(new Follower(Ports.kArmMasterId, true));
 
-    SmartDashboard.putNumber("Arm Position", armPosition.asSupplier().get());
+    SmartDashboard.putNumber("Arm/Position", armPosition.asSupplier().get()+ManualOffset);
   }
 }

@@ -22,7 +22,7 @@ private final Intake mIntake;
   @Override
   public void execute() {
     mIntake.setIntakeSpeed(-1);
-    mShooter.setOpenLoop(0.6, true);
+    mShooter.setOpenLoop(0.1, true);
     mShooter.transit(0.8);
   }
 
