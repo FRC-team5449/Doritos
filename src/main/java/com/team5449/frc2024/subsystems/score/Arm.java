@@ -53,9 +53,9 @@ public class Arm extends SubsystemBase {
     mConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     mConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     mConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    mConfig.MotionMagic.MotionMagicCruiseVelocity = 0.75;
-    mConfig.MotionMagic.MotionMagicAcceleration = 7.5;
-    mConfig.Slot0.kP = 6;
+    mConfig.MotionMagic.MotionMagicCruiseVelocity = 2;
+    mConfig.MotionMagic.MotionMagicAcceleration = 2;
+    mConfig.Slot0.kP = 10;
     mConfig.Slot0.kG = 0.028;
     mConfig.Slot0.kS = 0.025390625;
 
@@ -65,7 +65,7 @@ public class Arm extends SubsystemBase {
 
     mConfig.Feedback.FeedbackRemoteSensorID = 12;
     mConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    mConfig.Feedback.FeedbackRotorOffset = -0.57763671875;
+    mConfig.Feedback.FeedbackRotorOffset = 0;//-0.57763671875;
     mConfig.Feedback.RotorToSensorRatio = 192 * 0.75;
 
     CANcoderConfiguration mEncoderConfig = new CANcoderConfiguration();
