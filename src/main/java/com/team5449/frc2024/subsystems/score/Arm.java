@@ -54,7 +54,7 @@ public class Arm extends SubsystemBase {
     mConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     mConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
     mConfig.MotionMagic.MotionMagicCruiseVelocity = 2;
-    mConfig.MotionMagic.MotionMagicAcceleration = 2;
+    mConfig.MotionMagic.MotionMagicAcceleration = 7.5;
     mConfig.Slot0.kP = 10;
     mConfig.Slot0.kG = 0.028;
     mConfig.Slot0.kS = 0.025390625;
