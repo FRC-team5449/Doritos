@@ -51,15 +51,15 @@ public class Shooter extends SubsystemBase {
     TalonFXConfiguration mConfiguration = new TalonFXConfiguration();
     SlotConfigs mConfig = new SlotConfigs();
     mConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    mConfig.kP = 0.1;
-    mConfig.kI = 0.1;
-    mConfig.kV = 0.1;
-    mConfig.kS = 0.13;
-    mConfig.kA = 0.15;
-    mConfig.kD = 0.01;
+    mConfig.kP = 0.03;
+    mConfig.kV = 0.011;
+    // mConfig.kI = 0.01;
+    // mConfig.kV = 0.1;
+    // mConfig.kS = 0.13;
+    // mConfig.kD = 0.01;
     mConfiguration.Slot0 = Slot0Configs.from(mConfig);
-    mConfiguration.Slot1 = Slot1Configs.from(mConfig);
-    mConfiguration.Slot1.kS = 0.16;
+    //mConfiguration.Slot1 = Slot1Configs.from(mConfig);
+    //mConfiguration.Slot1.kS = 0.16;
     mLowShooter.getConfigurator().apply(mConfiguration);
     mUpShooter.getConfigurator().apply(mConfiguration);
   }
@@ -98,7 +98,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter/lowSetpoint", lowShooterSetpoint);
     SmartDashboard.putNumber("Shooter/upSetpoint", upShooterSetpoint);
     mUpShooter.setControl(velocityControl.withVelocity(upShooterSetpoint).withSlot(0));
-    mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint).withSlot(1));
+    mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint).withSlot(0));
   }
 
   @Override
