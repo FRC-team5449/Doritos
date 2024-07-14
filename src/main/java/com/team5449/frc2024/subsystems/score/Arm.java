@@ -22,9 +22,6 @@ import com.team5449.frc2024.Constants;
 import com.team5449.frc2024.Constants.Ports;
 import com.team5449.lib.util.Util;
 
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -37,76 +34,9 @@ public class Arm extends SubsystemBase {
   private StatusSignal<Double> armPosition;
   private double setPoint;
   private static final double ManualOffset = 0.708740234375-0.6083984375;
-  private static final Arm mArm = new Arm();
+  
 
-  private ArmSystemState mSystemState = ArmSystemState.IDLE;
-  private final ShuffleboardTab mTab = Shuffleboard.getTab("Arm");
-  private final GenericEntry mPos = mTab.add("ArmPosition", mSystemState.armPose).getEntry();
-  private final GenericEntry mStateName = mTab.add("ArmSystemState", mSystemState.toString()).getEntry();
-
-  //private static int ArmSystemState_LoadCount = 0;
-
-  public enum ArmSystemState{
-    IDLE(0.03),
-    SHOOTING(0.118),
-    OVERSHOOT(0.21),
-    AMP(0.38),
-    INTAKE(0.02),
-    OUTTAKE(0.07),
-    CHANGING(0.03),
-    AUTOSHOOT(0.118),
-    PRECLIMB(0.22),
-    CLIMB(0.085),
-    PRETRAP(0.22),
-    ARMDOWN(0.02),
-    TRAP(0.37);
-    
-    public double armPose;
-    public String PrintString;
-    
-    private ArmSystemState(double armPose){
-        this.armPose = armPose;
-        /*java.lang.reflect.Field[] fields = this.getClass().getDeclaredFields();
-        //TODO: unpredictable bug may caused by field's order doesn't match the initalized.
-        PrintString = fields[ArmSystemState_LoadCount].getName();
-        ArmSystemState_LoadCount++;*/
-        PrintString=this.name();
-	  }
-
-    @Override
-    public String toString()
-    {
-        return "ArmSystemState."+PrintString+"(armPose = "+armPose+")";
-    }
-  }
-
-  public ArmSystemState getArmState()
-  {
-    if(mArm.isArmAtSetpoint())
-    {
-      return mSystemState;
-    }else{
-      return ArmSystemState.CHANGING;
-    }
-  }
-
-  public void setPose(ArmSystemState newSystemState){
-    mSystemState = newSystemState;
-    //CConsole.stdout.log("Setted new SystemState", mSystemState);
-    mStateName.setString(mSystemState.toString());
-    OnArmPoseUpdate();
-  }
-  private void OnArmPoseUpdate()
-  {
-    mPos.setDouble(mSystemState.armPose);
-  }
-  public void setAutoShootPosition(double position){
-    setPose(ArmSystemState.AUTOSHOOT);
-    mSystemState.armPose = position;
-    OnArmPoseUpdate();
-  }
-
-  private Arm() {
+  public Arm() {
     mArmMaster = new TalonFX(Ports.kArmMasterId,Ports.kCANBusFDName);
     mArmSlave = new TalonFX(Ports.kArmSlaveId,Ports.kCANBusFDName);
     mArmCancoder = new CANcoder(12, Ports.kCANBusFDName);
@@ -148,10 +78,6 @@ public class Arm extends SubsystemBase {
     
   }
 
-  public static Arm getInstance(){
-    return mArm;
-  }
-
   public void setTargetOpenLoop(double percent){
     mArmMaster.setControl(new DutyCycleOut(percent));
   }
@@ -188,27 +114,5 @@ public class Arm extends SubsystemBase {
     mArmSlave.setControl(new Follower(Ports.kArmMasterId, true));
 
     SmartDashboard.putNumber("Arm/Position", armPosition.asSupplier().get()+ManualOffset);
-
-
-    
-
-
-  if(mSystemState == ArmSystemState.PRETRAP){
-    setArmClimbPosition(mSystemState.armPose);
-  }
-  else if(mSystemState == ArmSystemState.ARMDOWN){
-    setAutoArmDown(mSystemState.armPose);
-  }
-  else{
-    setArmPosition(mSystemState.armPose);
-  }
-
-  //SmartDashboard.putNumber("Arm Pose", mSystemState.armPose);
-  }
-
-  public void setShootArmPose(double pose){
-    ArmSystemState.SHOOTING.armPose = pose;
-    
-    OnArmPoseUpdate();
   }
 }

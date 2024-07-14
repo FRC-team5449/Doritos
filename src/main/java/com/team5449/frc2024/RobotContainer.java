@@ -28,12 +28,12 @@ import com.team5449.frc2024.commands.OrientToTargetCommand;
 import com.team5449.frc2024.commands.OuttakeCommand;
 import com.team5449.frc2024.commands.RotateCommand;
 import com.team5449.frc2024.commands.ShootCommand;
+import com.team5449.frc2024.commands.ArmPoseCommand.ArmSystemState;
 import com.team5449.frc2024.subsystems.CalcRotationWithUnitCircleData;
 import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
 import com.team5449.frc2024.subsystems.drive.GyroIOPigeon;
 import com.team5449.frc2024.subsystems.drive.SwerveModuleIOFalconPro;
 import com.team5449.frc2024.subsystems.score.Arm;
-import com.team5449.frc2024.subsystems.score.Arm.ArmSystemState;
 import com.team5449.frc2024.subsystems.score.Climber;
 import com.team5449.frc2024.subsystems.score.Intake;
 import com.team5449.frc2024.subsystems.score.Shooter;
@@ -116,7 +116,7 @@ public class RobotContainer {
       vision
     );
 
-    arm = Arm.getInstance();
+    arm = new Arm();
     climber=new Climber();
     armPoseCommand = new ArmPoseCommand(arm, vision);
     arm.setDefaultCommand(armPoseCommand);
