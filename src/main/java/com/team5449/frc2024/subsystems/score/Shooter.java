@@ -7,7 +7,6 @@ package com.team5449.frc2024.subsystems.score;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
@@ -29,6 +28,7 @@ public class Shooter extends SubsystemBase {
   private double upShooterSetpoint;
   private double lowShooterSetpoint;
   private static final Shooter mInstance = new Shooter();
+  private boolean bConsiderLowShooter = true;
 
   private Shooter(){
 
@@ -82,11 +82,12 @@ public class Shooter extends SubsystemBase {
     lowShooterSetpoint = 0;
     updateSetpoint();
     mLowShooter.set(0);
+    bConsiderLowShooter = false;
     //mLowShooter.setControl(new Follower(Ports.kShooterUpId, false));
   }
 
   public boolean isShooterAtSetpoint(){
-    return Util.epsilonEquals(upShooterSetpoint, mUpShooterVelocity.asSupplier().get(), 5) && Util.epsilonEquals(lowShooterSetpoint, mLowShooterVelocity.asSupplier().get(), 5);
+    return Util.epsilonEquals(upShooterSetpoint, mUpShooterVelocity.asSupplier().get(), 5) && (Util.epsilonEquals(lowShooterSetpoint, mLowShooterVelocity.asSupplier().get(), 5) || (!bConsiderLowShooter));
   }
 
   public void transit(double percent){
@@ -99,6 +100,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter/upSetpoint", upShooterSetpoint);
     mUpShooter.setControl(velocityControl.withVelocity(upShooterSetpoint).withSlot(0));
     mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint).withSlot(0));
+    bConsiderLowShooter = true;
   }
 
   @Override

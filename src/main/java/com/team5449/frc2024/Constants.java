@@ -185,7 +185,7 @@ public class Constants {
         public static final long offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
         public static final long ResetArmOffset = offsetArmUp | offsetArmDown;
         public static final long forceShoot = shoot | reload;
-        public static final long forceIntake = intake | scalestring1 | scalestring2;
+        public static final long forceIntake = intake | scalestring2;
 
     }
 

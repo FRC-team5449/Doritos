@@ -7,6 +7,7 @@ package com.team5449.frc2024;
 
 import org.littletonrobotics.junction.LoggedRobot;
 
+import com.team5449.frc2024.subsystems.score.Arm;
 //import com.team5449.lib.SaveLimelightPNG;
 import com.team5449.lib.util.ControllerUtil;
 
@@ -49,6 +50,7 @@ public class Robot extends LoggedRobot {
 
     SmartDashboard.putBoolean("Reload", m_robotContainer.conditionReload.getAsBoolean());
     SmartDashboard.putBoolean("OverShoot", m_robotContainer.conditionOverShoot.getAsBoolean());
+    SmartDashboard.putBoolean("Arm/AtSetPoint", Arm.getInstance().isArmAtSetpoint());
   }
 
   @Override

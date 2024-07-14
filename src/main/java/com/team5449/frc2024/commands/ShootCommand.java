@@ -6,6 +6,7 @@ package com.team5449.frc2024.commands;
 
 import java.util.function.BooleanSupplier;
 
+import com.team5449.frc2024.commands.ArmPoseCommand.ArmSystemState;
 import com.team5449.frc2024.subsystems.score.Shooter;
 
 import edu.wpi.first.util.function.BooleanConsumer;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class ShootCommand extends Command {
   private final Shooter mShooter;
+  private final ArmPoseCommand mArm;
   private final BooleanSupplier isArmSet;
   private final BooleanConsumer onShoot;
 
@@ -21,14 +23,16 @@ public class ShootCommand extends Command {
   private boolean isNoteOuted;
 
   private double shooterSetpoint;
-  public ShootCommand(Shooter shooter, BooleanSupplier isArmPositionSet, double setpoint, BooleanConsumer onShoot) {
+  public ShootCommand(Shooter shooter, ArmPoseCommand mArmPoseCommand, BooleanSupplier isArmPositionSet, double setpoint, BooleanConsumer onShoot) {
     mShooter = shooter;
     isArmSet = isArmPositionSet;
     shooterSetpoint = setpoint;
     this.onShoot = onShoot;
+    mArm = mArmPoseCommand;
+    addRequirements(mShooter);
   }
-  public ShootCommand(Shooter shooter, BooleanSupplier isArmPositionSet, double setpoint) {
-    this(shooter, isArmPositionSet, setpoint, (e)->{});
+  public ShootCommand(Shooter shooter, ArmPoseCommand mArmPoseCommand, BooleanSupplier isArmPositionSet, double setpoint) {
+    this(shooter, mArmPoseCommand, isArmPositionSet, setpoint, (e)->{});
   }
 
   // Called when the command is initially scheduled.
@@ -44,7 +48,9 @@ public class ShootCommand extends Command {
 
     mShooter.setShootRPM(shooterSetpoint);
 
-    SmartDashboard.putBoolean("isShooterAtSetpoint", mShooter.isShooterAtSetpoint());
+    SmartDashboard.putBoolean("Shooter/isAtSetpoint", mShooter.isShooterAtSetpoint());
+    SmartDashboard.putBoolean("Shooter/isTransitRunning", isTransitRunning);
+    SmartDashboard.putBoolean("Shooter/isNoteOuted", isNoteOuted);
 
     if(!mShooter.isShooterAtSetpoint() && isTransitRunning)
     {
@@ -69,12 +75,15 @@ public class ShootCommand extends Command {
   public void end(boolean interrupted) {
     mShooter.setOpenLoop(0, false);
     mShooter.transit(0);
+    if(isNoteOuted){
+      mArm.setPose(ArmSystemState.INTAKE);
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return isNoteOuted; // TODO: test if works
   }
   public boolean isNoteShooted()
   {

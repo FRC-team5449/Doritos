@@ -43,12 +43,13 @@ static{
     mSystemState = newSystemState;
     //CConsole.stdout.log("Setted new SystemState", mSystemState);
     mStateName.setString(mSystemState.toString());
-    //OnArmPoseUpdate();
+    OnArmPoseUpdate();
   }
 
   private void OnArmPoseUpdate()
   {
-    mPos.setDouble(mSystemState.armPose);
+    // mPos.setDouble(mSystemState.armPose);
+    execute();
   }
   public void setAutoShootPosition(double position){
     setPose(ArmSystemState.AUTOSHOOT);
@@ -80,7 +81,7 @@ static{
         //CConsole.stdout.log("Setted armpose", mSystemState, "= shootingArmPose(", botToTarget, ") =", mSystemState.armPose);
       }
       mSystemState.armPose += offset;
-      OnArmPoseUpdate();
+      // OnArmPoseUpdate();
 
     // if(mPos.getDouble(mSystemState.armPose)!=mSystemState.armPose)
     // {

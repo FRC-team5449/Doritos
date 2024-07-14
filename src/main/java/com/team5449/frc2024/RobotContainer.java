@@ -90,7 +90,7 @@ public class RobotContainer {
   //private final edu.wpi.first.wpilibj.Joystick mDriverJoystick = new edu.wpi.first.wpilibj.Joystick(0);
   //public final CommandXboxController mOperatorController = new CommandXboxController(1);
 
-  private final DigitalInput noteStored = new DigitalInput(0);
+  public static final DigitalInput noteStored = new DigitalInput(0);
 
   private final SendableChooser<Command> mAutoChooser;
 
@@ -127,7 +127,7 @@ public class RobotContainer {
       vision
     );
 
-    arm = new Arm();
+    arm = Arm.getInstance();
     climber=new Climber();
     armPoseCommand = new ArmPoseCommand(arm, vision);
     arm.setDefaultCommand(armPoseCommand);
@@ -174,18 +174,30 @@ public class RobotContainer {
     
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
-    new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 70));//.whileTrue(mAutoAlignCommand);//.o
+    new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 70));//.whileTrue(mAutoAlignCommand);//.o
 
-    new Trigger(conditionIntake).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
-    new Trigger(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE && conditionIntake.getAsBoolean()==true).whileTrue(new IntakeCommand(shooter, intake));
+    // BooleanSupplier trgRestore=() -> {return conditionIntake.getAsBoolean() && armPoseCommand.getArmState() != ArmSystemState.INTAKE;};
+    // // Trigger trgRestoreTimeout=new Trigger(trgRestore).debounce(0.2);
+    // BooleanSupplier bRestore = () -> {
+    //   boolean a=trgRestore.getAsBoolean();
+    //   // boolean b=trgRestoreTimeout.getAsBoolean();
+    //   boolean v = a/* && !b*/;
+    //   SmartDashboard.putBoolean("trgRestore", a);
+    //   // SmartDashboard.putBoolean("trgRestoreTimeout", b);
+    //   SmartDashboard.putBoolean("bRestore", v);
+    //   return v;
+    // };
+    new Trigger(/*bRestore*/conditionIntake).and(() -> armPoseCommand.getArmState() != ArmSystemState.INTAKE).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
+    new Trigger(conditionIntake).and(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE).toggleOnTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
+    // new Trigger(conditionIntake).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
 
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceIntake)).whileTrue(new IntakeCommand(shooter, intake));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceIntake)).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
-    new Trigger(conditionOverShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 50));
+    new Trigger(conditionOverShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 50));
 
-    new Trigger(conditionGoAMP).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.AMP))).whileTrue(new AmpCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AMP,-30));
+    new Trigger(conditionGoAMP).whileTrue(new AmpCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AMP, -30, false));
 
     new Trigger(() -> mOperatorController.getLeftTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.PRECLIMB)));
     new Trigger(() -> mOperatorController.getRightTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.CLIMB)));
@@ -196,7 +208,7 @@ public class RobotContainer {
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.scalestring2)).whileTrue(new ClimbCommand(climber, -0.7));
     new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
-    new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, ()->true, -60));
+    new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, armPoseCommand, ()->true, -60, true));
     new Trigger(() -> mOperatorController.getPOV() == 270).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.PRETRAP)).alongWith(
       new InstantCommand(()->shooter.setOpenLoop(-0.2, false))))
       .onFalse(new InstantCommand(()->shooter.setOpenLoop(0, false)));
@@ -272,10 +284,11 @@ public class RobotContainer {
     }*/
   };
   private void pathPlannerRegisterCommand(){
-    NamedCommands.registerCommand("Intake", new WaitCommand(new IntakeCommand(shooter, intake), 10, noteStored::get).alongWith(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE))));
-    NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
-    NamedCommands.registerCommand("MiddleShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.22))));
-    NamedCommands.registerCommand("FarShoot", new WaitCommand(new ShootCommand(shooter, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 80, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.196))));
+    // NamedCommands.registerCommand("Intake", new WaitCommand(new IntakeCommand(shooter, intake), 10, noteStored::get).alongWith(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE))));
+    NamedCommands.registerCommand("Intake", new IntakeCommand(shooter, intake, armPoseCommand, false));
+    NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
+    NamedCommands.registerCommand("MiddleShoot", new WaitCommand(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.22))));
+    NamedCommands.registerCommand("FarShoot", new WaitCommand(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 80, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.196))));
     NamedCommands.registerCommand("Arm Down", new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.ARMDOWN)));
   }
 
