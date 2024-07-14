@@ -20,10 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ArmPoseCommand extends Command{
 private final Arm mArm;
 private final VisionSubsystem mVision;
-private ArmSystemState mSystemState = ArmSystemState.IDLE;
 private final ShuffleboardTab mTab = Shuffleboard.getTab("Arm");
-private final GenericEntry mPos = mTab.add("ArmPosition", mSystemState.armPose).getEntry();
-private final GenericEntry mStateName = mTab.add("ArmSystemState", mSystemState.toString()).getEntry();
+private final GenericEntry mDist = mTab.add("Robot relative dist", -1).getEntry();
 
 private static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> mShooterRPMTreeMap = new InterpolatingTreeMap<>();
 
@@ -44,21 +42,12 @@ static{
     addRequirements(mArm, mVision);
   }
 
-  public void setPose(ArmSystemState newSystemState){
-    mSystemState = newSystemState;
-    //CConsole.stdout.log("Setted new SystemState", mSystemState);
-    mStateName.setString(mSystemState.toString());
-    //OnArmPoseUpdate();
+  public void setPose(Arm.ArmSystemState newSystemState){
+    mArm.setPose(newSystemState);
   }
 
-  private void OnArmPoseUpdate()
-  {
-    mPos.setDouble(mSystemState.armPose);
-  }
   public void setAutoShootPosition(double position){
-    setPose(ArmSystemState.AUTOSHOOT);
-    mSystemState.armPose = position;
-    //OnArmPoseUpdate();
+    mArm.setAutoShootPosition(position);
   }
 
   // Called when the command is initially scheduled.
@@ -71,37 +60,28 @@ static{
     double botToTarget = mVision.getStageDistance(0);
     SmartDashboard.putNumber("Dist", botToTarget);
 
-    if(mSystemState == ArmSystemState.SHOOTING){
+    if(mArm.getArmState() == Arm.ArmSystemState.SHOOTING){
         
-        //botToTarget = -2;
-      if(botToTarget < 0){
-        mSystemState.armPose = 0.148;
-      }
-      else{
-        //double armPose = Units.radiansToRotations(Math.atan((com.team5449.frc2024.Constants.armToSpeakerVerticalMeter) / Math.abs(botToTarget)));
-        //mSystemState.armPose = armPose + 0.11;
-        mSystemState.armPose = shootingArmPose(botToTarget);
-        //CConsole.stdout.log("Setted armpose", mSystemState, "= shootingArmPose(", botToTarget, ") =", mSystemState.armPose);
-      }
-      mSystemState.armPose += offset;
-      //OnArmPoseUpdate();
-
-    // if(mPos.getDouble(mSystemState.armPose)!=mSystemState.armPose)
-    // {
-    //   mSystemState.armPose = mPos.getDouble(0);
-    // }
-    }
-
-
-    if(mSystemState == ArmSystemState.PRETRAP){
-      mArm.setArmClimbPosition(mSystemState.armPose);
-    }
-    else if(mSystemState == ArmSystemState.ARMDOWN){
-      mArm.setAutoArmDown(mSystemState.armPose);
+      //botToTarget = -2;
+    if(botToTarget < 0){
+      mArm.setShootArmPose(0.148+offset);// mSystemState.armPose = 0.148;
     }
     else{
-      mArm.setArmPosition(mSystemState.armPose);
+      //double armPose = Units.radiansToRotations(Math.atan((com.team5449.frc2024.Constants.armToSpeakerVerticalMeter) / Math.abs(botToTarget)));
+      //mSystemState.armPose = armPose + 0.11;
+      //mSystemState.armPose = shootingArmPose(botToTarget);
+      mArm.setShootArmPose(shootingArmPose(botToTarget)+offset);
+      //CConsole.stdout.log("Setted armpose", mSystemState, "= shootingArmPose(", botToTarget, ") =", mSystemState.armPose);
     }
+    //mSystemState.armPose += offset;
+
+  // if(mPos.getDouble(mSystemState.armPose)!=mSystemState.armPose)
+  // {
+  //   mSystemState.armPose = mPos.getDouble(0);
+  // }
+  }
+    
+
 
     //SmartDashboard.putNumber("Arm Pose", mSystemState.armPose);
   }
@@ -116,19 +96,14 @@ static{
     return false;
   }
   
-  public ArmSystemState getArmState()
+  public Arm.ArmSystemState getArmState()
   {
-    if(mArm.isArmAtSetpoint())
-    {
-      return mSystemState;
-    }else{
-      return ArmSystemState.CHANGING;
-    }
+    return mArm.getArmState();
   }
 
   public void offsetBy(double offset)
   {
-    if(mSystemState == ArmSystemState.SHOOTING)
+    if(mArm.getArmState() == Arm.ArmSystemState.SHOOTING)
     {
       this.offset += offset;
       System.out.println("Offset by "+offset+" (now = "+this.offset+")");
@@ -139,40 +114,6 @@ static{
   }
   public void resetOffset(){
     setOffset(0);
-  }
-
-  private static int ArmSystemState_LoadCount = 0;
-
-  public enum ArmSystemState{
-    IDLE(0.03),
-    SHOOTING(0.118),
-    AMP(0.45),
-    INTAKE(0.02),
-    OUTTAKE(0.07),
-    CHANGING(0.03),
-    AUTOSHOOT(0.118),
-    PRECLIMB(0.22),
-    CLIMB(0.085),
-    PRETRAP(0.22),
-    ARMDOWN(0.02),
-    TRAP(0.37);
-    
-    public double armPose;
-    public String PrintString;
-    
-    private ArmSystemState(double armPose){
-        this.armPose = armPose;
-        java.lang.reflect.Field[] fields = this.getClass().getDeclaredFields();
-        //TODO: unpredictable bug may caused by field's order doesn't match the initalized.
-        PrintString = fields[ArmSystemState_LoadCount].getName();
-        ArmSystemState_LoadCount++;
-	  }
-
-    @Override
-    public String toString()
-    {
-        return "ArmSystemState."+PrintString+"(armPose = "+armPose+")";
-    }
   }
 
   private double shootingArmPose(double botToSpeakerDistanceMeter)
