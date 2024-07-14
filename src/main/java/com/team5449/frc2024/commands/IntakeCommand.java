@@ -37,7 +37,6 @@ public class IntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(mArm.getArmState());
     if(isRaw || mArm.getArmState() == ArmPoseCommand.ArmSystemState.INTAKE){
       mIntake.setIntakeSpeed(1);
       mShooter.setOpenLoop(-0.3, true);

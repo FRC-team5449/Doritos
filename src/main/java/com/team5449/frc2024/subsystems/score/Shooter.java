@@ -86,7 +86,17 @@ public class Shooter extends SubsystemBase {
     //mLowShooter.setControl(new Follower(Ports.kShooterUpId, false));
   }
 
+  public double getUpSpeed(){
+    return mUpShooterVelocity.asSupplier().get();
+  }
+  public double getDownSpeed(){
+    return mLowShooterVelocity.asSupplier().get();
+  }
+
   public boolean isShooterAtSetpoint(){
+    System.out.print(getUpSpeed()/upShooterSetpoint);
+    System.out.print(":");
+    System.out.println(getDownSpeed()/lowShooterSetpoint);
     return Util.epsilonEquals(upShooterSetpoint, mUpShooterVelocity.asSupplier().get(), 5) && (Util.epsilonEquals(lowShooterSetpoint, mLowShooterVelocity.asSupplier().get(), 5) || (!bConsiderLowShooter));
   }
 

@@ -33,7 +33,7 @@ public class Arm extends SubsystemBase {
   //private DynamicMotionMagicDutyCycle dynamicMotion = new DynamicMotionMagicDutyCycle(0, 0, 0, 0, isArmAtSetpoint(), 0, 0, isArmAtSetpoint(), isArmAtSetpoint(), isArmAtSetpoint())
   private StatusSignal<Double> armPosition;
   private double setPoint;
-  private static final double ManualOffset = 0.708740234375-0.6083984375;
+  public static final double ManualOffset = 0.708740234375-0.6083984375;
 
   private static final Arm mInstance = new Arm();
   

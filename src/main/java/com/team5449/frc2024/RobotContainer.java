@@ -28,6 +28,7 @@ import com.team5449.frc2024.commands.OrientToTargetCommand;
 import com.team5449.frc2024.commands.OuttakeCommand;
 import com.team5449.frc2024.commands.RotateCommand;
 import com.team5449.frc2024.commands.ShootCommand;
+import com.team5449.frc2024.commands.ShootWithTrajectory;
 import com.team5449.frc2024.commands.ArmPoseCommand.ArmSystemState;
 import com.team5449.frc2024.subsystems.CalcRotationWithUnitCircleData;
 import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
@@ -49,6 +50,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -175,6 +177,7 @@ public class RobotContainer {
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
     new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 70));//.whileTrue(mAutoAlignCommand);//.o
+    // new Trigger(conditionShoot).whileTrue(new ShootWithTrajectory(shooter, armPoseCommand, new Translation2d(20, 0)));
 
     // BooleanSupplier trgRestore=() -> {return conditionIntake.getAsBoolean() && armPoseCommand.getArmState() != ArmSystemState.INTAKE;};
     // // Trigger trgRestoreTimeout=new Trigger(trgRestore).debounce(0.2);
