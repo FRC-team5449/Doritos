@@ -90,10 +90,10 @@ public class Constants {
     public static final double steerPositionCoefficient = 2.0 * Math.PI * steerGearRatio;
 
     //CANCoder Positive Direction Offset
-    public static final double kFrontLeftEncoderOffset = 0.9765625;
-    public static final double kFrontRightEncoderOffset = 0.576171875;
-    public static final double kBackLeftEncoderOffset = 0.34130859375;
-    public static final double kBackRightEncoderOffset = 0.924560546875;
+    public static final double kFrontLeftEncoderOffset = 0.011230;
+    public static final double kFrontRightEncoderOffset = 0.838623;
+    public static final double kBackLeftEncoderOffset = 0.026611;
+    public static final double kBackRightEncoderOffset = 0.580566;
 
     //Vision Constants
     public static final double aprilTagToStageCenterMeter = 0.505;
@@ -116,7 +116,7 @@ public class Constants {
 
 
     public static class Ports {
-        public static final String kCANBusFDName = isOfficialbot ? "canivore" : "rio";
+        public static final String kCANBusFDName = "rio";//isOfficialbot ? "canivore" : "rio";
         public static final String kCANBusDefault = "rio";
         public static final String visionName = "limelight";
         
@@ -138,20 +138,21 @@ public class Constants {
         public static final int kBackRightAziId = 22;
         public static final int kBackRightEncoderId = 32;
 
-        public static final int kShooterLeftId = 41;
-        public static final int kShooterRightId = 40;
+        // public static final int kShooterLeftId = 41;
+        // public static final int kShooterRightId = 40;
 
-        public static final int kShooterUpId = 40;
-        public static final int kShooterLowId = 41;
+        public static final int kShooterUpId = 60;
+        public static final int kShooterLowId = 61;
 
-        public static final int kIntake1Id = 6;
+        public static final int kIntake1Id = 50;
+        public static final int kIntake2Id = 51;
 
-        public static final int kTransId = 8;
+        public static final int kTransId = 51;
 
         public static final int kArmMasterId = 13;
         public static final int kArmSlaveId = 14;
 
-        public static final int kClimbLftId = 7;
+        // public static final int kClimbLftId = 7;
         
 
     }

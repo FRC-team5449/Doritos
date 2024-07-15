@@ -32,7 +32,7 @@ import com.team5449.frc2024.commands.ShootWithTrajectory;
 import com.team5449.frc2024.commands.ArmPoseCommand.ArmSystemState;
 import com.team5449.frc2024.subsystems.CalcRotationWithUnitCircleData;
 import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
-import com.team5449.frc2024.subsystems.drive.GyroIOPigeon;
+import com.team5449.frc2024.subsystems.drive.GyroIONone;
 import com.team5449.frc2024.subsystems.drive.SwerveModuleIOFalconPro;
 import com.team5449.frc2024.subsystems.score.Arm;
 import com.team5449.frc2024.subsystems.score.Climber;
@@ -103,7 +103,7 @@ public class RobotContainer {
 
   private final RotateCommand mRotateCommand;
 
-  private final GyroIOPigeon mPigeon;
+  private final GyroIONone mPigeon;
 
   public BooleanSupplier conditionShoot = ControllerUtil.toCond(Constants.ControlConds.shoot);
   public BooleanSupplier conditionIntake = ControllerUtil.toCond(Constants.ControlConds.intake);
@@ -119,13 +119,13 @@ public class RobotContainer {
       new VisionIOLimelight("limelight", new Transform3d())
     });
 
-    mPigeon = new GyroIOPigeon();
+    mPigeon = new GyroIONone();
     drivetrainSubsystem = new DrivetrainSubsystem(
       mPigeon,
       new SwerveModuleIOFalconPro(Ports.kFrontLeftMotorId, Ports.kFrontLeftAziId, Ports.kFrontLeftEncoderId, Ports.kCANBusFDName, Constants.kFrontLeftEncoderOffset, false),
       new SwerveModuleIOFalconPro(Ports.kFrontRightMotorId, Ports.kFrontRightAziId, Ports.kFrontRightEncoderId, Ports.kCANBusFDName, Constants.kFrontRightEncoderOffset, false),
-      new SwerveModuleIOFalconPro(Ports.kBackLeftMotorId, Ports.kBackLeftAziId, Ports.kBackLeftEncoderId, Ports.kCANBusFDName, Constants.kBackLeftEncoderOffset, true),
-      new SwerveModuleIOFalconPro(Ports.kBackRightMotorId, Ports.kBackRightAziId, Ports.kBackRightEncoderId, Ports.kCANBusFDName, Constants.kBackRightEncoderOffset, true),
+      new SwerveModuleIOFalconPro(Ports.kBackLeftMotorId, Ports.kBackLeftAziId, Ports.kBackLeftEncoderId, Ports.kCANBusFDName, Constants.kBackLeftEncoderOffset, false),
+      new SwerveModuleIOFalconPro(Ports.kBackRightMotorId, Ports.kBackRightAziId, Ports.kBackRightEncoderId, Ports.kCANBusFDName, Constants.kBackRightEncoderOffset, false),
       vision
     );
 

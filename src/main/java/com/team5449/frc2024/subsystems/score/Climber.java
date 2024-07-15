@@ -4,19 +4,19 @@
 
 package com.team5449.frc2024.subsystems.score;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.team5449.frc2024.Constants.Ports;
+// import com.ctre.phoenix6.hardware.TalonFX;
+// import com.ctre.phoenix6.signals.NeutralModeValue;
+// import com.team5449.frc2024.Constants.Ports;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
-  private final TalonFX mClimbLft;
+  // private final TalonFX mClimbLft;
   public Climber() {
-    mClimbLft = new TalonFX(Ports.kClimbLftId, Ports.kCANBusFDName);
-    mClimbLft.setNeutralMode(NeutralModeValue.Brake);
+    // mClimbLft = new TalonFX(Ports.kClimbLftId, Ports.kCANBusFDName);
+    // mClimbLft.setNeutralMode(NeutralModeValue.Brake);
   }
   public void setClimbOpenloop(double speed){
-    mClimbLft.set(speed);
+    // mClimbLft.set(speed);
   }
   @Override
   public void periodic() {

@@ -4,29 +4,32 @@
 
 package com.team5449.frc2024.subsystems.score;
 
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.team5449.frc2024.Constants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax mIntake1;
-  private static final Intake mInstance = new Intake();
-  public static Intake getInstance(){
-    return mInstance;
-  }
-  /** Creates a new Intake. */
-  private Intake() {
-    mIntake1 = new CANSparkMax(6, MotorType.kBrushless);
-    mIntake1.setInverted(true);
-  }
+    private final TalonFX upIntake;
+    private final TalonFX downIntake;
+    private static final Intake mInstance = new Intake();
+    public static Intake getInstance(){
+        return mInstance;
+    }
+    /** Creates a new Intake. */
+    private Intake() {
+        upIntake=new TalonFX(Constants.Ports.kIntake1Id);
+        downIntake=new TalonFX(Constants.Ports.kIntake2Id);
+        upIntake.setInverted(false);
+        downIntake.setInverted(false);
+    }
 
-  public void setIntakeSpeed(double percent){
-    mIntake1.set(percent);
-  }
+    public void setIntakeSpeed(double percent){
+        upIntake.set(percent);
+        downIntake.set(percent);
+    }
 
-  @Override
-  public void periodic() {
-  }
+    @Override
+    public void periodic() {
+    }
 }

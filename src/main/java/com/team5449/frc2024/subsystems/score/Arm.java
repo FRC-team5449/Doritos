@@ -25,10 +25,12 @@ import com.team5449.lib.util.Util;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
+// TODO: subsitute shooter-test/Arm.java to here
 public class Arm extends SubsystemBase {
-  private final TalonFX mArmMaster;
-  private final TalonFX mArmSlave;
-  private final CANcoder mArmCancoder;
+  // private final TalonFX mArmMaster;
+  // private final TalonFX mArmSlave;
+  // private final CANcoder mArmCancoder;
   private MotionMagicDutyCycle motionMagicDutyCycle = new MotionMagicDutyCycle(0, true, 0, 0, false, false, false);
   //private DynamicMotionMagicDutyCycle dynamicMotion = new DynamicMotionMagicDutyCycle(0, 0, 0, 0, isArmAtSetpoint(), 0, 0, isArmAtSetpoint(), isArmAtSetpoint(), isArmAtSetpoint())
   private StatusSignal<Double> armPosition;
@@ -39,15 +41,15 @@ public class Arm extends SubsystemBase {
   
 
   private Arm() {
-    mArmMaster = new TalonFX(Ports.kArmMasterId,Ports.kCANBusFDName);
-    mArmSlave = new TalonFX(Ports.kArmSlaveId,Ports.kCANBusFDName);
-    mArmCancoder = new CANcoder(12, Ports.kCANBusFDName);
-    mArmMaster.setNeutralMode(NeutralModeValue.Brake);
-    mArmSlave.setNeutralMode(NeutralModeValue.Brake);
-    armPosition = mArmMaster.getPosition();
-    armPosition.setUpdateFrequency(250);
-    setArmPosition(0.03);
-    configureTalons();
+    // mArmMaster = new TalonFX(Ports.kArmMasterId,Ports.kCANBusFDName);
+    // mArmSlave = new TalonFX(Ports.kArmSlaveId,Ports.kCANBusFDName);
+    // mArmCancoder = new CANcoder(12, Ports.kCANBusFDName);
+    // mArmMaster.setNeutralMode(NeutralModeValue.Brake);
+    // mArmSlave.setNeutralMode(NeutralModeValue.Brake);
+    // armPosition = mArmMaster.getPosition();
+    // armPosition.setUpdateFrequency(250);
+    // setArmPosition(0.03);
+    // configureTalons();
   }
 
   private void configureTalons(){
@@ -75,8 +77,8 @@ public class Arm extends SubsystemBase {
     mEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
 
-    mArmMaster.getConfigurator().apply(mConfig);
-    mArmCancoder.getConfigurator().apply(mEncoderConfig);
+    // mArmMaster.getConfigurator().apply(mConfig);
+    // mArmCancoder.getConfigurator().apply(mEncoderConfig);
     
   }
 
@@ -85,7 +87,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setTargetOpenLoop(double percent){
-    mArmMaster.setControl(new DutyCycleOut(percent));
+    // mArmMaster.setControl(new DutyCycleOut(percent));
   }
 
   private void setArmPositionCommon(double position){
@@ -95,30 +97,31 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmPosition(double position){
-    setArmPositionCommon(position);
-    motionMagicDutyCycle = motionMagicDutyCycle.withSlot(0);
-    SmartDashboard.putNumber("Arm/Setpoint(Rot)", setPoint+ManualOffset);
+    // setArmPositionCommon(position);
+    // motionMagicDutyCycle = motionMagicDutyCycle.withSlot(0);
+    // SmartDashboard.putNumber("Arm/Setpoint(Rot)", setPoint+ManualOffset);
   }
 
   public boolean isArmAtSetpoint(){
-    return Util.epsilonEquals(setPoint, armPosition.asSupplier().get(), 0.01);
+    return true;
+    // return Util.epsilonEquals(setPoint, armPosition.asSupplier().get(), 0.01);
   }
 
   public void setArmClimbPosition(double position){
-    setArmPositionCommon(position);
-    motionMagicDutyCycle = motionMagicDutyCycle.withSlot(1);
+    // setArmPositionCommon(position);
+    // motionMagicDutyCycle = motionMagicDutyCycle.withSlot(1);
   }
 
   public void setAutoArmDown(double position){
-    setArmPositionCommon(position);
-    motionMagicDutyCycle = motionMagicDutyCycle.withSlot(2);
+    // setArmPositionCommon(position);
+    // motionMagicDutyCycle = motionMagicDutyCycle.withSlot(2);
   }
 
   @Override
   public void periodic() {
-    mArmMaster.setControl(motionMagicDutyCycle.withPosition(setPoint));
-    mArmSlave.setControl(new Follower(Ports.kArmMasterId, true));
+    // mArmMaster.setControl(motionMagicDutyCycle.withPosition(setPoint));
+    // mArmSlave.setControl(new Follower(Ports.kArmMasterId, true));
 
-    SmartDashboard.putNumber("Arm/Position", armPosition.asSupplier().get()+ManualOffset);
+    // SmartDashboard.putNumber("Arm/Position", armPosition.asSupplier().get()+ManualOffset);
   }
 }
