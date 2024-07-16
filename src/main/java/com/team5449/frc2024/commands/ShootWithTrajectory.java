@@ -4,6 +4,7 @@ import com.team5449.frc2024.commands.ArmPoseCommand.ArmSystemState;
 import com.team5449.frc2024.subsystems.score.Arm;
 import com.team5449.frc2024.subsystems.score.Shooter;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -12,6 +13,7 @@ public class ShootWithTrajectory extends Command {
   private final ArmPoseCommand mArm;
   private final Translation2d target;
   private double velocity;
+  private Rotation2d theta;
   private static final double vRatio = 10/Math.PI*0.75;
   /** Creates a new ShootWithTrajectory. */
   public ShootWithTrajectory(Shooter shooter, ArmPoseCommand mArmPoseCommand, Translation2d targetPt) {
@@ -24,9 +26,24 @@ public class ShootWithTrajectory extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    double vx,b;
+    theta = target.getAngle().rotateBy(Rotation2d.fromDegrees(90)).div(2);
+    System.out.print("theta=");
+    System.out.print(theta);
+    System.out.print(";b=");
     mArm.setPose(ArmSystemState.SHOOTING);
-    ArmSystemState.SHOOTING.armPose = Arm.ManualOffset + 1/8;
-    velocity = Math.sqrt(9.8 * target.getX()); // m/s
+    ArmSystemState.SHOOTING.armPose = Arm.ManualOffset + theta.getRotations();
+    b = theta.getTan();
+    System.out.print(b);
+    System.out.print(";targetAngle=");
+    System.out.print(target.getAngle());
+    vx = Math.sqrt(target.getX()*(-9.8*0.5) / (target.getAngle().getTan() - b));
+    velocity = vx / theta.getCos();
+    System.out.print(";vx=");
+    System.out.print(vx);
+    System.out.print(";v=");
+    System.out.println(velocity);
+    //velocity = Math.sqrt(9.8 * target.getX()); // m/s
     mShooter.setShootRPM(velocity*vRatio/0.6); // 胶轮直径： 100mm，齿轮比24->18(3:4)
   }
 

@@ -35,10 +35,7 @@ public class Arm extends SubsystemBase {
   private double setPoint;
   public static final double ManualOffset = 0.708740234375-0.6083984375;
 
-  private static final Arm mInstance = new Arm();
-  
-
-  private Arm() {
+  public Arm() {
     mArmMaster = new TalonFX(Ports.kArmMasterId,Ports.kCANBusFDName);
     mArmSlave = new TalonFX(Ports.kArmSlaveId,Ports.kCANBusFDName);
     mArmCancoder = new CANcoder(12, Ports.kCANBusFDName);
@@ -78,10 +75,6 @@ public class Arm extends SubsystemBase {
     mArmMaster.getConfigurator().apply(mConfig);
     mArmCancoder.getConfigurator().apply(mEncoderConfig);
     
-  }
-
-  public static Arm getInstance(){
-    return mInstance;
   }
 
   public void setTargetOpenLoop(double percent){

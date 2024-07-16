@@ -129,7 +129,7 @@ public class RobotContainer {
       vision
     );
 
-    arm = Arm.getInstance();
+    arm = new Arm();
     climber=new Climber();
     armPoseCommand = new ArmPoseCommand(arm, vision);
     arm.setDefaultCommand(armPoseCommand);
@@ -176,8 +176,8 @@ public class RobotContainer {
     
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
-    new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 70));//.whileTrue(mAutoAlignCommand);//.o
-    // new Trigger(conditionShoot).whileTrue(new ShootWithTrajectory(shooter, armPoseCommand, new Translation2d(20, 0)));
+    // new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 70));//.whileTrue(mAutoAlignCommand);//.o
+    new Trigger(conditionShoot).whileTrue(new ShootWithTrajectory(shooter, armPoseCommand, new Translation2d(6, 0.49)));
 
     // BooleanSupplier trgRestore=() -> {return conditionIntake.getAsBoolean() && armPoseCommand.getArmState() != ArmSystemState.INTAKE;};
     // // Trigger trgRestoreTimeout=new Trigger(trgRestore).debounce(0.2);
