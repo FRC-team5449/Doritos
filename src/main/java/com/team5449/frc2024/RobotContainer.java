@@ -39,6 +39,7 @@ import com.team5449.frc2024.subsystems.score.Climber;
 import com.team5449.frc2024.subsystems.score.Intake;
 import com.team5449.frc2024.subsystems.score.Shooter;
 import com.team5449.frc2024.subsystems.vision.Led;
+import com.team5449.frc2024.subsystems.vision.LimeLight;
 import com.team5449.frc2024.subsystems.vision.Led.Color;
 import com.team5449.frc2024.subsystems.vision.VisionIO;
 import com.team5449.frc2024.subsystems.vision.VisionIOLimelight;
@@ -49,8 +50,11 @@ import com.team5449.lib.util.TimeDelayedBoolean;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -75,6 +79,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Arm arm;
   private final Climber climber;
+  private final LimeLight mLimelight;
 
   private final ArmPoseCommand armPoseCommand;
 
@@ -155,6 +160,8 @@ public class RobotContainer {
     mOrientToTargetCommand = new OrientToTargetCommand(drivetrainSubsystem, vision);
     mAutoAlignCommand = new AutoAlign(drivetrainSubsystem, vision);
 
+    mLimelight = new LimeLight(new Pose3d(new Translation3d(0.37425, -0.508, /*-0.079*/-0.22),new Rotation3d(Math.toRadians(15), 0, 0)));
+
     pathPlannerRegisterCommand();
 
     mAutoChooser = AutoBuilder.buildAutoChooser();
@@ -176,8 +183,11 @@ public class RobotContainer {
     
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
-    // new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 70));//.whileTrue(mAutoAlignCommand);//.o
-    new Trigger(conditionShoot).whileTrue(new ShootWithTrajectory(shooter, armPoseCommand, new Translation2d(6, 0.49)));
+    new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 50));//.whileTrue(mAutoAlignCommand);//.o
+    // new Trigger(conditionShoot).whileTrue(new ShootWithTrajectory(shooter, armPoseCommand, () -> {
+    //   Pose3d mPose3d = mLimelight.getPose3DBot();/*new Translation2d(1.43+5, -0.3)*/
+    //   return new Translation2d(mPose3d.getZ()+1.43, /*-mPose3d.getY()-0.3*/2.6);
+    // }));
 
     // BooleanSupplier trgRestore=() -> {return conditionIntake.getAsBoolean() && armPoseCommand.getArmState() != ArmSystemState.INTAKE;};
     // // Trigger trgRestoreTimeout=new Trigger(trgRestore).debounce(0.2);
