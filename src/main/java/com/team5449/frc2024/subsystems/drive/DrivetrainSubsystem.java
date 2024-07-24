@@ -46,6 +46,8 @@ public class DrivetrainSubsystem extends SubsystemBase{
 
     private final double maxAngularVelocityRadPerSec;
 
+    public boolean isSlowMode = false;
+
     private final int odometryDetectorIndex = 0;
 
     private final GyroIO gyroIO;
@@ -456,11 +458,11 @@ public class DrivetrainSubsystem extends SubsystemBase{
     }
 
     public double getMaxVelocityMetersPerSec() {
-        return maxVelocityMetersPerSec;
+        return isSlowMode?maxVelocityMetersPerSec*0.5:maxVelocityMetersPerSec;
     }
 
     public double getMaxAngularVelocityRadPerSec() {
-        return maxAngularVelocityRadPerSec;
+        return isSlowMode?maxAngularVelocityRadPerSec*0.5:maxAngularVelocityRadPerSec;
     }
 
 

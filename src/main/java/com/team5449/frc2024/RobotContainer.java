@@ -148,6 +148,7 @@ public class RobotContainer {
 
       drivetrainSubsystem.setPathAuto();
 
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.ToggleSlowMode)).onTrue(new InstantCommand(() -> drivetrainSubsystem.isSlowMode=!drivetrainSubsystem.isSlowMode));
 
     shooter = Shooter.getInstance();
     intake = Intake.getInstance();
