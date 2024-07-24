@@ -458,11 +458,11 @@ public class DrivetrainSubsystem extends SubsystemBase{
     }
 
     public double getMaxVelocityMetersPerSec() {
-        return isSlowMode?maxVelocityMetersPerSec*0.5:maxVelocityMetersPerSec;
+        return isSlowMode?maxVelocityMetersPerSec*0.1:maxVelocityMetersPerSec;
     }
 
     public double getMaxAngularVelocityRadPerSec() {
-        return isSlowMode?maxAngularVelocityRadPerSec*0.5:maxAngularVelocityRadPerSec;
+        return isSlowMode?maxAngularVelocityRadPerSec*0.1:maxAngularVelocityRadPerSec;
     }
 
 
