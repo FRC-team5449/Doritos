@@ -90,10 +90,10 @@ public class Constants {
     public static final double steerPositionCoefficient = 2.0 * Math.PI * steerGearRatio;
 
     //CANCoder Positive Direction Offset
-    public static final double kFrontLeftEncoderOffset = 0.011230;
-    public static final double kFrontRightEncoderOffset = 0.838623;
-    public static final double kBackLeftEncoderOffset = 0.026611;
-    public static final double kBackRightEncoderOffset = 0.580566;
+    public static final double kFrontLeftEncoderOffset = 0.496592;
+    public static final double kFrontRightEncoderOffset = -0.835693;
+    public static final double kBackLeftEncoderOffset = -0.528564;
+    public static final double kBackRightEncoderOffset = -0.584229;
 
     //Vision Constants
     public static final double aprilTagToStageCenterMeter = 0.505;
