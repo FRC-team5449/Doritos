@@ -167,6 +167,7 @@ public class Constants {
         }
         // public static final long SwitchHeadNReset = ControllerUtil.GetXboxVal("B"); // It is calling getBButton instead of getBButtonPressed
         public static final long AutoAlignStage = ControllerUtil.GetXboxVal("Y");
+        public static final long ToggleSlowMode = ControllerUtil.GetXboxVal("X");
         public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetXboxVal("LeftBumper");
         public static final long ClkwRotatePos90Deg = ControllerUtil.GetXboxVal("RightBumper");
 
