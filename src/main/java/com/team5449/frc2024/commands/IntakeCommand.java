@@ -55,6 +55,6 @@ public class IntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return mFinishedFlag.update(RobotContainer.noteStored.get(), 0.15);
+    return mFinishedFlag.update(RobotContainer.noteStored.get(), 0.15) && !isRaw;
   }
 }
