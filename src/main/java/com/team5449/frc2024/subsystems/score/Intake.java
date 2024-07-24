@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
     private Intake() {
         upIntake=new TalonFX(Constants.Ports.kIntake1Id);
         downIntake=new TalonFX(Constants.Ports.kIntake2Id);
-        upIntake.setInverted(false);
+        upIntake.setInverted(true);
         downIntake.setInverted(false);
     }
 

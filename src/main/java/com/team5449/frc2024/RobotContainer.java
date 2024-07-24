@@ -191,9 +191,9 @@ public class RobotContainer {
     //   SmartDashboard.putBoolean("bRestore", v);
     //   return v;
     // };
-    new Trigger(/*bRestore*/conditionIntake).and(() -> armPoseCommand.getArmState() != ArmSystemState.INTAKE).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
-    new Trigger(conditionIntake).and(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE).toggleOnTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
-    // new Trigger(conditionIntake).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
+    // new Trigger(/*bRestore*/conditionIntake).and(() -> armPoseCommand.getArmState() != ArmSystemState.INTAKE).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
+    // new Trigger(conditionIntake).and(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE).toggleOnTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
+    new Trigger(conditionIntake).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceIntake)).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
 
