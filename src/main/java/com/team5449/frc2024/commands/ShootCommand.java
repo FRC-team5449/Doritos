@@ -58,7 +58,7 @@ public class ShootCommand extends Command {
     }
     if(mShooter.isShooterAtSetpoint() && isArmSet.getAsBoolean() /*&& !isTransitRunning*/){
       mShooter.transit(1);
-      //isTransitRunning = true;
+      isTransitRunning = true;
     }
     else{
       mShooter.transit(0);

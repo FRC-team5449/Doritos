@@ -16,7 +16,7 @@ public class IntakeCommand extends Command {
   private final Shooter mShooter;
   private final ArmPoseCommand mArm;
   private final boolean isRaw;
-  private final TimeDelayedBoolean mFinishedFlag = new TimeDelayedBoolean();
+  // private final TimeDelayedBoolean mFinishedFlag = new TimeDelayedBoolean();
   /** Creates a new IntakeCommand. */
   public IntakeCommand(Shooter shooter, Intake intake, ArmPoseCommand arm, boolean isRaw) {
     mIntake = intake;
@@ -38,9 +38,9 @@ public class IntakeCommand extends Command {
   @Override
   public void execute() {
     if(isRaw || mArm.getArmState() == ArmPoseCommand.ArmSystemState.INTAKE){
-      mIntake.setIntakeSpeed(1);
+      mIntake.setIntakeSpeed(0.6);
       //mShooter.setOpenLoop(-0.3, true);
-      mShooter.transit(0.8);
+      //mShooter.transit(0.8);
     }
   }
 
@@ -55,6 +55,6 @@ public class IntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return mFinishedFlag.update(RobotContainer.noteStored.get(), 0.15) && !isRaw;
+    return RobotContainer.noteStored.get() && !isRaw;
   }
 }

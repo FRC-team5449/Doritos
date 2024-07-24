@@ -38,6 +38,7 @@ import com.team5449.frc2024.subsystems.score.Arm;
 import com.team5449.frc2024.subsystems.score.Climber;
 import com.team5449.frc2024.subsystems.score.Intake;
 import com.team5449.frc2024.subsystems.score.Shooter;
+import com.team5449.frc2024.subsystems.vision.ColorSensor;
 import com.team5449.frc2024.subsystems.vision.Led;
 import com.team5449.frc2024.subsystems.vision.Led.Color;
 import com.team5449.frc2024.subsystems.vision.VisionIO;
@@ -92,7 +93,14 @@ public class RobotContainer {
   //private final edu.wpi.first.wpilibj.Joystick mDriverJoystick = new edu.wpi.first.wpilibj.Joystick(0);
   //public final CommandXboxController mOperatorController = new CommandXboxController(1);
 
-  public static final DigitalInput noteStored = new DigitalInput(0);
+  private static final ColorSensor mSensor = new ColorSensor();
+
+  public static class HelperClass{
+    public boolean get(){
+      return mSensor.getTarget();
+    }
+  }
+  public static final HelperClass noteStored = new HelperClass();//new DigitalInput(0);
 
   private final SendableChooser<Command> mAutoChooser;
 
@@ -104,6 +112,7 @@ public class RobotContainer {
   private final RotateCommand mRotateCommand;
 
   private final GyroIONone mPigeon;
+
 
   public BooleanSupplier conditionShoot = ControllerUtil.toCond(Constants.ControlConds.shoot);
   public BooleanSupplier conditionIntake = ControllerUtil.toCond(Constants.ControlConds.intake);
@@ -191,9 +200,9 @@ public class RobotContainer {
     //   SmartDashboard.putBoolean("bRestore", v);
     //   return v;
     // };
-    // new Trigger(/*bRestore*/conditionIntake).and(() -> armPoseCommand.getArmState() != ArmSystemState.INTAKE).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
-    // new Trigger(conditionIntake).and(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE).toggleOnTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
-    new Trigger(conditionIntake).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
+    new Trigger(/*bRestore*/conditionIntake).and(() -> armPoseCommand.getArmState() != ArmSystemState.INTAKE).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE)));
+    new Trigger(conditionIntake).and(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE).toggleOnTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
+    // new Trigger(conditionIntake).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceIntake)).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
 
