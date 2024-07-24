@@ -22,8 +22,8 @@ private final Intake mIntake;
   @Override
   public void execute() {
     mIntake.setIntakeSpeed(-1);
-    mShooter.setOpenLoop(0.1, true);
-    mShooter.transit(0.8);
+    mShooter.setOpenLoop(-0.1, true);
+    // mShooter.transit(-0.8);
   }
 
   // Called once the command ends or is interrupted.
@@ -31,7 +31,7 @@ private final Intake mIntake;
   public void end(boolean interrupted) {
     mIntake.setIntakeSpeed(0);
     mShooter.setOpenLoop(0, false);
-    mShooter.transit(0);
+    //mShooter.transit(0);
   }
 
   // Returns true when the command should end.

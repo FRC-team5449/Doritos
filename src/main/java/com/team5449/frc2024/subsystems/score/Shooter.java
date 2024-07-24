@@ -24,7 +24,8 @@ public class Shooter extends SubsystemBase {
   private final VelocityDutyCycle velocityControl = new VelocityDutyCycle(0);
   private final StatusSignal<Double> mUpShooterVelocity;
   private final StatusSignal<Double> mLowShooterVelocity;
-  private final TalonFX transit;
+  // private final TalonFX transit;
+  private final Intake mIntake = Intake.getInstance();
   private double upShooterSetpoint;
   private double lowShooterSetpoint;
   private static final Shooter mInstance = new Shooter();
@@ -40,7 +41,7 @@ public class Shooter extends SubsystemBase {
     upShooterSetpoint = 0;
     lowShooterSetpoint = 0;
 
-    transit = new TalonFX(Ports.kTransId, Ports.kCANBusFDName);
+    // transit = new TalonFX(Ports.kTransId, Ports.kCANBusFDName);
     configureTalons();
   }
   public static Shooter getInstance(){
@@ -62,6 +63,9 @@ public class Shooter extends SubsystemBase {
     //mConfiguration.Slot1.kS = 0.16;
     mLowShooter.getConfigurator().apply(mConfiguration);
     mUpShooter.getConfigurator().apply(mConfiguration);
+    
+    mUpShooter.setInverted(false);
+    mLowShooter.setInverted(false);
   }
 
   public void setShootRPM(double speed){
@@ -101,7 +105,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void transit(double percent){
-    transit.set(percent);
+    // transit.set(percent);
+    mIntake.setIntakeSpeed(percent);
   }
   
   private void updateSetpoint()
