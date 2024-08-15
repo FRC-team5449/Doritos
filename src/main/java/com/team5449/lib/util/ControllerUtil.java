@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ControllerUtil {
@@ -48,6 +49,27 @@ public class ControllerUtil {
     }
     public static long GetXboxVal(String key){
         return GetXboxVal(key, 1);
+    }
+    
+
+    public static long GetPS5Val(int port, String key, int CompMethod){
+        String t=replaceMap.get(key);
+        if(t!=null){key=t;}
+        try {
+            return (1L<<(PS5Controller.Button.valueOf("k"+key).value-1))|(((long)CompMethod)<<40)|(((long)port&0xF)<<32);
+        } catch (IllegalArgumentException e) {
+            DriverStation.reportError("Illeagal key "+key+". Please check your spelling.", false);
+            return 1L<<63;
+        }
+    }
+    public static long GetPS5Val(int port, String key){
+        return GetPS5Val(port, key, 1);
+    }
+    public static long GetPS5Val(String key, int CompMethod){
+        return GetPS5Val(nowport, key, CompMethod);
+    }
+    public static long GetPS5Val(String key){
+        return GetPS5Val(key, 1);
     }
     public static void setControlPort(int port){
         nowport=port;

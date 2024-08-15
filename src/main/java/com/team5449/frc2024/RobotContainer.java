@@ -7,6 +7,7 @@ package com.team5449.frc2024;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Driver;
 import java.util.function.BooleanSupplier;
 
 import org.json.simple.JSONObject;
@@ -58,6 +59,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -89,7 +91,7 @@ public class RobotContainer {
 
   private TimeDelayedBoolean resetGyroBoolean = new TimeDelayedBoolean();
 
-  public final XboxController mDriverController = new XboxController(0);
+  public final PS5Controller mDriverController = new PS5Controller(0);
   // public final ControllerUtil mDriverControllerU = new ControllerUtil(mDriverController);
   public final XboxController mOperatorController = new XboxController(1);
   // public final ControllerUtil mOperatorControllerU = new ControllerUtil(mOperatorController);
@@ -148,8 +150,8 @@ public class RobotContainer {
       () -> -adjustJoystickValue(xLimiter.calculate(mDriverController.getLeftY())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(yLimiter.calculate(mDriverController.getLeftX())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(omegaLimiter.calculate(mDriverController.getRightX())) * drivetrainSubsystem.getMaxAngularVelocityRadPerSec()/* + mRotateCommand.calcRotVel()*/,
-      mDriverController::getBButtonPressed,
-      () -> {boolean reset = resetGyroBoolean.update(mDriverController.getAButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
+      mDriverController::getOptionsButtonPressed,
+      () -> {boolean reset = resetGyroBoolean.update(mDriverController.getCrossButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
 
       drivetrainSubsystem.setPathAuto();
 
@@ -205,7 +207,7 @@ public class RobotContainer {
     new Trigger(conditionIntake).and(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE).toggleOnTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
     // new Trigger(conditionIntake).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
 
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceIntake)).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
+    new Trigger(()->DriverStation.getStickPOV(3, 0)==90).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
@@ -213,39 +215,39 @@ public class RobotContainer {
 
     new Trigger(conditionGoAMP).whileTrue(new AmpCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AMP, -30, false));
 
-    new Trigger(() -> mOperatorController.getLeftTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.PRECLIMB)));
-    new Trigger(() -> mOperatorController.getRightTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.CLIMB)));
+    // new Trigger(() -> mOperatorController.getLeftTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.PRECLIMB)));
+    // new Trigger(() -> mOperatorController.getRightTriggerAxis() == 1).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.CLIMB)));
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.scalestring1)).whileTrue(new ClimbCommand(climber, 0.7));
 
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceShoot)).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
+    new Trigger(()->DriverStation.getStickPOV(3, 0)==270).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.scalestring2)).whileTrue(new ClimbCommand(climber, -0.7));
-    new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
-    new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, armPoseCommand, ()->true, -60, true));
-    new Trigger(() -> mOperatorController.getPOV() == 270).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.PRETRAP)).alongWith(
-      new InstantCommand(()->shooter.setOpenLoop(-0.2, false))))
-      .onFalse(new InstantCommand(()->shooter.setOpenLoop(0, false)));
+    // new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
+    // new Trigger(() -> mOperatorController.getPOV() == 0).whileTrue(new AmpCommand(shooter, armPoseCommand, ()->true, -60, true));
+    // new Trigger(() -> mOperatorController.getPOV() == 270).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.PRETRAP)).alongWith(
+    //   new InstantCommand(()->shooter.setOpenLoop(-0.2, false))))
+    //   .onFalse(new InstantCommand(()->shooter.setOpenLoop(0, false)));
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.AutoAlignStage)).whileTrue(mAutoAlignCommand);
 
     new Trigger(noteStored::get).onTrue(new WaitCommand(
       new InstantCommand(() -> {
         mDriverController.setRumble(RumbleType.kBothRumble, 0.5);
-        mOperatorController.setRumble(RumbleType.kBothRumble, 0.5);
+        // mOperatorController.setRumble(RumbleType.kBothRumble, 0.5);
       }), 0.5
     ).andThen(
       new InstantCommand(() -> {
         mDriverController.setRumble(RumbleType.kBothRumble, 0);
-        mOperatorController.setRumble(RumbleType.kBothRumble, 0);
+        // mOperatorController.setRumble(RumbleType.kBothRumble, 0);
       })
     ));
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
 
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmUp)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmDown)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
+    new Trigger(()->DriverStation.getStickPOV(3, 0)==0).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
+    new Trigger(()->DriverStation.getStickPOV(3, 0)==180).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.ResetArmOffset)).onTrue(new InstantCommand(armPoseCommand::resetOffset));
   }
 

@@ -16,44 +16,28 @@
     },
     {
       "anchor": {
-        "x": 1.2879723980088535,
-        "y": 7.108880647180037
+        "x": 2.5905267159007304,
+        "y": 7.193851318008039
       },
       "prevControl": {
-        "x": 0.7998788679168781,
-        "y": 7.000415418270708
+        "x": 2.093878889864864,
+        "y": 7.188131101907064
       },
       "nextControl": {
-        "x": 1.901478536053158,
-        "y": 7.245215344523216
+        "x": 2.6905200837468763,
+        "y": 7.195003006675056
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.962941536796478,
-        "y": 6.978266165937833
+        "x": 1.9,
+        "y": 5.621802779441736
       },
       "prevControl": {
-        "x": 2.466293710760612,
-        "y": 6.972545949836858
-      },
-      "nextControl": {
-        "x": 3.062934904642624,
-        "y": 6.97941785460485
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.8,
-        "y": 6.7
-      },
-      "prevControl": {
-        "x": 1.2904525746783135,
-        "y": 6.779698543382251
+        "x": 2.3904525746783105,
+        "y": 5.701501322823987
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,12 +46,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": -20.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.7999999999999998,
+      "waypointRelativePos": 0.9,
       "rotationDegrees": -20.0,
       "rotateFast": false
     }
@@ -75,8 +59,8 @@
   "constraintZones": [
     {
       "name": "Stop",
-      "minWaypointRelativePos": 2.9,
-      "maxWaypointRelativePos": 3.0,
+      "minWaypointRelativePos": 1.9,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 4.0,
         "maxAcceleration": 6.0,
@@ -88,7 +72,7 @@
   "eventMarkers": [
     {
       "name": "Intake",
-      "waypointRelativePos": 1.7999999999999998,
+      "waypointRelativePos": 0.9,
       "command": {
         "type": "parallel",
         "data": {

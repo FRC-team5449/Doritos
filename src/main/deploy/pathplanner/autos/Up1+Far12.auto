@@ -12,21 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "NearShoot"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Arm Down"
-                }
-              },
               {
                 "type": "path",
                 "data": {
@@ -37,21 +25,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "NearShoot"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Arm Down"
-                }
-              },
               {
                 "type": "path",
                 "data": {

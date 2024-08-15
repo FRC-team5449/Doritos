@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8,
+      "y": 6.7
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "UpToNote1N"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.33
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.18
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "UpToNote2N"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.92
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.22
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
