@@ -1,7 +1,10 @@
 package com.team5449.frc2024;
 
+import java.sql.DriverPropertyInfo;
 import java.util.function.BooleanSupplier;
 
+import com.google.flatbuffers.FlexBuffers.Key;
+import com.team5449.frc2024.commands.DriveCommandWithRotationAbsloute;
 import com.team5449.lib.util.ControllerUtil;
 
 import edu.wpi.first.math.Matrix;
@@ -17,7 +20,7 @@ public class Constants {
 
     public static final double kLooperDt = 0.02;
     public static final double kEpsilon = 1e-12;
-
+ 
     //Gyro Pigeon
     public static final double pigeonMountPoseYaw = 0;
     public static final double pigeonMountPoseRoll = 0;
@@ -161,32 +164,60 @@ public class Constants {
     public static class ControlConds{
         public static final int DriverPort = 0;
         public static final int OperatorPort = 1;
-        // Driver
-        static{
-            ControllerUtil.setControlPort(DriverPort);
-        }
-        // public static final long SwitchHeadNReset = ControllerUtil.GetXboxVal("B"); // It is calling getBButton instead of getBButtonPressed
-        public static final long AutoAlignStage = ControllerUtil.GetXboxVal("Y");
-        public static final long ToggleSlowMode = ControllerUtil.GetXboxVal("X");
-        public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetXboxVal("LeftBumper");
-        public static final long ClkwRotatePos90Deg = ControllerUtil.GetXboxVal("RightBumper");
+        public static final int SinglePort = 2;
+        // // single
+        // static{
+        //     ControllerUtil.setControlPort(SinglePort);
+        // }
+        // // public static final long SwitchHeadNReset = ControllerUtil.GetXboxVal("B"); // It is calling getBButton instead of getBButtonPressed
+        // public static final long AutoAlignStage = ControllerUtil.GetPS5Val("Cross");
+        // public static final long ToggleSlowMode = ControllerUtil.GetPS5Val("L3");
+        // public static final long CounterClkwRotatePos90Deg = ToggleSlowMode | ControllerUtil.GetPS5Val("R3");
+        // public static final long ClkwRotatePos90Deg = ControllerUtil.GetPS5Val("R3");
+        // public static final long shoot = ControllerUtil.GetPS5Val("Square");
+        // public static final long intake = ControllerUtil.GetPS5Val("L1");
+        // public static final long reload = ControllerUtil.GetPS5Val("R1");
+        // public static final long amp = ControllerUtil.GetPS5Val("Triangle");
+        // public static final long scalestring1 = 987654323;//ControllerUtil.GetXboxVal("LeftBumper");
+        // public static final long scalestring2 = 987654323;//ControllerUtil.GetXboxVal("RightBumper");
+        // public static final long overshoot = ControllerUtil.GetPS5Val("L2");
+        // // public static final long offsetArmUp = ControllerUtil.GetPS5Val("LeftStick");
+        // // public static final long offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
+        // public static final long ResetArmOffset = ControllerUtil.GetPS5Val("Options");
+        // // public static final long forceShoot = shoot | reload;
+        // // public static final long forceIntake = intake | scalestring2;
+        
 
-        // Operator
+        //Drive
         static{
+        ControllerUtil.setControlPort(DriverPort);
+    }
+     public static final long SwitchHeadNReset = ControllerUtil.GetPS5Val("Options"); // It is calling getBButton instead of getBButtonPressed
+    public static final long AutoAlignStage = ControllerUtil.GetPS5Val("Triangle");
+    public static final long ToggleSlowMode = ControllerUtil.GetPS5Val("Square");
+    public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetPS5Val("L3") | ControllerUtil.GetPS5Val("R3");
+    public static final long ClkwRotatePos90Deg = ControllerUtil.GetPS5Val("R3");
+    public static final long shoot = ControllerUtil.GetPS5Val("L2");
+    public static final long intake = ControllerUtil.GetPS5Val("L1");
+    public static final long reload = ControllerUtil.GetPS5Val("R1");
+    public static final long amp = ControllerUtil.GetPS5Val("R2");
+
+    // Operator
+    static{
             ControllerUtil.setControlPort(OperatorPort);
         }
-        public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
-        public static final long intake = ControllerUtil.GetXboxVal("B");
-        public static final long reload = ControllerUtil.GetXboxVal("X");
-        public static final long amp = ControllerUtil.GetXboxVal("Y");
-        public static final long scalestring1 = ControllerUtil.GetXboxVal("LeftBumper");
-        public static final long scalestring2 = ControllerUtil.GetXboxVal("RightBumper");
-        public static final long overshoot = reload | scalestring1 | scalestring2;
-        public static final long offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
-        public static final long offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
-        public static final long ResetArmOffset = offsetArmUp | offsetArmDown;
-        public static final long forceShoot = shoot | reload;
-        public static final long forceIntake = intake | scalestring2;
+    // public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
+    // public static final long intake = ControllerUtil.GetXboxVal("B");
+    // public static final long reload = ControllerUtil.GetXboxVal("X");
+    // public static final long amp = ControllerUtil.GetXboxVal("Y");
+    public static final long scalestring1 = ControllerUtil.GetXboxVal("LeftBumper");
+    public static final long scalestring2 = ControllerUtil.GetXboxVal("RightBumper");
+    public static final long overshoot = reload | scalestring1 | scalestring2;
+    public static final long offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
+    public static final long offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
+    public static final long ResetArmOffset = offsetArmUp | offsetArmDown;
+    public static final long forceShoot = shoot | reload;
+    public static final long forceIntake = intake | scalestring2;
 
     }
 
