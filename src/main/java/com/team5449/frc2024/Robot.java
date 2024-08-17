@@ -17,6 +17,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.UsbCamera;*/
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -25,6 +26,8 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private final Field2d mfield = new Field2d();
 
   //private SaveLimelightPNG mSave = new SaveLimelightPNG();
 
@@ -38,6 +41,7 @@ public class Robot extends LoggedRobot {
     camera.setResolution(320, 240);*/
 
     //mSave.start();
+    SmartDashboard.putData("Drive/Pose", mfield);
   }
 
   @Override
@@ -51,6 +55,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Reload", m_robotContainer.conditionReload.getAsBoolean());
     SmartDashboard.putBoolean("OverShoot", m_robotContainer.conditionOverShoot.getAsBoolean());
     //SmartDashboard.putBoolean("Arm/AtSetPoint", Arm.getInstance().isArmAtSetpoint());
+    mfield.setRobotPose(m_robotContainer.getDrivetrainSubsystem().getPose());
   }
 
   @Override

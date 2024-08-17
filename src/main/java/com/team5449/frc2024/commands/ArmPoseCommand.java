@@ -144,7 +144,7 @@ static{
     IDLE(0.03),
     SHOOTING(0.118),
     OVERSHOOT(0.21),
-    AMP(0.38),
+    AMP(0.36),
     INTAKE(0.02),
     OUTTAKE(0.07),
     CHANGING(0.03),

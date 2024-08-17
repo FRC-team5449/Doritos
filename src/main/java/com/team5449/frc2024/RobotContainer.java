@@ -18,7 +18,7 @@ import org.littletonrobotics.conduit.schema.Joystick;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.team5449.frc2024.Constants.Ports;
-import com.team5449.frc2024.autos.autocommands.WaitCommand;
+// import com.team5449.frc2024.autos.autocommands.WaitCommand;
 import com.team5449.frc2024.commands.AmpCommand;
 import com.team5449.frc2024.commands.ArmPoseCommand;
 import com.team5449.frc2024.commands.AutoAlign;
@@ -231,11 +231,11 @@ public class RobotContainer {
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.AutoAlignStage)).whileTrue(mAutoAlignCommand);
 
-    new Trigger(noteStored::get).onTrue(new WaitCommand(
+    new Trigger(noteStored::get).onTrue(Commands.waitSeconds(0.5).raceWith(
       new InstantCommand(() -> {
         mDriverController.setRumble(RumbleType.kBothRumble, 0.5);
         // mOperatorController.setRumble(RumbleType.kBothRumble, 0.5);
-      }), 0.5
+      })
     ).andThen(
       new InstantCommand(() -> {
         mDriverController.setRumble(RumbleType.kBothRumble, 0);
@@ -302,9 +302,9 @@ public class RobotContainer {
   private void pathPlannerRegisterCommand(){
     // NamedCommands.registerCommand("Intake", new WaitCommand(new IntakeCommand(shooter, intake), 10, noteStored::get).alongWith(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.INTAKE))));
     NamedCommands.registerCommand("Intake", new IntakeCommand(shooter, intake, armPoseCommand, false));
-    NamedCommands.registerCommand("NearShoot", new WaitCommand(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
-    NamedCommands.registerCommand("MiddleShoot", new WaitCommand(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.22))));
-    NamedCommands.registerCommand("FarShoot", new WaitCommand(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 80, mPrintNote), 10, delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.196))));
+    NamedCommands.registerCommand("NearShoot", Commands.waitSeconds(10).raceWith(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65, mPrintNote)).until(delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.25))));
+    NamedCommands.registerCommand("MiddleShoot", Commands.waitSeconds(10).raceWith(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75, mPrintNote)). until(delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.22))));
+    NamedCommands.registerCommand("FarShoot", Commands.waitSeconds(10).raceWith(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 80, mPrintNote)).until(delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.196))));
     NamedCommands.registerCommand("Arm Down", new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.ARMDOWN)));
   }
 
