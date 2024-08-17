@@ -33,7 +33,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    //m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer();
 
     //TODO Do not comment it
     /*UsbCamera camera = CameraServer.startAutomaticCapture();

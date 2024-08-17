@@ -177,7 +177,7 @@ public class RobotContainer {
   }
 
   private static double adjustJoystickValue(double value) {
-      value = MathUtil.applyDeadband(value, 0.01);
+      value = MathUtil.applyDeadband(value, 0.05);
       value = Math.copySign(value * value, value);
       return value;
   }
