@@ -187,6 +187,7 @@ public class RobotContainer {
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
     new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 50));//.whileTrue(mAutoAlignCommand);//.o
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceShoot)).whileTrue(new InstantCommand(() -> shooter.transit(1)));//.whileTrue(mAutoAlignCommand);//.o
     // new Trigger(conditionShoot).whileTrue(new ShootWithTrajectory(shooter, armPoseCommand, () -> {
     //   Pose3d mPose3d = mLimelight.getPose3DBot();/*new Translation2d(1.43+5, -0.3)*/
     //   return new Translation2d(mPose3d.getZ()+1.43, /*-mPose3d.getY()-0.3*/2.6);

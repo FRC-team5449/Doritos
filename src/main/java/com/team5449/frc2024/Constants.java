@@ -197,19 +197,19 @@ public class Constants {
     public static final long ToggleSlowMode = ControllerUtil.GetPS5Val("Square");
     public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetPS5Val("L3") | ControllerUtil.GetPS5Val("R3");
     public static final long ClkwRotatePos90Deg = ControllerUtil.GetPS5Val("R3");
-    public static final long shoot = ControllerUtil.GetPS5Val("L2");
-    public static final long intake = ControllerUtil.GetPS5Val("L1");
-    public static final long reload = ControllerUtil.GetPS5Val("R1");
-    public static final long amp = ControllerUtil.GetPS5Val("R2");
+    // public static final long shoot = ControllerUtil.GetPS5Val("L2");
+    // public static final long intake = ControllerUtil.GetPS5Val("L1");
+    // public static final long reload = ControllerUtil.GetPS5Val("R1");
+    // public static final long amp = ControllerUtil.GetPS5Val("R2");
 
     // Operator
     static{
             ControllerUtil.setControlPort(OperatorPort);
         }
-    // public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
-    // public static final long intake = ControllerUtil.GetXboxVal("B");
-    // public static final long reload = ControllerUtil.GetXboxVal("X");
-    // public static final long amp = ControllerUtil.GetXboxVal("Y");
+    public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
+    public static final long intake = ControllerUtil.GetXboxVal("B");
+    public static final long reload = ControllerUtil.GetXboxVal("X");
+    public static final long amp = ControllerUtil.GetXboxVal("Y");
     public static final long scalestring1 = ControllerUtil.GetXboxVal("LeftBumper");
     public static final long scalestring2 = ControllerUtil.GetXboxVal("RightBumper");
     public static final long overshoot = reload | scalestring1 | scalestring2;
