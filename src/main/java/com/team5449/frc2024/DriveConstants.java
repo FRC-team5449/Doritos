@@ -67,7 +67,7 @@ public class DriveConstants {
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
     public static final double kSpeedAt12VoltsMps = 10.43;
-    public static final double kMaxAngularSpeed = 3 * Math.PI;
+    public static final double kMaxAngularSpeed = 2 * Math.PI;
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot

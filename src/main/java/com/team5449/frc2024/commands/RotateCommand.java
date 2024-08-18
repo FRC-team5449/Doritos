@@ -2,6 +2,8 @@ package com.team5449.frc2024.commands;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.team5449.frc2024.subsystems.CommandSwerveDrivetrain;
 import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
 import com.team5449.lib.CConsole;
 import com.team5449.lib.util.Util;
@@ -11,7 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RotateCommand extends Command{
-    private final DrivetrainSubsystem drivetrain;
+    private final CommandSwerveDrivetrain drivetrain;
 
     private final DoubleSupplier RotateRadianAbslute;
 
@@ -26,7 +28,7 @@ public class RotateCommand extends Command{
 
     // private double lastdelta = 0;
 
-    public RotateCommand(DrivetrainSubsystem mDrivetrainSubsystem, DoubleSupplier RotateRadianAbslute, double ApprochMinTimeSecond){
+    public RotateCommand(CommandSwerveDrivetrain mDrivetrainSubsystem, DoubleSupplier RotateRadianAbslute, double ApprochMinTimeSecond){
 
         drivetrain = mDrivetrainSubsystem;
 
@@ -43,13 +45,14 @@ public class RotateCommand extends Command{
         mPidRotation.setSetpoint(RotateRadianAbslute.getAsDouble());
         //double delta = Util.map(-Math.PI, Math.PI,drivetrain.getHeading().getRadians()-RotateRadianAbslute.getAsDouble());
 
-        targetVelocity = drivetrain.getTargetVelocity();
+
+        ChassisSpeeds targetVelocity = drivetrain.getState().speeds;
         //targetVelocity.omegaRadiansPerSecond = /*Util.map(-Math.PI,Math.PI,*/RotateRadianAbslute.getAsDouble()-drivetrain.getHeading().getRadians();//);//delta * kP + (delta-lastdelta)* kD;
         //CConsole.stdout.log("Heading: ",drivetrain.getHeading().getRadians(),"(Desired=",RotateRadianAbslute.getAsDouble(),")");
         //CConsole.stdout.log("RotV=",targetVelocity.omegaRadiansPerSecond);
 
         targetVelocity.omegaRadiansPerSecond = calcRotVel();
-        drivetrain.setTargetVelocity(targetVelocity);
+        drivetrain.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(targetVelocity));;
         //lastdelta = delta;
     }
 

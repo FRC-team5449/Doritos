@@ -33,7 +33,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    //m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer();
 
     //TODO Do not comment it
     /*UsbCamera camera = CameraServer.startAutomaticCapture();
@@ -55,7 +55,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Reload", m_robotContainer.conditionReload.getAsBoolean());
     SmartDashboard.putBoolean("OverShoot", m_robotContainer.conditionOverShoot.getAsBoolean());
     //SmartDashboard.putBoolean("Arm/AtSetPoint", Arm.getInstance().isArmAtSetpoint());
-    mfield.setRobotPose(m_robotContainer.getDrivetrainSubsystem().getPose());
+    mfield.setRobotPose(m_robotContainer.getDrivetrainSubsystem().getState().Pose);
   }
 
   @Override

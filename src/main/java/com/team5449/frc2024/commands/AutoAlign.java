@@ -4,7 +4,9 @@
 
 package com.team5449.frc2024.commands;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.team5449.frc2024.FieldLayout;
+import com.team5449.frc2024.subsystems.CommandSwerveDrivetrain;
 import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
 import com.team5449.frc2024.subsystems.vision.VisionSubsystem;
 import com.team5449.lib.util.Util;
@@ -20,12 +22,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AutoAlign extends Command {
-  private final DrivetrainSubsystem mDrive;
+  private final CommandSwerveDrivetrain mDrive;
   private final VisionSubsystem mVision;
   private final PIDController omegaController = new PIDController(3, 0, 0);
 
   /** Creates a new AutoAlign. */
-  public AutoAlign(DrivetrainSubsystem drive, VisionSubsystem vision) {
+  public AutoAlign(CommandSwerveDrivetrain drive, VisionSubsystem vision) {
     mDrive = drive;
     mVision = vision;
     omegaController.enableContinuousInput(0, 2 * Math.PI);
@@ -48,15 +50,17 @@ public class AutoAlign extends Command {
     //   SmartDashboard.putNumber("Omega Velocity", Units.degreesToRadians(omegaVelocity));
     //   mDrive.setHeadingControlSpeed(omegaVelocity);
     // } else {
-      double omegaVelocity = omegaController.calculate(mDrive.getHeading().getRadians());
-      mDrive.setHeadingControlSpeed(omegaVelocity);
+      double omegaVelocity = omegaController.calculate(mDrive.getState().Pose.getRotation().getRadians());
+      // mDrive.setHeadingControlSpeed(omegaVelocity);
+      mDrive.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(new ChassisSpeeds(0,0, omegaVelocity)));
     //}
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mDrive.setTargetVelocity(new ChassisSpeeds(0, 0, 0));
+    // mDrive.setTargetVelocity(new ChassisSpeeds(0, 0, 0));
+    mDrive.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(new ChassisSpeeds()));
   }
 
   // Returns true when the command should end.
@@ -68,8 +72,8 @@ public class AutoAlign extends Command {
   
 
   private void calcTargetAngle() {
-    double adjustAngleToTartget = mDrive.getHeading().getDegrees();
-    Pose2d currentPose = mDrive.getEstimatedPose();
+    double adjustAngleToTartget = mDrive.getState().Pose.getRotation().getDegrees();
+    Pose2d currentPose = mDrive.getState().Pose;
     double botToTargetX = 0;
     double botToTargetY = 0;
 

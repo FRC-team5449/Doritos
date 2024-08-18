@@ -15,6 +15,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.conduit.schema.Joystick;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.team5449.frc2024.Constants.Ports;
@@ -32,6 +35,7 @@ import com.team5449.frc2024.commands.ShootCommand;
 import com.team5449.frc2024.commands.ShootWithTrajectory;
 import com.team5449.frc2024.commands.ArmPoseCommand.ArmSystemState;
 import com.team5449.frc2024.subsystems.CalcRotationWithUnitCircleData;
+import com.team5449.frc2024.subsystems.CommandSwerveDrivetrain;
 import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
 import com.team5449.frc2024.subsystems.drive.GyroIOPigeon;
 import com.team5449.frc2024.subsystems.drive.SwerveModuleIOFalconPro;
@@ -47,6 +51,8 @@ import com.team5449.frc2024.subsystems.vision.VisionIOLimelight;
 import com.team5449.frc2024.subsystems.vision.VisionSubsystem;
 import com.team5449.lib.util.ControllerUtil;
 import com.team5449.lib.util.TimeDelayedBoolean;
+import com.team5449.lib.util.WjUtils.JoystickInputHandler;
+
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -69,13 +75,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 public class RobotContainer {
-
-  private final DrivetrainSubsystem drivetrainSubsystem;
+  
+  private final static double maxSpeed = DriveConstants.kSpeedAt12VoltsMps;
+  private final static double maxAngularSpeed = 1 * Math.PI; 
+  private final CommandPS5Controller psController;
+  private final CommandSwerveDrivetrain drivetrainSubsystem;
   private final VisionSubsystem vision;
   private final Shooter shooter;
   private final Intake intake;
@@ -111,6 +121,10 @@ public class RobotContainer {
   private final RotateCommand mRotateCommand;
 
   private final GyroIOPigeon mPigeon;
+  
+
+  private final JoystickInputHandler handler = new JoystickInputHandler(5, 5, 4);
+
 
   public BooleanSupplier conditionShoot = ControllerUtil.toCond(Constants.ControlConds.shoot);
   public BooleanSupplier conditionIntake = ControllerUtil.toCond(Constants.ControlConds.intake);
@@ -118,8 +132,40 @@ public class RobotContainer {
   public BooleanSupplier conditionReload = ControllerUtil.toCond(Constants.ControlConds.reload);//() -> mOperatorController.getXButton() && !RLst.getAsBoolean() && !mOperatorController.getRightBumper();
   public BooleanSupplier conditionGoAMP = ControllerUtil.toCond(Constants.ControlConds.amp);
   public BooleanSupplier conditionOverShoot = ControllerUtil.toCond(Constants.ControlConds.overshoot);//new Trigger(RLst).negate().and(mOperatorController::getRightBumper).and(mOperatorController::getXButton);
+  public static final class JoystickInputHandler {
+    //private Translation2d displacement=new Translation2d();
+      private final SlewRateLimiter xLimiter;
+      private final SlewRateLimiter yLimiter;
+      private final SlewRateLimiter omegaLimiter;
+      
+    public JoystickInputHandler(double xSlewRate, double ySlweRate, double omegaSlewRate){
+      xLimiter=new SlewRateLimiter(xSlewRate);
+      yLimiter=new SlewRateLimiter(ySlweRate);
+      omegaLimiter=new SlewRateLimiter(omegaSlewRate);
+    }
+    private final double calcOutput(double val){
+      return Math.copySign(val*val, -val);
+    }
+    public final double getXInput(double xInput/*,double yInput*/){
+      xInput=MathUtil.applyDeadband(xInput, 0.1);
+      return calcOutput(xLimiter.calculate(xInput));
+      //displacement=WjUtils.applyDeadband(new Translation2d(xInput, yInput),0.1);
+      //displacement=new Translation2d(stickValueHandler(xLimiter.calculate(displacement.getX())), yLimiter.calculate(displacement.getY()));
+      //return displacement.getX();
+    }
+    public final double getYInput(double yInput){
+      yInput=MathUtil.applyDeadband(yInput, 0.1);
+      return calcOutput(yLimiter.calculate(yInput));
+      //return displacement.getY();
+    }
+    public final double getOmegaInput(double omegaInput){
+      omegaInput=MathUtil.applyDeadband(omegaInput,0.1);
+      return calcOutput(omegaLimiter.calculate(omegaInput));
+    }
+  }
 
   public RobotContainer() {
+    psController = new CommandPS5Controller(Constants.ControlConds.SinglePort);
 
     
     vision = new VisionSubsystem(new VisionIO[]{
@@ -127,14 +173,7 @@ public class RobotContainer {
     });
 
     mPigeon = new GyroIOPigeon();
-    drivetrainSubsystem = new DrivetrainSubsystem(
-      mPigeon,
-      new SwerveModuleIOFalconPro(Ports.kFrontLeftMotorId, Ports.kFrontLeftAziId, Ports.kFrontLeftEncoderId, Ports.kCANBusFDName, Constants.kFrontLeftEncoderOffset, false),
-      new SwerveModuleIOFalconPro(Ports.kFrontRightMotorId, Ports.kFrontRightAziId, Ports.kFrontRightEncoderId, Ports.kCANBusFDName, Constants.kFrontRightEncoderOffset, false),
-      new SwerveModuleIOFalconPro(Ports.kBackLeftMotorId, Ports.kBackLeftAziId, Ports.kBackLeftEncoderId, Ports.kCANBusFDName, Constants.kBackLeftEncoderOffset, true),
-      new SwerveModuleIOFalconPro(Ports.kBackRightMotorId, Ports.kBackRightAziId, Ports.kBackRightEncoderId, Ports.kCANBusFDName, Constants.kBackRightEncoderOffset, true),
-      vision
-    );
+    drivetrainSubsystem = DriveConstants.DriveTrain;
 
     arm = new Arm();
     climber=new Climber();
@@ -142,20 +181,18 @@ public class RobotContainer {
     arm.setDefaultCommand(armPoseCommand);
 
 
-    mCircleData = new CalcRotationWithUnitCircleData(mOperatorController::getRightX, ()->-mOperatorController.getRightY(), drivetrainSubsystem.getHeading().getRadians(), 0.5);
+    mCircleData = new CalcRotationWithUnitCircleData(mOperatorController::getRightX, ()->-mOperatorController.getRightY(), drivetrainSubsystem.getState().Pose.getRotation().getRadians(), 0.5);
     mRotateCommand = new RotateCommand(drivetrainSubsystem, mCircleData::calculate,0.25);
 
-    drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-      drivetrainSubsystem,
-      () -> -adjustJoystickValue(xLimiter.calculate(mDriverController.getLeftY())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
-      () -> -adjustJoystickValue(yLimiter.calculate(mDriverController.getLeftX())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
-      () -> -adjustJoystickValue(omegaLimiter.calculate(mDriverController.getRightX())) * drivetrainSubsystem.getMaxAngularVelocityRadPerSec()/* + mRotateCommand.calcRotVel()*/,
-      mDriverController::getOptionsButtonPressed,
-      () -> {boolean reset = resetGyroBoolean.update(mDriverController.getCrossButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
+    drivetrainSubsystem.setDefaultCommand(
+      drivetrainSubsystem.applyRequest(() -> drive
+        .withVelocityX(DriveConstants.kSpeedAt12VoltsMps*handler.getXInput(psController.getLeftY()))
+        .withVelocityY(maxSpeed*handler.getYInput(psController.getLeftX()))
+        .withRotationalRate(maxAngularSpeed*handler.getOmegaInput(psController.getRightX())))
+    );
+      // drivetrainSubsystem.setPathAuto();
 
-      drivetrainSubsystem.setPathAuto();
-
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.ToggleSlowMode)).onTrue(new InstantCommand(() -> drivetrainSubsystem.isSlowMode=!drivetrainSubsystem.isSlowMode));
+    // new Trigger(ControllerUtil.toCond(Constants.ControlConds.ToggleSlowMode)).onTrue(new InstantCommand(() -> drivetrainSubsystem.isSlowMode=!drivetrainSubsystem.isSlowMode));
 
     shooter = Shooter.getInstance();
     intake = Intake.getInstance();
@@ -177,10 +214,12 @@ public class RobotContainer {
   }
 
   private static double adjustJoystickValue(double value) {
-      value = MathUtil.applyDeadband(value, 0.01);
+      value = MathUtil.applyDeadband(value, 0.05);
       value = Math.copySign(value * value, value);
       return value;
   }
+  private final FieldCentric drive = new FieldCentric()
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   private void configureBindings() {
     
@@ -243,8 +282,9 @@ public class RobotContainer {
       })
     ));
 
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
+    // TODO: No equviliant function found, fix it later.
+    // new Trigger(ControllerUtil.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
+    // new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
 
     new Trigger(()->DriverStation.getStickPOV(3, 0)==0).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
     new Trigger(()->DriverStation.getStickPOV(3, 0)==180).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
@@ -281,7 +321,7 @@ public class RobotContainer {
     return nowSelected;
   }
 
-  public DrivetrainSubsystem getDrivetrainSubsystem(){
+  public CommandSwerveDrivetrain getDrivetrainSubsystem(){
     return drivetrainSubsystem;
   }
 

@@ -1,5 +1,7 @@
 package com.team5449.frc2024.commands;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.team5449.frc2024.subsystems.CommandSwerveDrivetrain;
 import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
 import com.team5449.frc2024.subsystems.score.Intake;
 import com.team5449.frc2024.subsystems.score.Shooter;
@@ -13,12 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class OrientToTargetCommand extends Command{
-private final DrivetrainSubsystem mDrive;
+private final CommandSwerveDrivetrain mDrive;
   private final VisionSubsystem mVision;
 
   private final PIDController omegaController;
   /** Creates a new IntakeCommand. */
-  public OrientToTargetCommand(DrivetrainSubsystem drive, VisionSubsystem vision) {
+  public OrientToTargetCommand(CommandSwerveDrivetrain drive, VisionSubsystem vision) {
     mDrive = drive;
     mVision = vision;
     omegaController = new PIDController(2, 0, 0);
@@ -40,9 +42,8 @@ private final DrivetrainSubsystem mDrive;
     if(!mVision.getTargetDetected(0)){
         System.err.println("No target AprilTag detected.");
     }
-    mDrive.setTargetVelocity(new ChassisSpeeds(0, 0, Units.degreesToRadians(omegaVelocity)));
-    
-    //System.out.println("111");
+    mDrive.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(new ChassisSpeeds(0, 0, Units.degreesToRadians(omegaVelocity))));
+    //System.out.println("111");m
   } 
 
   // Called once the command ends or is interrupted.
