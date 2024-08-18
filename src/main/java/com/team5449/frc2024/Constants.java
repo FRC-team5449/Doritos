@@ -81,7 +81,7 @@ public class Constants {
     public static final double turnkV1 = 0;
     public static final double turnkD1 = 0;
 
-    public static final double wheelRadiMeters = 0.05;
+    public static final double wheelRadiMeters = 0.0508; // 2 inches
     public static final double driveGearRatio = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
 
     public static final double drivePositionCoefficient = (2 * Math.PI * wheelRadiMeters) / driveGearRatio;

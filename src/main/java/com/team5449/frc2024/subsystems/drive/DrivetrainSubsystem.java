@@ -53,7 +53,7 @@ public class DrivetrainSubsystem extends SubsystemBase{
     private final GyroIO gyroIO;
     private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
 
-    private double yawOffset;
+    // private double yawOffset;
 
     private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
     private SwerveModuleState[] optimizedSwerveModuleStates = new SwerveModuleState[4];
@@ -200,10 +200,10 @@ public class DrivetrainSubsystem extends SubsystemBase{
             new SwerveModule(backRightSwerveModuleIO, "BackRight")
         };
         swerveModulePositions = new SwerveModulePosition[] {
-            new SwerveModulePosition(),
-            new SwerveModulePosition(),
-            new SwerveModulePosition(),
-            new SwerveModulePosition()
+            swerveModules[0].getPosition(),
+            swerveModules[1].getPosition(),
+            swerveModules[2].getPosition(),
+            swerveModules[3].getPosition()
         };
         var frontLeftLocation = new Translation2d(Constants.wheelBaseMeters / 2, Constants.trackBaseMeters / 2);
         var frontRightLocation = new Translation2d(Constants.wheelBaseMeters / 2, -Constants.trackBaseMeters / 2);
@@ -231,8 +231,8 @@ public class DrivetrainSubsystem extends SubsystemBase{
                     new SwerveModulePosition()
                 },
                 new Pose2d(),
-                VecBuilder.fill(0.1, 0.1, 0.1),
-                VecBuilder.fill(0.5, 0.5, 0.5));
+                VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+                VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(180)));
         mMeasuredStates = new SwerveModuleState[]{
             new SwerveModuleState(),
             new SwerveModuleState(),
@@ -252,7 +252,7 @@ public class DrivetrainSubsystem extends SubsystemBase{
         odometryUpdateThread = new OdometryUpdateThread();
         odometryUpdateThread.start();
 
-        yawOffset = gyroInputs.yaw;
+        // yawOffset = gyroInputs.yaw;
 
         
     }
@@ -422,28 +422,34 @@ public class DrivetrainSubsystem extends SubsystemBase{
     }
 
     public Rotation2d getHeading(){
-        synchronized (gyroInputs){
-            return Rotation2d.fromDegrees((Units.radiansToDegrees(gyroInputs.yaw - yawOffset) % 360)<0?(Units.radiansToDegrees(gyroInputs.yaw - yawOffset) % 360+360):(Units.radiansToDegrees(gyroInputs.yaw - yawOffset) % 360));
-        }
+        // synchronized (gyroInputs){
+        //     return Rotation2d.fromDegrees((Units.radiansToDegrees(gyroInputs.yaw - yawOffset) % 360)<0?(Units.radiansToDegrees(gyroInputs.yaw - yawOffset) % 360+360):(Units.radiansToDegrees(gyroInputs.yaw - yawOffset) % 360));
+        // }
+        return getPose().getRotation();
     }
 
     public void offsetHeading(double rad){ // CW: postive
-        yawOffset += rad;
+        // yawOffset += rad;
+        Pose2d pose = getPose();
+        resetPose(new Pose2d(pose.getX(), pose.getY(), pose.getRotation().plus(Rotation2d.fromRadians(rad))));
     }
 
     public void resetHeading(){
-        synchronized (gyroInputs){
-            yawOffset = gyroInputs.yaw;
-        }
+        // synchronized (gyroInputs){
+        //     yawOffset = gyroInputs.yaw;
+        // }
+        resetPose();
     }
 
     /**
-     * Set specific angle of pigeon's yaw to zero, doesn't change the postive direction (counterclockwise)
+     * Set specific angle of field (points directly to opposite alliance as 0, and CW postive direction) to zero, doesn't change the postive direction (counterclockwise)
      * @param radians The angle in radians.
      */
     public void resetHeading(double radians){
         System.out.println("Setted heading: "+radians+" rad");
-        yawOffset += radians;
+        Pose2d pose = getPose();
+        resetPose(new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromRadians(radians)));
+        // yawOffset = radians;
     }
 
     public Pose2d getProjectedPose(double latency) {
