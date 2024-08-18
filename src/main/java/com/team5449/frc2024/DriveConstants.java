@@ -71,15 +71,15 @@ public class DriveConstants {
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
-    public static final double kSpeedAt12VoltsMps = 10.43;
+    public static final double kSpeedAt12VoltsMps = 4.73;
     public static final double kMaxAngularSpeed = 2 * Math.PI;
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
-    private static final double kCoupleRatio = 3.5714285714285716; // TODO: Change this value
+    private static final double kCoupleRatio = 3.5714285714285716;
 
     private static final double kDriveGearRatio = Constants.driveGearRatio;
-    private static final double kSteerGearRatio = Constants.steerGearRatio;
+    private static final double kSteerGearRatio = 12.8; //Constants.steerGearRatio;
     private static final double kWheelRadiusInches = 2; // TODO: Change this value
 
     private static final boolean kInvertLeftSide = false;
@@ -130,9 +130,9 @@ public class DriveConstants {
     private static final int kFrontLeftSteerMotorId = 21,                                      kFrontRightSteerMotorId = 24;
     private static final int kFrontLeftEncoderId = 31,                                         kFrontRightEncoderId = 34;
     private static final double kFrontLeftEncoderOffset = Constants.kFrontLeftEncoderOffset,   kFrontRightEncoderOffset = Constants.kFrontRightEncoderOffset;
-    private static final boolean kFrontLeftSteerInvert = true,                                 kFrontRightSteerInvert = true;
-    private static final double kFrontLeftXPosInches = Constants.frontLeftLocation.getX()/25.4,kFrontRightXPosInches = Constants.frontRightLocation.getX()/25.4;
-    private static final double kFrontLeftYPosInches = Constants.frontLeftLocation.getY()/25.4,kFrontRightYPosInches = Constants.frontRightLocation.getY()/25.4;
+    private static final boolean kFrontLeftSteerInvert = false,                                kFrontRightSteerInvert = false;
+    private static final double kFrontLeftXPosInches = Constants.frontLeftLocation.getY()/25.4,kFrontRightXPosInches = Constants.frontRightLocation.getY()/25.4;
+    private static final double kFrontLeftYPosInches = Constants.frontLeftLocation.getX()/25.4,kFrontRightYPosInches = Constants.frontRightLocation.getX()/25.4;
 
     // Back Left                                                                               Back Right
     private static final int kBackLeftDriveMotorId = 3,                                        kBackRightDriveMotorId = 2;
@@ -140,8 +140,8 @@ public class DriveConstants {
     private static final int kBackLeftEncoderId = 33,                                          kBackRightEncoderId = 32;
     private static final double kBackLeftEncoderOffset = Constants.kBackLeftEncoderOffset,     kBackRightEncoderOffset = Constants.kBackRightEncoderOffset;
     private static final boolean kBackLeftSteerInvert = true,                                  kBackRightSteerInvert = true;
-    private static final double kBackLeftXPosInches = Constants.backLeftLocation.getX()/25.4,  kBackRightXPosInches = Constants.backRightLocation.getX()/25.4;
-    private static final double kBackLeftYPosInches = Constants.backLeftLocation.getY()/25.4,  kBackRightYPosInches = Constants.backRightLocation.getY()/25.4;
+    private static final double kBackLeftXPosInches = Constants.backLeftLocation.getY()/25.4,  kBackRightXPosInches = Constants.backRightLocation.getY()/25.4;
+    private static final double kBackLeftYPosInches = Constants.backLeftLocation.getX()/25.4,  kBackRightYPosInches = Constants.backRightLocation.getX()/25.4;
 
     public static final double kDriveBaseRadiusInches = Math.sqrt(kFrontLeftXPosInches*kFrontLeftXPosInches+kFrontLeftYPosInches*kFrontLeftYPosInches);
 
