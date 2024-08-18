@@ -284,9 +284,33 @@ public class RobotContainer {
     ));
 
     // TODO: No equviliant function found, fix it later.
-    // new Trigger(ControllerUtil.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
-    // new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
+  //   // public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+  //   // ... 其他成员变量和方法 ...
 
+  //   /**
+  //    * 调整机器人的朝向。
+  //    *
+  //    * @param angle 要调整的角度（弧度）
+  //    */
+  //   public void offsetHeading(double angle) {
+  //     // 获取当前朝向
+  //     Rotation2d currentHeading = getState().Pose.getRotation();
+  //     // 计算新的朝向
+  //     Rotation2d newHeading = currentHeading.plus(Rotation2d.fromRadians(angle));
+  //     // 更新机器人的朝向状态
+  //     // 这里需要根据您的具体实现来调整，可能需要调用某个方法或设置某个状态
+  //     // 例如：setHeading(newHeading);
+  // }
+
+  // ... 其他成员变量和方法 ...
+// }
+// // ... 其他代码 ...
+
+// new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
+
+// // ... 其他代码 ...
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmUp)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmDown)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.ResetArmOffset)).onTrue(new InstantCommand(armPoseCommand::resetOffset));
