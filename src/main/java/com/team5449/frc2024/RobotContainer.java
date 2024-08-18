@@ -226,6 +226,7 @@ public class RobotContainer {
     //BooleanSupplier conditionHasTarget = ()->mColorSensor.getTarget()==new Constants.checkTarget[]{Constants.checkTarget.HASTARGET};
 
     new Trigger(conditionShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.SHOOTING))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.SHOOTING, 50));//.whileTrue(mAutoAlignCommand);//.o
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceShoot)).whileTrue(new InstantCommand(() -> shooter.transit(1)));//.whileTrue(mAutoAlignCommand);//.o
     // new Trigger(conditionShoot).whileTrue(new ShootWithTrajectory(shooter, armPoseCommand, () -> {
     //   Pose3d mPose3d = mLimelight.getPose3DBot();/*new Translation2d(1.43+5, -0.3)*/
     //   return new Translation2d(mPose3d.getZ()+1.43, /*-mPose3d.getY()-0.3*/2.6);
@@ -246,7 +247,7 @@ public class RobotContainer {
     new Trigger(conditionIntake).and(() -> armPoseCommand.getArmState() == ArmSystemState.INTAKE).toggleOnTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
     // new Trigger(conditionIntake).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, false));
 
-    new Trigger(()->DriverStation.getStickPOV(3, 0)==90).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceIntake)).whileTrue(new IntakeCommand(shooter, intake, armPoseCommand, true));
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
@@ -259,7 +260,7 @@ public class RobotContainer {
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.scalestring1)).whileTrue(new ClimbCommand(climber, 0.7));
 
-    new Trigger(()->DriverStation.getStickPOV(3, 0)==270).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.forceShoot)).onTrue(new InstantCommand(() -> shooter.transit(0.5))).onFalse(new InstantCommand(() -> shooter.transit(0)));
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.scalestring2)).whileTrue(new ClimbCommand(climber, -0.7));
     // new Trigger(() -> mOperatorController.getPOV() == 180).onTrue(new InstantCommand(()->armPoseCommand.setPose(ArmSystemState.TRAP)));
@@ -286,8 +287,8 @@ public class RobotContainer {
     // new Trigger(ControllerUtil.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
     // new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
 
-    new Trigger(()->DriverStation.getStickPOV(3, 0)==0).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
-    new Trigger(()->DriverStation.getStickPOV(3, 0)==180).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmUp)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmDown)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.ResetArmOffset)).onTrue(new InstantCommand(armPoseCommand::resetOffset));
   }
 
