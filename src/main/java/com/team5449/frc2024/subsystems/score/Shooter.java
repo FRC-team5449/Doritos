@@ -10,7 +10,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.team5449.frc2024.Constants.Ports;
@@ -22,7 +22,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Shooter extends SubsystemBase {
   private final TalonFX mUpShooter;
   private final TalonFX mLowShooter;
-  private final VelocityDutyCycle velocityControl = new VelocityDutyCycle(0);
+  private final VelocityVoltage velocityControlUp = new VelocityVoltage(0);
+  private final VelocityVoltage velocityControlDown = new VelocityVoltage(0);
   private final StatusSignal<Double> mUpShooterVelocity;
   private final StatusSignal<Double> mLowShooterVelocity;
   private final TalonFX transit;
@@ -66,6 +67,9 @@ public class Shooter extends SubsystemBase {
     //mConfiguration.Slot1.kS = 0.16;
     mLowShooter.getConfigurator().apply(mConfiguration);
     mUpShooter.getConfigurator().apply(mConfiguration);
+
+    velocityControlUp.Slot = 1;
+    velocityControlDown.Slot = 0;
   }
 
   public void setShootRPM(double speed){
@@ -114,8 +118,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter/upSetpoint", upShooterSetpoint);
     // mUpShooter.setControl(velocityControl.withVelocity(upShooterSetpoint).withSlot(upShooterSetpoint>mUpShooterVelocity.asSupplier().get()?0:1));
     // mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint).withSlot(lowShooterSetpoint>mLowShooterVelocity.asSupplier().get()?0:1));
-    mUpShooter.setControl(velocityControl.withVelocity(upShooterSetpoint).withSlot(1));
-    mLowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint).withSlot(0));
+    mUpShooter.setControl(velocityControlUp.withVelocity(upShooterSetpoint));
+    mLowShooter.setControl(velocityControlDown.withVelocity(lowShooterSetpoint));
     bConsiderLowShooter = true;
   }
 
