@@ -7,7 +7,6 @@ package com.team5449.frc2024;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Driver;
 import java.util.function.BooleanSupplier;
 
 import org.json.simple.JSONObject;
@@ -30,15 +29,15 @@ import com.team5449.frc2024.commands.DefaultDriveCommand;
 import com.team5449.frc2024.commands.IntakeCommand;
 import com.team5449.frc2024.commands.OrientToTargetCommand;
 import com.team5449.frc2024.commands.OuttakeCommand;
-import com.team5449.frc2024.commands.RotateCommand;
+// import com.team5449.frc2024.commands.RotateCommand;
 import com.team5449.frc2024.commands.ShootCommand;
 import com.team5449.frc2024.commands.ShootWithTrajectory;
 import com.team5449.frc2024.commands.ArmPoseCommand.ArmSystemState;
 import com.team5449.frc2024.subsystems.CalcRotationWithUnitCircleData;
 import com.team5449.frc2024.subsystems.CommandSwerveDrivetrain;
-import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
-import com.team5449.frc2024.subsystems.drive.GyroIOPigeon;
-import com.team5449.frc2024.subsystems.drive.SwerveModuleIOFalconPro;
+// import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
+// import com.team5449.frc2024.subsystems.drive.GyroIOPigeon;
+// import com.team5449.frc2024.subsystems.drive.SwerveModuleIOFalconPro;
 import com.team5449.frc2024.subsystems.score.Arm;
 import com.team5449.frc2024.subsystems.score.Climber;
 import com.team5449.frc2024.subsystems.score.Intake;
@@ -58,6 +57,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -118,9 +118,9 @@ public class RobotContainer {
 
   private final CalcRotationWithUnitCircleData mCircleData;
 
-  private final RotateCommand mRotateCommand;
+  // private final RotateCommand mRotateCommand;
 
-  private final GyroIOPigeon mPigeon;
+  // private final GyroIOPigeon mPigeon;
   
 
   private final JoystickInputHandler handler = new JoystickInputHandler(5, 5, 4);
@@ -172,7 +172,7 @@ public class RobotContainer {
       new VisionIOLimelight("limelight", new Transform3d())
     });
 
-    mPigeon = new GyroIOPigeon();
+    // mPigeon = new GyroIOPigeon();
     drivetrainSubsystem = DriveConstants.DriveTrain;
 
     arm = new Arm();
@@ -182,7 +182,7 @@ public class RobotContainer {
 
 
     mCircleData = new CalcRotationWithUnitCircleData(mOperatorController::getRightX, ()->-mOperatorController.getRightY(), drivetrainSubsystem.getState().Pose.getRotation().getRadians(), 0.5);
-    mRotateCommand = new RotateCommand(drivetrainSubsystem, mCircleData::calculate,0.25);
+    // mRotateCommand = new RotateCommand(drivetrainSubsystem, mCircleData::calculate,0.25);
 
     drivetrainSubsystem.setDefaultCommand(
       drivetrainSubsystem.applyRequest(() -> drive
@@ -306,8 +306,9 @@ public class RobotContainer {
         JSONObject autoJsonObj = (JSONObject)obj;
         Pose2d startPose = AutoBuilder.getStartingPoseFromJson((JSONObject)autoJsonObj.get("startingPose"));
         System.out.println("Inital heading: "+startPose.getRotation());
-        drivetrainSubsystem.resetHeading(DriverStation.getAlliance().get()==Alliance.Blue ? -startPose.getRotation().getRadians() : -Math.PI-startPose.getRotation().getRadians());
-        //TODO: test if works
+        // drivetrainSubsystem.resetHeading(DriverStation.getAlliance().get()==Alliance.Blue ? -startPose.getRotation().getRadians() : -Math.PI-startPose.getRotation().getRadians());
+        drivetrainSubsystem.setControl(new SwerveRequest.FieldCentricFacingAngle().withTargetDirection(new Rotation2d()));
+        //TODO: test if works (again)
       }
       catch (FileNotFoundException e) {
         e.printStackTrace();
