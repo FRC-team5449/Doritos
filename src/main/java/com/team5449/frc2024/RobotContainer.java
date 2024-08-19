@@ -86,9 +86,9 @@ public class RobotContainer {
 
   private final ArmPoseCommand armPoseCommand;
 
-  private SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-  private SlewRateLimiter yLimiter = new SlewRateLimiter(3);
-  private SlewRateLimiter omegaLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter omegaLimiter = new SlewRateLimiter(3);
 
   private TimeDelayedBoolean resetGyroBoolean = new TimeDelayedBoolean();
 
@@ -233,7 +233,7 @@ public class RobotContainer {
     //   new InstantCommand(()->shooter.setOpenLoop(-0.2, false))))
     //   .onFalse(new InstantCommand(()->shooter.setOpenLoop(0, false)));
 
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.AutoAlignStage)).whileTrue(mAutoAlignCommand);
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.AutoAlignStage)).toggleOnTrue(mAutoAlignCommand);
 
     new Trigger(noteStored::get).onTrue(Commands.waitSeconds(0.5).raceWith(
       new InstantCommand(() -> {

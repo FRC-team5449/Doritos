@@ -7,6 +7,7 @@ import com.team5449.frc2024.subsystems.score.Arm;
 import com.team5449.frc2024.subsystems.vision.VisionSubsystem;
 import com.team5449.lib.interpolate.InterpolatingDouble;
 import com.team5449.lib.interpolate.InterpolatingTreeMap;
+import com.team5449.lib.util.GeomUtil;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
@@ -30,11 +31,21 @@ private static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDoub
 private double offset = 0;
 
 static{
-  mShooterRPMTreeMap.put(new InterpolatingDouble(1.533),new InterpolatingDouble(0.235));
-  mShooterRPMTreeMap.put(new InterpolatingDouble(1.83),new InterpolatingDouble(0.23));
-  mShooterRPMTreeMap.put(new InterpolatingDouble(1.99),new InterpolatingDouble(0.22));
-  mShooterRPMTreeMap.put(new InterpolatingDouble(2.33),new InterpolatingDouble(0.21));
-  mShooterRPMTreeMap.put(new InterpolatingDouble(2.70),new InterpolatingDouble(0.2));
+  // mShooterRPMTreeMap.put(new InterpolatingDouble(1.533),new InterpolatingDouble(0.235));
+  // mShooterRPMTreeMap.put(new InterpolatingDouble(1.83),new InterpolatingDouble(0.23));
+  // mShooterRPMTreeMap.put(new InterpolatingDouble(1.99),new InterpolatingDouble(0.22));
+  // mShooterRPMTreeMap.put(new InterpolatingDouble(2.33),new InterpolatingDouble(0.21));
+  // mShooterRPMTreeMap.put(new InterpolatingDouble(2.70),new InterpolatingDouble(0.2));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(1.47221710673951), new InterpolatingDouble(0.235));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(1.58359399599082), new InterpolatingDouble(0.229991344549218));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(1.79371911971832), new InterpolatingDouble(0.224610789230331));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(1.83808426326811), new InterpolatingDouble(0.217023321899457));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(2.07800372107129), new InterpolatingDouble(0.211501185061742));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(2.48149329105085), new InterpolatingDouble(0.195907611979989));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(3.02591489363875), new InterpolatingDouble(0.187));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(2.07800372107129), new InterpolatingDouble(0.211501185061742));
+  mShooterRPMTreeMap.put(new InterpolatingDouble(3.3215523997256), new InterpolatingDouble(0.184));
+
   
 }
 
@@ -62,10 +73,6 @@ static{
     OnArmPoseUpdate();
   }
 
-  private Translation2d GetStageTranslation(){
-    return (DriverStation.getAlliance().orElse(Alliance.Blue)==Alliance.Blue?Constants.ShootTargetPosBlue:Constants.ShootTargetPosRed).toTranslation2d();
-  }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -73,7 +80,7 @@ static{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double botToTarget = mDrive.getPose().getTranslation().getDistance(GetStageTranslation());
+    double botToTarget = mDrive.getPose().getTranslation().getDistance(GeomUtil.GetStageTranslation().toTranslation2d());
     // SmartDashboard.putNumber("Dist", botToTarget);
     mDist.setDouble(botToTarget);
 

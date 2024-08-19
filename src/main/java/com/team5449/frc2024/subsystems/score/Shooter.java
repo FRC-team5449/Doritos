@@ -105,6 +105,7 @@ public class Shooter extends SubsystemBase {
     System.out.print(getUpSpeed()/upShooterSetpoint);
     System.out.print(":");
     System.out.println(getDownSpeed()/lowShooterSetpoint);
+    SmartDashboard.putNumber("Shooter/Up-Low", Math.abs(getUpSpeed())-Math.abs(getDownSpeed()));
     return Util.epsilonEquals(upShooterSetpoint, mUpShooterVelocity.asSupplier().get(), 5) && (Util.epsilonEquals(lowShooterSetpoint, mLowShooterVelocity.asSupplier().get(), 5) || (!bConsiderLowShooter));
   }
 

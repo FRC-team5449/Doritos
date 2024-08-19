@@ -15,6 +15,7 @@ import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
 import com.team5449.frc2024.subsystems.score.Intake;
 import com.team5449.frc2024.subsystems.score.Shooter;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -60,11 +61,13 @@ public class AutoMidCommand extends SequentialCommandGroup{
             Translation2d mRobot = mDrive.getPose().getTranslation().nearest(Arrays.asList(MSHOOT_poses));
             for(int j=0;j<MSHOOT_poses.length;j++){
                 if(MSHOOT_poses[j]==mRobot){
+                    mStartPose.getObject("traj").setPose(mRobot.getX(), mRobot.getY(), new Rotation2d());
                     AutoBuilder.followPath(MSHOOT[j]).andThen(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 40, true), m, 2)).andThen(c).schedule();
                     NoteI = j;
                     break;
                 }
             }
+            
         };
         SmartDashboard.putData("Drive/StartPose", mStartPose);
         mStartPose.setRobotPose(MidM1.getPreviewStartingHolonomicPose());
