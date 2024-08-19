@@ -1,0 +1,100 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.5276958246224197,
+        "y": 4.371055665188254
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.5276958246224197,
+        "y": 5.371055665188252
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.826693499540847,
+        "y": 6.502315312322933
+      },
+      "prevControl": {
+        "x": 3.8266934995408466,
+        "y": 6.502315312322933
+      },
+      "nextControl": {
+        "x": 5.826693499540847,
+        "y": 6.502315312322933
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.293429202243022,
+        "y": 4.25265235145855
+      },
+      "prevControl": {
+        "x": 7.293429202243022,
+        "y": 5.252652351458546
+      },
+      "nextControl": {
+        "x": 7.293429202243022,
+        "y": 3.2526523514585497
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.826693499540847,
+        "y": 1.7563158203239486
+      },
+      "prevControl": {
+        "x": 5.826693499540847,
+        "y": 1.7563158203239486
+      },
+      "nextControl": {
+        "x": 3.8266934995408466,
+        "y": 1.7563158203239486
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5276958246224197,
+        "y": 4.371055665188254
+      },
+      "prevControl": {
+        "x": 2.5276958246224197,
+        "y": 3.371055665188254
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 8.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 86.48932156973271,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Offseason Paths",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
