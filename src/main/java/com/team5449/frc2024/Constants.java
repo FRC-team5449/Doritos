@@ -3,6 +3,8 @@ package com.team5449.frc2024;
 import java.sql.DriverPropertyInfo;
 import java.util.function.BooleanSupplier;
 
+import org.ejml.interfaces.decomposition.LUDecomposition_F32;
+
 import com.google.flatbuffers.FlexBuffers.Key;
 import com.team5449.frc2024.commands.DriveCommandWithRotationAbsloute;
 import com.team5449.lib.util.ControllerUtil;
@@ -40,7 +42,7 @@ public class Constants {
     public static final double maxAutoVelocityMeterPerSec = 2;
     public static final double maxAutoAccelerationMeterPerSecSq = 100;
 
-    public static final double maxAngularVelocityRadPerSec = 2*Math.PI; //maxVelocityMeterPerSec / Math.hypot(wheelBaseMeters / 2, trackBaseMeters / 2);
+    public static final double maxAngularVelocityRadPerSec = 30; //maxVelocityMeterPerSec / Math.hypot(wheelBaseMeters / 2, trackBaseMeters / 2);
 
     public static final int driveCurrentLimit = 70;
     public static final int steerCurrentLimit = 30;
@@ -198,22 +200,23 @@ public class Constants {
     public static final long ToggleSlowMode = ControllerUtil.GetPS5Val("Square");
     public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetPS5Val("L3") | ControllerUtil.GetPS5Val("R3");
     public static final long ClkwRotatePos90Deg = ControllerUtil.GetPS5Val("R3");
-    // public static final long shoot = ControllerUtil.GetPS5Val("L2");
-    // public static final long intake = ControllerUtil.GetPS5Val("L1");
-    // public static final long reload = ControllerUtil.GetPS5Val("R1");
-    // public static final long amp = ControllerUtil.GetPS5Val("R2");
+    public static final long shoot = ControllerUtil.GetPS5Val("L2");
+    public static final long intake = ControllerUtil.GetPS5Val("L1");
+    public static final long reload = ControllerUtil.GetPS5Val("R1");
+    public static final long amp = ControllerUtil.GetPS5Val("R2");
+     public static final long overshoot = ControllerUtil.GetPS5Val("L3");
 
     // Operator
     static{
             ControllerUtil.setControlPort(OperatorPort);
         }
-    public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
-    public static final long intake = ControllerUtil.GetXboxVal("B");
-    public static final long reload = ControllerUtil.GetXboxVal("X");
-    public static final long amp = ControllerUtil.GetXboxVal("Y");
+    // public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
+    // public static final long intake = ControllerUtil.GetXboxVal("B");
+    // public static final long reload = ControllerUtil.GetXboxVal("X");
+    // public static final long amp = ControllerUtil.GetXboxVal("Y");
     public static final long scalestring1 = ControllerUtil.GetXboxVal("LeftBumper");
     public static final long scalestring2 = ControllerUtil.GetXboxVal("RightBumper");
-    public static final long overshoot = reload | scalestring1 | scalestring2;
+    // public static final long overshoot = reload | scalestring1 | scalestring2;
     public static final long offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
     public static final long offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
     public static final long ResetArmOffset = offsetArmUp | offsetArmDown;
@@ -226,8 +229,8 @@ public class Constants {
     public static final Translation2d AmpTargetPosBlue = new Translation2d(72.5*0.0254, 323.00*0.0254);
     public static final Translation3d ShootMidAprilTagPosRed = new Translation3d(652.73*0.0254, 218.42*0.0254, 57.13*0.0254);
     public static final Translation2d AmpTargetPosRed = new Translation2d(578.77*0.0254, 323.00*0.0254);
-    public static final Translation3d ShootTargetPosBlue = ShootMidAprilTagPosBlue;//.plus(new Translation3d(0.28,0,0.7));
-    public static final Translation3d ShootTargetPosRed = ShootMidAprilTagPosRed;//.plus(new Translation3d(-0.28,0,0.7));
+    public static final Translation3d ShootTargetPosBlue = ShootMidAprilTagPosBlue.plus(new Translation3d(0.28,0,0.7));
+    public static final Translation3d ShootTargetPosRed = ShootMidAprilTagPosBlue.plus(new Translation3d(-0.28,0,0.7));
 
     public static enum checkTarget
     {
