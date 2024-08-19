@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 2.0836833981360283,
+      "y": 5.880697915241985
+    },
+    "rotation": 0.9
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CIRCLE"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Offseason Autos",
+  "choreoAuto": false
+}
