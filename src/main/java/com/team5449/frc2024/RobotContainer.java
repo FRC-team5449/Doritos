@@ -316,7 +316,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake", new IntakeCommand(shooter, intake, armPoseCommand, false));
     NamedCommands.registerCommand("NearShoot", Commands.waitSeconds(10).raceWith(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 65, mPrintNote)).until(delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.235))));
     NamedCommands.registerCommand("MiddleShoot", Commands.waitSeconds(10).raceWith(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 75, mPrintNote)). until(delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.22))));
-    NamedCommands.registerCommand("FarShoot", Commands.waitSeconds(10).raceWith(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 80, mPrintNote)).until(delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.196))));
+    NamedCommands.registerCommand("FarShoot", Commands.waitSeconds(10).raceWith(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AUTOSHOOT, 80, mPrintNote)).until(delayedNoteOut).alongWith(new InstantCommand(() -> armPoseCommand.setAutoShootPosition(0.185))));
     NamedCommands.registerCommand("Arm Down", new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.ARMDOWN)));
   }
 
