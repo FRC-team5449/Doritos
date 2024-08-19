@@ -119,7 +119,7 @@ public class RobotContainer {
   public BooleanSupplier conditionReload = ControllerUtil.toCond(Constants.ControlConds.reload);//() -> mOperatorController.getXButton() && !RLst.getAsBoolean() && !mOperatorController.getRightBumper();
   public BooleanSupplier conditionGoAMP = ControllerUtil.toCond(Constants.ControlConds.amp);
   public BooleanSupplier conditionOverShoot = ControllerUtil.toCond(Constants.ControlConds.overshoot);//new Trigger(RLst).negate().and(mOperatorController::getRightBumper).and(mOperatorController::getXButton);
-
+  
   public RobotContainer() {
 
     
@@ -234,9 +234,15 @@ public class RobotContainer {
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.AutoAlignStage)).toggleOnTrue(mAutoAlignCommand);
 
-    new Trigger(noteStored::get).onTrue(Commands.waitSeconds(0.5).raceWith(
+    new Trigger(noteStored::get).onTrue(
       new InstantCommand(() -> {
         mDriverController.setRumble(RumbleType.kBothRumble, 0.5);
+      })
+        .alongWith(
+        new InstantCommand(() -> {
+            // 打印消息
+            System.out.println("震动发生！");
+        
         // mOperatorController.setRumble(RumbleType.kBothRumble, 0.5);
       })
     ).andThen(
