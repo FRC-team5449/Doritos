@@ -93,17 +93,18 @@ public class AutoMidCommand extends SequentialCommandGroup{
                     mDrive.setTargetVelocity(new ChassisSpeeds());
                     return;
                 }
-                SequentialCommandGroup mCmd = new SequentialCommandGroup(
-                    AutoBuilder.followPath(SHOOTM[NoteI])
-                    // new InstantCommand(() -> NoteI++),
-                );
-                NoteI+=2;
-                for(int j=NoteI;j<5;j++){
-                    mCmd.addCommands(AutoBuilder.followPath(MM[j]));
-                }
-                mCmd.raceWith(new IntakeCommand(s, i, m, false)).andThen(new InstantCommand(() -> sequenceRun.accept(Commands.none())));
+                // SequentialCommandGroup mCmd = new SequentialCommandGroup(
+                //     AutoBuilder.followPath(SHOOTM[NoteI])
+                //     // new InstantCommand(() -> NoteI++),
+                // );
+                // NoteI+=2;
+                // for(int j=NoteI;j<5;j++){
+                //     mCmd.addCommands(AutoBuilder.followPath(MM[j]));
+                // }
+                // mCmd.raceWith(new IntakeCommand(s, i, m, false)).andThen(new InstantCommand(() -> sequenceRun.accept(Commands.none())));
                 
-                sequenceRun.accept(mCmd);
+                // sequenceRun.accept(mCmd);
+                sequenceRun.accept(Commands.none());
                 // mCmd.schedule();
             })
         );

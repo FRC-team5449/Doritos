@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.332718690882675,
-        "y": 6.412860052183209
+        "x": 3.7712115281881817,
+        "y": 6.388254389794664
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.30404765644137,
-        "y": 6.809747156389987
+        "x": 4.742540493746876,
+        "y": 6.785141494001442
       },
       "isLocked": false,
       "linkedName": "Q12Shoot"
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "Offseason Paths",
   "previewStartingState": {
-    "rotation": -168.5524037363144,
+    "rotation": -168.91743053697036,
     "velocity": 0
   },
   "useDefaultConstraints": true
