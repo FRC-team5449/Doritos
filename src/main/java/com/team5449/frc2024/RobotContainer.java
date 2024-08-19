@@ -92,7 +92,7 @@ public class RobotContainer {
 
   private TimeDelayedBoolean resetGyroBoolean = new TimeDelayedBoolean();
 
-  public final XboxController mDriverController = new XboxController(0);
+  public final PS5Controller mDriverController = new PS5Controller(0);
   // public final ControllerUtil mDriverControllerU = new ControllerUtil(mDriverController);
   public final XboxController mOperatorController = new XboxController(1);
   // public final ControllerUtil mOperatorControllerU = new ControllerUtil(mOperatorController);
@@ -151,9 +151,8 @@ public class RobotContainer {
       () -> -adjustJoystickValue(xLimiter.calculate(mDriverController.getLeftY())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(yLimiter.calculate(mDriverController.getLeftX())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(omegaLimiter.calculate(mDriverController.getRightX())) * drivetrainSubsystem.getMaxAngularVelocityRadPerSec()/* + mRotateCommand.calcRotVel()*/,
-      mDriverController::getBButtonPressed,
-      () -> {boolean reset = resetGyroBoolean.update(mDriverController.getAButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
-
+      mDriverController::getOptionsButtonPressed,
+      () -> {boolean reset = resetGyroBoolean.update(mDriverController.getCrossButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
       drivetrainSubsystem.setPathAuto();
 
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.ToggleSlowMode)).onTrue(new InstantCommand(() -> drivetrainSubsystem.isSlowMode=!drivetrainSubsystem.isSlowMode));
