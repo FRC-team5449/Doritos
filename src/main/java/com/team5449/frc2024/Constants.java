@@ -205,6 +205,8 @@ public class Constants {
     public static final long reload = ControllerUtil.GetPS5Val("R1");
     public static final long amp = ControllerUtil.GetPS5Val("R2");
      public static final long overshoot = ControllerUtil.GetPS5Val("L3");
+      public static final long offsetArmUp = ControllerUtil.GetPS5Val("Options");
+      public static final long offsetArmDown = ControllerUtil.GetPS5Val("Create");
 
     // Operator
     static{
@@ -217,8 +219,8 @@ public class Constants {
     public static final long scalestring1 = ControllerUtil.GetXboxVal("LeftBumper");
     public static final long scalestring2 = ControllerUtil.GetXboxVal("RightBumper");
     // public static final long overshoot = reload | scalestring1 | scalestring2;
-    public static final long offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
-    public static final long offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
+    // public static final long offsetArmUp = ControllerUtil.GetXboxVal("LeftStick");
+    // public static final long offsetArmDown = ControllerUtil.GetXboxVal("RightStick");
     public static final long ResetArmOffset = offsetArmUp | offsetArmDown;
     public static final long forceShoot = shoot | reload;
     public static final long forceIntake = intake | scalestring2;
