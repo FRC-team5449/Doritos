@@ -73,20 +73,21 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShootRPM(double speed){
-    upShooterSetpoint = speed;
-    lowShooterSetpoint = -speed;//*0.8;
+    upShooterSetpoint = speed*1.25;
+    lowShooterSetpoint = -speed*1.25;//*0.8;
 
     updateSetpoint();
   }
 
   public void setOpenLoop(double percent, boolean isDifferent){
+    percent*=1.25;
     mUpShooter.set(percent);
     mLowShooter.set(isDifferent?-percent:percent);
     //mLowShooter.setControl(new Follower(Ports.kShooterUpId, isDifferent));
   }
 
   public void setAmpShooting(double speed){
-    upShooterSetpoint = speed;
+    upShooterSetpoint = speed*1.25;
     lowShooterSetpoint = 0;
     updateSetpoint();
     mLowShooter.set(0);

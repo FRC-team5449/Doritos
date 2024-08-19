@@ -139,7 +139,7 @@ public class RobotContainer {
 
     arm = new Arm();
     climber=new Climber();
-    armPoseCommand = new ArmPoseCommand(arm, vision);
+    armPoseCommand = new ArmPoseCommand(arm, drivetrainSubsystem);
     arm.setDefaultCommand(armPoseCommand);
 
 
@@ -250,8 +250,8 @@ public class RobotContainer {
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.ClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(Math.PI/2)));
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.CounterClkwRotatePos90Deg)).onTrue(new InstantCommand(() -> drivetrainSubsystem.offsetHeading(-Math.PI/2)));
 
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmUp)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.005)));
-    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmDown)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.005)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmUp)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(0.001)));
+    new Trigger(ControllerUtil.toCond(Constants.ControlConds.offsetArmDown)).onTrue(new InstantCommand(() -> armPoseCommand.offsetBy(-0.001)));
     new Trigger(ControllerUtil.toCond(Constants.ControlConds.ResetArmOffset)).onTrue(new InstantCommand(armPoseCommand::resetOffset));
   }
 

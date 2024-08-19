@@ -3,13 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3247322168944597,
-        "y": 5.577308253853149
+        "x": 1.2725102294988313,
+        "y": 7.467744197574909
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4109495547235373,
-        "y": 6.391971257224957
+        "x": 2.0245326323891106,
+        "y": 7.791460626528901
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.298723340449226,
+        "y": 7.666187749678298
+      },
+      "prevControl": {
+        "x": 2.8496142488468186,
+        "y": 7.676632147157424
+      },
+      "nextControl": {
+        "x": 4.476540497182521,
+        "y": 7.638796653010082
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +36,8 @@
         "y": 7.3424114278254
       },
       "prevControl": {
-        "x": 6.379820596791322,
-        "y": 7.279745042950646
+        "x": 6.7349301110815984,
+        "y": 7.707965339594802
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,29 +46,17 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": -161.03246289994615,
-      "rotateFast": false
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 180.0,
+      "rotateFast": true
     },
     {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": -159.77437328700336,
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
-  "constraintZones": [
-    {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0.25,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 8.0,
@@ -61,14 +65,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 1.0,
+    "velocity": 0,
     "rotation": 0,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Offseason Paths",
   "previewStartingState": {
-    "rotation": -178.7811247648687,
+    "rotation": 178.75463573323157,
     "velocity": 0
   },
   "useDefaultConstraints": true

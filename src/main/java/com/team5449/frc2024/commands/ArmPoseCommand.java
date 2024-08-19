@@ -1,19 +1,24 @@
 package com.team5449.frc2024.commands;
 
 
+import com.team5449.frc2024.Constants;
+import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
 import com.team5449.frc2024.subsystems.score.Arm;
 import com.team5449.frc2024.subsystems.vision.VisionSubsystem;
 import com.team5449.lib.interpolate.InterpolatingDouble;
 import com.team5449.lib.interpolate.InterpolatingTreeMap;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ArmPoseCommand extends Command{
 private final Arm mArm;
-private final VisionSubsystem mVision;
+private final DrivetrainSubsystem mDrive;
 private ArmSystemState mSystemState = ArmSystemState.IDLE;
 private final ShuffleboardTab mTab = Shuffleboard.getTab("Arm");
 private final GenericEntry mPos = mTab.add("ArmPosition", mSystemState.armPose).getEntry();
@@ -33,10 +38,10 @@ static{
   
 }
 
-  public ArmPoseCommand(Arm arm, VisionSubsystem vision) {
+  public ArmPoseCommand(Arm arm, DrivetrainSubsystem drive) {
     mArm = arm;
-    mVision = vision;
-    addRequirements(mArm, mVision);
+    mDrive = drive;
+    addRequirements(mArm);
   }
 
   public void setPose(ArmSystemState newSystemState){
@@ -57,6 +62,10 @@ static{
     OnArmPoseUpdate();
   }
 
+  private Translation2d GetStageTranslation(){
+    return (DriverStation.getAlliance().orElse(Alliance.Blue)==Alliance.Blue?Constants.ShootTargetPosBlue:Constants.ShootTargetPosRed).toTranslation2d();
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -64,7 +73,7 @@ static{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double botToTarget = mVision.getStageDistance(0);
+    double botToTarget = mDrive.getPose().getTranslation().getDistance(GetStageTranslation());
     // SmartDashboard.putNumber("Dist", botToTarget);
     mDist.setDouble(botToTarget);
 

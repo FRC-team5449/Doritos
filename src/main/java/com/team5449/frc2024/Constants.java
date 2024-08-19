@@ -10,6 +10,7 @@ import com.team5449.lib.util.ControllerUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -220,6 +221,13 @@ public class Constants {
     public static final long forceIntake = intake | scalestring2;
 
     }
+
+    public static final Translation3d ShootMidAprilTagPosBlue = new Translation3d(-1.50*0.0254, 218.42*0.0254, 57.13*0.0254);
+    public static final Translation2d AmpTargetPosBlue = new Translation2d(72.5*0.0254, 323.00*0.0254);
+    public static final Translation3d ShootMidAprilTagPosRed = new Translation3d(652.73*0.0254, 218.42*0.0254, 57.13*0.0254);
+    public static final Translation2d AmpTargetPosRed = new Translation2d(578.77*0.0254, 323.00*0.0254);
+    public static final Translation3d ShootTargetPosBlue = ShootMidAprilTagPosBlue.plus(new Translation3d(0.28,0,0.7));
+    public static final Translation3d ShootTargetPosRed = ShootMidAprilTagPosBlue.plus(new Translation3d(-0.28,0,0.7));
 
     public static enum checkTarget
     {

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.040479795972315,
-        "y": 7.467744197574909
+        "x": 7.737592269077669,
+        "y": 7.3424114278254
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.040479795972315,
-        "y": 7.467744197574909
+        "x": 6.737592269077669,
+        "y": 7.3424114278254
       },
       "isLocked": true,
       "linkedName": "M1Note"
@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 8.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
