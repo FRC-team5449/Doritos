@@ -232,7 +232,7 @@ public class DrivetrainSubsystem extends SubsystemBase{
                 },
                 new Pose2d(),
                 VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-                VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(180)));
+                VecBuilder.fill(1.0, 1.0, Units.degreesToRadians(40)));
         mMeasuredStates = new SwerveModuleState[]{
             new SwerveModuleState(),
             new SwerveModuleState(),
@@ -359,7 +359,7 @@ public class DrivetrainSubsystem extends SubsystemBase{
     }
 
     public Pose2d getPose() {
-        return getPose(false);
+        return getPose(true);
     }
 
     public Pose2d getPose(boolean visionAngle) {
@@ -479,7 +479,7 @@ public class DrivetrainSubsystem extends SubsystemBase{
     }
 
     public void setPathAuto(){
-        resetHeading(-120);
+        // resetHeading(-120);
         resetPose();
 
         AutoBuilder.configureHolonomic(

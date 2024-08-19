@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3247322168944597,
+      "y": 5.577308253853149
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid2M1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M12M2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M22M3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M32M4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M42M5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M52Q4Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Offseason Autos",
+  "choreoAuto": false
+}

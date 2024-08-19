@@ -55,7 +55,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Reload", m_robotContainer.conditionReload.getAsBoolean());
     SmartDashboard.putBoolean("OverShoot", m_robotContainer.conditionOverShoot.getAsBoolean());
     //SmartDashboard.putBoolean("Arm/AtSetPoint", Arm.getInstance().isArmAtSetpoint());
-    mfield.setRobotPose(m_robotContainer.getDrivetrainSubsystem().getEstimatedPose());
+    mfield.setRobotPose(m_robotContainer.getDrivetrainSubsystem().getPose());
   }
 
   @Override

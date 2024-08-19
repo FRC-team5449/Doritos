@@ -19,6 +19,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.team5449.frc2024.Constants.Ports;
 // import com.team5449.frc2024.autos.autocommands.WaitCommand;
+import com.team5449.frc2024.autos.autocommands.AutoMidCommand;
 import com.team5449.frc2024.commands.AmpCommand;
 import com.team5449.frc2024.commands.ArmPoseCommand;
 import com.team5449.frc2024.commands.AutoAlign;
@@ -91,7 +92,7 @@ public class RobotContainer {
 
   private TimeDelayedBoolean resetGyroBoolean = new TimeDelayedBoolean();
 
-  public final PS5Controller mDriverController = new PS5Controller(0);
+  public final XboxController mDriverController = new XboxController(0);
   // public final ControllerUtil mDriverControllerU = new ControllerUtil(mDriverController);
   public final XboxController mOperatorController = new XboxController(1);
   // public final ControllerUtil mOperatorControllerU = new ControllerUtil(mOperatorController);
@@ -150,8 +151,8 @@ public class RobotContainer {
       () -> -adjustJoystickValue(xLimiter.calculate(mDriverController.getLeftY())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(yLimiter.calculate(mDriverController.getLeftX())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(omegaLimiter.calculate(mDriverController.getRightX())) * drivetrainSubsystem.getMaxAngularVelocityRadPerSec()/* + mRotateCommand.calcRotVel()*/,
-      mDriverController::getOptionsButtonPressed,
-      () -> {boolean reset = resetGyroBoolean.update(mDriverController.getCrossButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
+      mDriverController::getBButtonPressed,
+      () -> {boolean reset = resetGyroBoolean.update(mDriverController.getAButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
 
       drivetrainSubsystem.setPathAuto();
 
@@ -168,6 +169,8 @@ public class RobotContainer {
     pathPlannerRegisterCommand();
 
     mAutoChooser = AutoBuilder.buildAutoChooser();
+
+    mAutoChooser.addOption("Auto Mid", new AutoMidCommand(intake, shooter, armPoseCommand, drivetrainSubsystem));
 
     SmartDashboard.putData("Builder Auto Chooser", mAutoChooser);
 
@@ -258,7 +261,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     final Command nowSelected = mAutoChooser.getSelected();
     String name = nowSelected.getName();
-    if(!nowSelected.getName().equals("InstantCommand"))
+    if(!nowSelected.getName().equals("InstantCommand") && !nowSelected.getName().equals("AutoMidCommand"))
     {
       JSONParser parser = new JSONParser();
       try{

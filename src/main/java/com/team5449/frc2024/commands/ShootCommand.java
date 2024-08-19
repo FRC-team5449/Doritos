@@ -15,17 +15,25 @@ public class ShootCommand extends Command {
   private final BooleanSupplier isArmSet;
   private final BooleanConsumer onShoot;
 
+  private final boolean restoreAfterStop;
   private boolean isTransitRunning;
   private boolean isNoteOuted;
 
   private double shooterSetpoint;
-  public ShootCommand(Shooter shooter, ArmPoseCommand mArmPoseCommand, BooleanSupplier isArmPositionSet, double setpoint, BooleanConsumer onShoot) {
+  public ShootCommand(Shooter shooter, ArmPoseCommand mArmPoseCommand, BooleanSupplier isArmPositionSet, double setpoint, boolean restoreAfterStop, BooleanConsumer onShoot) {
     mShooter = shooter;
     isArmSet = isArmPositionSet;
     shooterSetpoint = setpoint;
     this.onShoot = onShoot;
     mArm = mArmPoseCommand;
+    this.restoreAfterStop = restoreAfterStop;
     addRequirements(mShooter);
+  }
+  public ShootCommand(Shooter shooter, ArmPoseCommand mArmPoseCommand, BooleanSupplier isArmPositionSet, double setpoint, boolean restoreAfterStop) {
+    this(shooter, mArmPoseCommand, isArmPositionSet, setpoint, restoreAfterStop, (e)->{});
+  }
+  public ShootCommand(Shooter shooter, ArmPoseCommand mArmPoseCommand, BooleanSupplier isArmPositionSet, double setpoint, BooleanConsumer onShoot) {
+    this(shooter, mArmPoseCommand, isArmPositionSet, setpoint, false, onShoot);
   }
   public ShootCommand(Shooter shooter, ArmPoseCommand mArmPoseCommand, BooleanSupplier isArmPositionSet, double setpoint) {
     this(shooter, mArmPoseCommand, isArmPositionSet, setpoint, (e)->{});
@@ -71,7 +79,7 @@ public class ShootCommand extends Command {
   public void end(boolean interrupted) {
     mShooter.setOpenLoop(0, false);
     mShooter.transit(0);
-    if(isNoteOuted){
+    if(isNoteOuted || restoreAfterStop){
       mArm.setPose(ArmSystemState.INTAKE);
     }
   }
