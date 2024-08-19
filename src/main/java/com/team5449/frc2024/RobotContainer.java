@@ -241,8 +241,11 @@ public class RobotContainer {
       })
     ).andThen(
       new InstantCommand(() -> {
-        mDriverController.setRumble(RumbleType.kBothRumble, 0);
-        // mOperatorController.setRumble(RumbleType.kBothRumble, 0);
+        mDriverController.setRumble(RumbleType.kBothRumble, 1.0);
+        mOperatorController.setRumble(RumbleType.kBothRumble, 1.0);
+        Timer.delay(0.5);
+        mDriverController.setRumble(RumbleType.kBothRumble, 0.0);
+        mOperatorController.setRumble(RumbleType.kBothRumble, 0.0);
       })
     ));
 
