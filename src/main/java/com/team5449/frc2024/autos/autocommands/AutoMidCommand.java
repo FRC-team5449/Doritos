@@ -62,7 +62,8 @@ public class AutoMidCommand extends SequentialCommandGroup{
             for(int j=0;j<MSHOOT_poses.length;j++){
                 if(MSHOOT_poses[j]==mRobot){
                     mStartPose.getObject("traj").setPose(mRobot.getX(), mRobot.getY(), new Rotation2d());
-                    AutoBuilder.followPath(MSHOOT[j]).andThen(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 40, true), m, 2)).andThen(c).schedule();
+                    System.out.println("SHOOT POSE "+j);
+                    AutoBuilder.followPath(MSHOOT[j]).andThen(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 60, true), m, 2)).andThen(Commands.print("Ten")).andThen(c).schedule();
                     NoteI = j;
                     break;
                 }
@@ -93,18 +94,17 @@ public class AutoMidCommand extends SequentialCommandGroup{
                     mDrive.setTargetVelocity(new ChassisSpeeds());
                     return;
                 }
-                // SequentialCommandGroup mCmd = new SequentialCommandGroup(
-                //     AutoBuilder.followPath(SHOOTM[NoteI])
-                //     // new InstantCommand(() -> NoteI++),
-                // );
+                SequentialCommandGroup mCmd = new SequentialCommandGroup(
+                    AutoBuilder.followPath(SHOOTM[NoteI])
+                    // new InstantCommand(() -> NoteI++),
+                );
                 // NoteI+=2;
                 // for(int j=NoteI;j<5;j++){
                 //     mCmd.addCommands(AutoBuilder.followPath(MM[j]));
                 // }
-                // mCmd.raceWith(new IntakeCommand(s, i, m, false)).andThen(new InstantCommand(() -> sequenceRun.accept(Commands.none())));
                 
-                // sequenceRun.accept(mCmd);
-                sequenceRun.accept(Commands.none());
+                // sequenceRun.accept(mCmd.raceWith(new IntakeCommand(s, i, m, false)).andThen(new InstantCommand(() -> sequenceRun.accept(Commands.none()))));
+                sequenceRun.accept(mCmd);
                 // mCmd.schedule();
             })
         );
