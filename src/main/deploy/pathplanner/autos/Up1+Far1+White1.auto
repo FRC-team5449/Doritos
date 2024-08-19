@@ -58,42 +58,6 @@
           "data": {
             "name": "Arm Down"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Note1ToNote2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "FarShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Arm Down"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Note2ToNote3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "FarShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Arm Down"
-          }
         }
       ]
     }
