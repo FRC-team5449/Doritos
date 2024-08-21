@@ -13,10 +13,12 @@ import com.team5449.lib.util.Util;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -28,12 +30,14 @@ public class AutoAlign extends Command {
   private final double maxAccelerationRadPerSecSq = 2;
   private final double maxVelocityRadPerSec = 4;
   private double lastt = 0;
+  private final Field2d mOutput = new Field2d();
 
   /** Creates a new AutoAlign. */
   public AutoAlign(DrivetrainSubsystem drive, VisionSubsystem vision) {
     mDrive = drive;
     // mVision = vision;
     omegaController.enableContinuousInput(-Math.PI, Math.PI);
+    SmartDashboard.putData("Drive/StagePose", mOutput);
   }
 
   // Called when the command is initially scheduled.
@@ -111,7 +115,7 @@ public class AutoAlign extends Command {
     // omegaController.setSetpoint(adjustAngleToTartget);
 
     // SmartDashboard.putNumber("Adjust Angle", Units.radiansToDegrees(adjustAngleToTartget));
-
+    mOutput.setRobotPose(new Pose2d(GeomUtil.GetStageTranslation().toTranslation2d(), new Rotation2d()));
     double rotation = GeomUtil.GetStageTranslation().toTranslation2d().minus(mDrive.getPose().getTranslation()).getAngle().getRadians();
     SmartDashboard.putNumber("Auto Align/Adjust Angle", Units.radiansToDegrees(rotation));
     omegaController.setSetpoint(rotation);

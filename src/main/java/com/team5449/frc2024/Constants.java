@@ -232,7 +232,7 @@ public class Constants {
     public static final Translation3d ShootMidAprilTagPosRed = new Translation3d(652.73*0.0254, 218.42*0.0254, 57.13*0.0254);
     public static final Translation2d AmpTargetPosRed = new Translation2d(578.77*0.0254, 323.00*0.0254);
     public static final Translation3d ShootTargetPosBlue = ShootMidAprilTagPosBlue.plus(new Translation3d(0.28,0,0.7));
-    public static final Translation3d ShootTargetPosRed = ShootMidAprilTagPosBlue.plus(new Translation3d(-0.28,0,0.7));
+    public static final Translation3d ShootTargetPosRed = ShootMidAprilTagPosRed.plus(new Translation3d(-0.28,0,0.7));
 
     public static enum checkTarget
     {

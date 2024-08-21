@@ -44,12 +44,16 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putData("Drive/Pose", mfield);
   }
 
+  public static boolean isRedAlliance(){
+    return DriverStation.getAlliance().get() == Alliance.Red;
+  }
+
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
     if(DriverStation.getAlliance().isPresent()){
-      SmartDashboard.putBoolean("Alliance Choice", DriverStation.getAlliance().get() != Alliance.Red);
+      SmartDashboard.putBoolean("Alliance Choice", !isRedAlliance());
     }
 
     SmartDashboard.putBoolean("Reload", m_robotContainer.conditionReload.getAsBoolean());

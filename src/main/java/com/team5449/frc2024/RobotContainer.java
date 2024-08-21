@@ -148,8 +148,8 @@ public class RobotContainer {
 
     drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
       drivetrainSubsystem,
-      () -> -adjustJoystickValue(xLimiter.calculate(mDriverController.getLeftY())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
-      () -> -adjustJoystickValue(yLimiter.calculate(mDriverController.getLeftX())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
+      () -> -adjustJoystickValue(xLimiter.calculate(mDriverController.getLeftY())) * drivetrainSubsystem.getMaxVelocityMetersPerSec() * (Robot.isRedAlliance()?-1:1),
+      () -> -adjustJoystickValue(yLimiter.calculate(mDriverController.getLeftX())) * drivetrainSubsystem.getMaxVelocityMetersPerSec() * (Robot.isRedAlliance()?-1:1),
       () -> -adjustJoystickValue(omegaLimiter.calculate(mDriverController.getRightX())) * drivetrainSubsystem.getMaxAngularVelocityRadPerSec()/* + mRotateCommand.calcRotVel()*/,
       () -> mDriverController.getOptionsButtonPressed() && ControllerUtil.toCond(Constants.ControlConds.secondContext).getAsBoolean()==false,
       () -> {boolean reset = resetGyroBoolean.update(mDriverController.getCrossButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
