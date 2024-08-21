@@ -25,9 +25,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoMidCommand extends SequentialCommandGroup{
     private static final PathPlannerPath MidM1 = PathPlannerPath.fromPathFile("Mid2M1");
+    private static final PathPlannerPath UpM1 = PathPlannerPath.fromPathFile("Up2M1");
+    private static final PathPlannerPath DownM5 = PathPlannerPath.fromPathFile("Down2M5");
     private static final PathPlannerPath M1M2 = PathPlannerPath.fromPathFile("M12M2");
     private static final PathPlannerPath M2M3 = PathPlannerPath.fromPathFile("M22M3");
     private static final PathPlannerPath M3M4 = PathPlannerPath.fromPathFile("M32M4");
@@ -37,7 +40,10 @@ public class AutoMidCommand extends SequentialCommandGroup{
     private static final PathPlannerPath M3SHOOT = PathPlannerPath.fromPathFile("M32Q4Shoot");
     private static final PathPlannerPath M4SHOOT = PathPlannerPath.fromPathFile("M42Q4Shoot");
     private static final PathPlannerPath M5SHOOT = PathPlannerPath.fromPathFile("M52Q4Shoot");
-    private static final PathPlannerPath[] MM = {MidM1, M1M2, M2M3, M3M4, M4M5};
+
+    private static final PathPlannerPath StartPoseChooser = UpM1;
+
+    private static final PathPlannerPath[] MM = {StartPoseChooser, M1M2, M2M3, M3M4, M4M5};
     private static final PathPlannerPath[] MSHOOT = {M1SHOOT, M2SHOOT, M3SHOOT, M4SHOOT, M5SHOOT};
     private static final PathPlannerPath[] SHOOTM = {
         null,
@@ -63,7 +69,7 @@ public class AutoMidCommand extends SequentialCommandGroup{
                 if(MSHOOT_poses[j]==mRobot){
                     mStartPose.getObject("traj").setPose(mRobot.getX(), mRobot.getY(), new Rotation2d());
                     System.out.println("SHOOT POSE "+j);
-                    AutoBuilder.followPath(MSHOOT[j]).andThen(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 60, true), m, 2)).andThen(Commands.print("Ten")).andThen(c).schedule();
+                    (AutoBuilder.followPath(MSHOOT[j]).andThen(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 60, true), m, 2)).andThen(Commands.print("Ten")).andThen(c)).schedule();
                     NoteI = j;
                     break;
                 }
@@ -71,13 +77,13 @@ public class AutoMidCommand extends SequentialCommandGroup{
             
         };
         SmartDashboard.putData("Drive/StartPose", mStartPose);
-        mStartPose.setRobotPose(MidM1.getPreviewStartingHolonomicPose());
-        addCommands(new InstantCommand(() -> mDrive.resetPose(MidM1.getPreviewStartingHolonomicPose())));
+        mStartPose.setRobotPose(StartPoseChooser.getPreviewStartingHolonomicPose());
+        addCommands(new InstantCommand(() -> mDrive.resetPose(StartPoseChooser.getPreviewStartingHolonomicPose())));
 
         // addCommands(new InstantCommand(() -> m.setPose(ArmSystemState.SHOOTING)),new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 40));
         addCommands(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 40, true), m, 2));
         addCommands(Commands.sequence(
-            AutoBuilder.followPath(MidM1),
+            AutoBuilder.followPath(StartPoseChooser),
             // new InstantCommand(() -> NoteI = 1),
             AutoBuilder.followPath(M1M2),
             // new InstantCommand(() -> NoteI = 2),
@@ -104,7 +110,8 @@ public class AutoMidCommand extends SequentialCommandGroup{
                 // }
                 
                 // sequenceRun.accept(mCmd.raceWith(new IntakeCommand(s, i, m, false)).andThen(new InstantCommand(() -> sequenceRun.accept(Commands.none()))));
-                sequenceRun.accept(mCmd);
+                // sequenceRun.accept(mCmd);
+                sequenceRun.accept(Commands.none());
                 // mCmd.schedule();
             })
         );

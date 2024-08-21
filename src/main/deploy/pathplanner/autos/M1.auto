@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6744662599645491,
+      "y": 6.709614747817872
+    },
+    "rotation": -119.63838368815131
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Up2M1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M12Q12Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Offseason Autos",
+  "choreoAuto": false
+}

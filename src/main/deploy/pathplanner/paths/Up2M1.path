@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.291145335471334,
-        "y": 0.7833298109344314
+        "x": 0.6744662599645491,
+        "y": 6.709614747817872
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.257149985032662,
-        "y": 0.5222198739615108
+        "x": 2.3202208207525032,
+        "y": 5.346267774385316
       },
       "isLocked": false,
-      "linkedName": "M5Note"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.901478536053158,
-        "y": 3.690775020933198
+        "x": 7.841776063148806,
+        "y": 7.430241005203245
       },
       "prevControl": {
-        "x": 2.653475154550212,
-        "y": 2.7403348503327543
+        "x": 6.841776063148806,
+        "y": 7.430241005203245
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Q4Shoot"
+      "linkedName": "M1Note"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 135.95484125387222,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Offseason Paths",
   "previewStartingState": {
-    "rotation": -116.09542415738849,
+    "rotation": -117.48909652985074,
     "velocity": 0
   },
   "useDefaultConstraints": true

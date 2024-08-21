@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.901478536053158,
-        "y": 3.690775020933198
+        "x": 0.7231572233013988,
+        "y": 4.430877663653311
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7056971419458415,
-        "y": 2.8865564150405163
+        "x": 1.2977105906762236,
+        "y": 3.496011167585799
       },
       "isLocked": false,
-      "linkedName": "Q4Shoot"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 0.7833298109344314
       },
       "prevControl": {
-        "x": 4.802716577443333,
-        "y": 0.9922177605169469
+        "x": 7.2911453354713345,
+        "y": 0.7833298109344318
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,12 +30,24 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9,
+      "waypointRelativePos": 0.85,
       "rotationDegrees": 0,
-      "rotateFast": true
+      "rotateFast": false
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.75,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 8.0,
@@ -45,13 +57,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -1.1934894239819718,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Offseason Paths",
   "previewStartingState": {
-    "rotation": 135.31830661145136,
+    "rotation": 120.19162296095759,
     "velocity": 0
   },
   "useDefaultConstraints": true

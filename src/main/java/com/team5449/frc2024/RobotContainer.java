@@ -167,7 +167,7 @@ public class RobotContainer {
 
     pathPlannerRegisterCommand();
 
-    mAutoChooser = AutoBuilder.buildAutoChooser();
+    mAutoChooser = new SendableChooser<>();//AutoBuilder.buildAutoChooser();
 
     mAutoChooser.addOption("Auto Mid", new AutoMidCommand(intake, shooter, armPoseCommand, drivetrainSubsystem));
 
