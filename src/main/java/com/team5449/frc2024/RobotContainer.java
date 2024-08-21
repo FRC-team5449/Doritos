@@ -151,7 +151,7 @@ public class RobotContainer {
       () -> -adjustJoystickValue(xLimiter.calculate(mDriverController.getLeftY())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(yLimiter.calculate(mDriverController.getLeftX())) * drivetrainSubsystem.getMaxVelocityMetersPerSec(),
       () -> -adjustJoystickValue(omegaLimiter.calculate(mDriverController.getRightX())) * drivetrainSubsystem.getMaxAngularVelocityRadPerSec()/* + mRotateCommand.calcRotVel()*/,
-      mDriverController::getOptionsButtonPressed,
+      () -> mDriverController.getOptionsButtonPressed() && ControllerUtil.toCond(Constants.ControlConds.secondContext).getAsBoolean()==false,
       () -> {boolean reset = resetGyroBoolean.update(mDriverController.getCrossButton(), 0.2);if(reset){mCircleData.reset();}return reset;}));
       drivetrainSubsystem.setPathAuto();
 

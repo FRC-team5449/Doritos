@@ -193,23 +193,23 @@ public class Constants {
 
         //Drive
         static{
-        ControllerUtil.setControlPort(DriverPort);
-    }
-     public static final long SwitchHeadNReset = ControllerUtil.GetPS5Val("Options"); // It is calling getBButton instead of getBButtonPressed
-    public static final long AutoAlignStage = ControllerUtil.GetPS5Val("Triangle");
-    public static final long ToggleSlowMode = ControllerUtil.GetPS5Val("Square");
-    public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetPS5Val("L3") | ControllerUtil.GetPS5Val("R3");
-    public static final long ClkwRotatePos90Deg = ControllerUtil.GetPS5Val("R3");
-    public static final long shoot = ControllerUtil.GetPS5Val("L2");
-    public static final long intake = ControllerUtil.GetPS5Val("L1");
-    public static final long reload = ControllerUtil.GetPS5Val("R1");
-    public static final long amp = ControllerUtil.GetPS5Val("R2");
-     public static final long overshoot = ControllerUtil.GetPS5Val("L3");
-      public static final long offsetArmUp = ControllerUtil.GetPS5Val("Options");
-      public static final long offsetArmDown = ControllerUtil.GetPS5Val("Create");
-
-    // Operator
-    static{
+            ControllerUtil.setControlPort(DriverPort);
+        }
+        public static final long SwitchHeadNReset = ControllerUtil.GetPS5Val("Options"); // It is calling getBButton instead of getBButtonPressed
+        public static final long AutoAlignStage = ControllerUtil.GetPS5Val("Triangle");
+        public static final long ToggleSlowMode = ControllerUtil.GetPS5Val("Square");
+        public static final long shoot = ControllerUtil.GetPS5Val("Cross");
+        public static final long intake = ControllerUtil.GetPS5Val("L1");
+        public static final long reload = ControllerUtil.GetPS5Val("R1");
+        public static final long amp = ControllerUtil.GetPS5Val("Circle");
+        public static final long overshoot = ControllerUtil.GetPS5Val("L3");
+        public static final long secondContext = ControllerUtil.GetPS5Val("L2") | ControllerUtil.GetPS5Val("R2");
+        public static final long offsetArmUp = ControllerUtil.GetPS5Val("Options") | secondContext;
+        public static final long offsetArmDown = ControllerUtil.GetPS5Val("Create") | secondContext;
+        public static final long CounterClkwRotatePos90Deg = ControllerUtil.GetPS5Val("L3") | secondContext;
+        public static final long ClkwRotatePos90Deg = ControllerUtil.GetPS5Val("R3") | secondContext;
+        // Operator
+        static{
             ControllerUtil.setControlPort(OperatorPort);
         }
     // public static final long shoot = ControllerUtil.GetXboxVal("A", 0);
