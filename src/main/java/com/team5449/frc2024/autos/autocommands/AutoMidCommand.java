@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoMidCommand extends SequentialCommandGroup{
     private static final PathPlannerPath MidM1 = PathPlannerPath.fromPathFile("Mid2M1");
-    private static final PathPlannerPath UpM1 = PathPlannerPath.fromPathFile("Up2M1_passQ1");
+    private static final PathPlannerPath UpM1 = PathPlannerPath.fromPathFile("Up2M1");
     private static final PathPlannerPath DownM5 = PathPlannerPath.fromPathFile("Down2M5");
     private static final PathPlannerPath M1M2 = PathPlannerPath.fromPathFile("M12M2");
     private static final PathPlannerPath M2M3 = PathPlannerPath.fromPathFile("M22M3");
@@ -64,15 +64,22 @@ public class AutoMidCommand extends SequentialCommandGroup{
     static{
         MSHOOT_poses=new Translation2d[MSHOOT.length];
         for(int i=0;i<MSHOOT.length; i++){
-            MSHOOT_poses[i] = MSHOOT[i].getPreviewStartingHolonomicPose().getTranslation();
+            MSHOOT_poses[i] = getAllianceSpecifiedStartingPoint(MSHOOT[i]).getTranslation();
         }
     }
     public static PathPlannerPath getAllianceSpecifiedPath(PathPlannerPath path){
         return Robot.isRedAlliance()?path.flipPath():path;
+        //return path;
     }
     public static Pose2d getAllianceSpecifiedStartingPoint(PathPlannerPath path){
-        Pose2d nonAllianceSpecifedPose = getAllianceSpecifiedPath(path).getStartingDifferentialPose();
-        return new Pose2d(nonAllianceSpecifedPose.getTranslation(), nonAllianceSpecifedPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
+        Pose2d mPose;
+        if(Robot.isRedAlliance())
+        {   
+            mPose = path.flipPath().getPreviewStartingHolonomicPose();
+        }else{
+            mPose = path.getPreviewStartingHolonomicPose();
+        }
+        return mPose;//new Pose2d(mPose.getTranslation(), mPose.getRotation().times(-1));
     }
     // private static final PathPlannerPath[] SHOOTM = {M2SHOOT.flipPath(), M3SHOOT.flipPath(), , M4SHOOT, M5SHOOT};
     private static final Field2d mStartPose = new Field2d();
