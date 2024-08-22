@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.team5449.frc2024.Robot;
 import com.team5449.frc2024.RobotContainer;
 import com.team5449.frc2024.commands.ArmPoseCommand;
 import com.team5449.frc2024.commands.IntakeCommand;
@@ -15,6 +16,7 @@ import com.team5449.frc2024.subsystems.drive.DrivetrainSubsystem;
 import com.team5449.frc2024.subsystems.score.Intake;
 import com.team5449.frc2024.subsystems.score.Shooter;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -29,12 +31,18 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoMidCommand extends SequentialCommandGroup{
     private static final PathPlannerPath MidM1 = PathPlannerPath.fromPathFile("Mid2M1");
-    private static final PathPlannerPath UpM1 = PathPlannerPath.fromPathFile("Up2M1");
+    private static final PathPlannerPath UpM1 = PathPlannerPath.fromPathFile("Up2M1_passQ1");
     private static final PathPlannerPath DownM5 = PathPlannerPath.fromPathFile("Down2M5");
     private static final PathPlannerPath M1M2 = PathPlannerPath.fromPathFile("M12M2");
     private static final PathPlannerPath M2M3 = PathPlannerPath.fromPathFile("M22M3");
     private static final PathPlannerPath M3M4 = PathPlannerPath.fromPathFile("M32M4");
     private static final PathPlannerPath M4M5 = PathPlannerPath.fromPathFile("M42M5");
+
+    private static final PathPlannerPath M2M1 = PathPlannerPath.fromPathFile("M22M1");
+    private static final PathPlannerPath M3M2 = PathPlannerPath.fromPathFile("M32M2");
+    private static final PathPlannerPath M4M3 = PathPlannerPath.fromPathFile("M42M3");
+    private static final PathPlannerPath M5M4 = PathPlannerPath.fromPathFile("M52M4");
+
     private static final PathPlannerPath M1SHOOT = PathPlannerPath.fromPathFile("M12Q12Shoot");
     private static final PathPlannerPath M2SHOOT = PathPlannerPath.fromPathFile("M22Q12Shoot");
     private static final PathPlannerPath M3SHOOT = PathPlannerPath.fromPathFile("M32Q4Shoot");
@@ -59,6 +67,13 @@ public class AutoMidCommand extends SequentialCommandGroup{
             MSHOOT_poses[i] = MSHOOT[i].getPreviewStartingHolonomicPose().getTranslation();
         }
     }
+    public static PathPlannerPath getAllianceSpecifiedPath(PathPlannerPath path){
+        return Robot.isRedAlliance()?path.flipPath():path;
+    }
+    public static Pose2d getAllianceSpecifiedStartingPoint(PathPlannerPath path){
+        Pose2d nonAllianceSpecifedPose = getAllianceSpecifiedPath(path).getStartingDifferentialPose();
+        return new Pose2d(nonAllianceSpecifedPose.getTranslation(), nonAllianceSpecifedPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
+    }
     // private static final PathPlannerPath[] SHOOTM = {M2SHOOT.flipPath(), M3SHOOT.flipPath(), , M4SHOOT, M5SHOOT};
     private static final Field2d mStartPose = new Field2d();
     private int NoteI = 0;
@@ -69,7 +84,7 @@ public class AutoMidCommand extends SequentialCommandGroup{
                 if(MSHOOT_poses[j]==mRobot){
                     mStartPose.getObject("traj").setPose(mRobot.getX(), mRobot.getY(), new Rotation2d());
                     System.out.println("SHOOT POSE "+j);
-                    (AutoBuilder.followPath(MSHOOT[j]).andThen(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 60, true), m, 2)).andThen(Commands.print("Ten")).andThen(c)).schedule();
+                    (AutoBuilder.followPath(getAllianceSpecifiedPath(MSHOOT[j])).andThen(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 60, true), m, 2)).andThen(Commands.print("Ten")).andThen(c)).schedule();
                     NoteI = j;
                     break;
                 }
@@ -77,21 +92,23 @@ public class AutoMidCommand extends SequentialCommandGroup{
             
         };
         SmartDashboard.putData("Drive/StartPose", mStartPose);
-        mStartPose.setRobotPose(StartPoseChooser.getPreviewStartingHolonomicPose());
-        addCommands(new InstantCommand(() -> mDrive.resetPose(StartPoseChooser.getPreviewStartingHolonomicPose())));
+        addCommands(new InstantCommand(() -> {
+            mStartPose.setRobotPose(getAllianceSpecifiedStartingPoint(StartPoseChooser));
+            mDrive.resetPose(getAllianceSpecifiedStartingPoint(StartPoseChooser));
+        }));
 
         // addCommands(new InstantCommand(() -> m.setPose(ArmSystemState.SHOOTING)),new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 40));
         addCommands(new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 40, true), m, 2));
         addCommands(Commands.sequence(
-            AutoBuilder.followPath(StartPoseChooser),
+            AutoBuilder.followPath(getAllianceSpecifiedPath(StartPoseChooser)),
             // new InstantCommand(() -> NoteI = 1),
-            AutoBuilder.followPath(M1M2),
+            AutoBuilder.followPath(getAllianceSpecifiedPath(MM[1])),
             // new InstantCommand(() -> NoteI = 2),
-            AutoBuilder.followPath(M2M3),
+            AutoBuilder.followPath(getAllianceSpecifiedPath(MM[2])),
             // new InstantCommand(() -> NoteI = 3),
-            AutoBuilder.followPath(M3M4),
+            AutoBuilder.followPath(getAllianceSpecifiedPath(MM[3])),
             // new InstantCommand(() -> NoteI = 4),
-            AutoBuilder.followPath(M4M5)
+            AutoBuilder.followPath(getAllianceSpecifiedPath(MM[4]))
             // new InstantCommand(() -> NoteI = 5)
         ).raceWith(new IntakeCommand(s, i, m, false)));
         addCommands(
@@ -101,12 +118,12 @@ public class AutoMidCommand extends SequentialCommandGroup{
                     return;
                 }
                 SequentialCommandGroup mCmd = new SequentialCommandGroup(
-                    AutoBuilder.followPath(SHOOTM[NoteI])
+                    AutoBuilder.followPath(getAllianceSpecifiedPath(SHOOTM[NoteI]))
                     // new InstantCommand(() -> NoteI++),
                 );
                 // NoteI+=2;
                 // for(int j=NoteI;j<5;j++){
-                //     mCmd.addCommands(AutoBuilder.followPath(MM[j]));
+                //     mCmd.addCommands(AutoBuilder.followPath(getAllianceSpecifiedPath(MM[j])));
                 // }
                 
                 // sequenceRun.accept(mCmd.raceWith(new IntakeCommand(s, i, m, false)).andThen(new InstantCommand(() -> sequenceRun.accept(Commands.none()))));

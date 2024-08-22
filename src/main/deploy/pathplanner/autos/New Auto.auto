@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Down2M5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M52M4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M42M3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M32M2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M22M1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M12Q12Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Offseason Autos",
+  "choreoAuto": false
+}

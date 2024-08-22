@@ -20,6 +20,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.team5449.frc2024.Constants.Ports;
 // import com.team5449.frc2024.autos.autocommands.WaitCommand;
 import com.team5449.frc2024.autos.autocommands.AutoMidCommand;
+import com.team5449.frc2024.autos.autocommands.AutoQ1Q3;
 import com.team5449.frc2024.commands.AmpCommand;
 import com.team5449.frc2024.commands.ArmPoseCommand;
 import com.team5449.frc2024.commands.AutoAlign;
@@ -169,7 +170,8 @@ public class RobotContainer {
 
     mAutoChooser = new SendableChooser<>();//AutoBuilder.buildAutoChooser();
 
-    mAutoChooser.addOption("Auto Mid", new AutoMidCommand(intake, shooter, armPoseCommand, drivetrainSubsystem));
+    mAutoChooser.addOption("AMid", new AutoMidCommand(intake, shooter, armPoseCommand, drivetrainSubsystem));
+    mAutoChooser.addOption("AQ1Q3", new AutoQ1Q3(intake, shooter, armPoseCommand, drivetrainSubsystem));
 
     SmartDashboard.putData("Builder Auto Chooser", mAutoChooser);
 

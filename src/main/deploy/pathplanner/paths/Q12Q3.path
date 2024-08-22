@@ -1,0 +1,58 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.8947741881248894,
+        "y": 6.982284142504229
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.729224912779601,
+        "y": 6.037679453769347
+      },
+      "isLocked": false,
+      "linkedName": "Q1Note"
+    },
+    {
+      "anchor": {
+        "x": 2.690272142110121,
+        "y": 4.070564534960625
+      },
+      "prevControl": {
+        "x": 2.690272142110121,
+        "y": 4.783849756193949
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Q3Note"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": -90.0,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 8.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": -90.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Offseason Paths",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

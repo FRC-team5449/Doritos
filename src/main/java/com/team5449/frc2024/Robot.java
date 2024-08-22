@@ -45,7 +45,7 @@ public class Robot extends LoggedRobot {
   }
 
   public static boolean isRedAlliance(){
-    return DriverStation.getAlliance().get() == Alliance.Red;
+    return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
   }
 
   @Override
