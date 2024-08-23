@@ -49,10 +49,10 @@ public class AutoMidCommand extends SequentialCommandGroup{
     private static final PathPlannerPath M4SHOOT = PathPlannerPath.fromPathFile("M42Q4Shoot");
     private static final PathPlannerPath M5SHOOT = PathPlannerPath.fromPathFile("M52Q4Shoot");
 
-    private static final PathPlannerPath StartPoseChooser = UpM1;
+    private static final PathPlannerPath StartPoseChooser = DownM5;
 
-    private static final PathPlannerPath[] MM = {StartPoseChooser, M1M2, M2M3, M3M4, M4M5};
-    private static final PathPlannerPath[] MSHOOT = {M1SHOOT, M2SHOOT, M3SHOOT, M4SHOOT, M5SHOOT};
+    private static final PathPlannerPath[] MM = {StartPoseChooser, M5M4, M4M3, M3M2, M2M1};
+    private static final PathPlannerPath[] MSHOOT = {M5SHOOT, M4SHOOT, M3SHOOT, M2SHOOT, M1SHOOT};
     private static final PathPlannerPath[] SHOOTM = {
         null,
         PathPlannerPath.fromPathFile("Q12Shoot2M2"), 

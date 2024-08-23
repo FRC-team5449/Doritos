@@ -48,6 +48,7 @@ import com.team5449.frc2024.subsystems.vision.VisionIO;
 import com.team5449.frc2024.subsystems.vision.VisionIOLimelight;
 import com.team5449.frc2024.subsystems.vision.VisionSubsystem;
 import com.team5449.lib.util.ControllerUtil;
+import com.team5449.lib.util.GeomUtil;
 import com.team5449.lib.util.TimeDelayedBoolean;
 
 import edu.wpi.first.math.MathUtil;
@@ -216,7 +217,9 @@ public class RobotContainer {
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
-    new Trigger(conditionOverShoot).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 50));
+    new Trigger(conditionOverShoot).onTrue(new ShootWithTrajectory(shooter, armPoseCommand, () -> {
+      return new Translation2d(drivetrainSubsystem.getPose().getTranslation().getDistance(GeomUtil.GetStageTranslation().toTranslation2d()) - 0.6 -  1 - 1, 1.8);
+    }));//new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 50));
 
     new Trigger(conditionGoAMP).whileTrue(new AmpCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AMP, -30, false));
 
