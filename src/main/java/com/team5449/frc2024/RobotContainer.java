@@ -120,7 +120,7 @@ public class RobotContainer {
   //public Trigger RLst = new Trigger(() -> (mOperatorController.getRightBumper() ^ mOperatorController.getLeftBumper())).debounce(0.1);
   public BooleanSupplier conditionReload = ControllerUtil.toCond(Constants.ControlConds.reload);//() -> mOperatorController.getXButton() && !RLst.getAsBoolean() && !mOperatorController.getRightBumper();
   public BooleanSupplier conditionGoAMP = ControllerUtil.toCond(Constants.ControlConds.amp);
-  public BooleanSupplier conditionOverShoot = ControllerUtil.toCond(Constants.ControlConds.overshoot);//new Trigger(RLst).negate().and(mOperatorController::getRightBumper).and(mOperatorController::getXButton);
+  public BooleanSupplier conditionOverShoot = () -> {return mDriverController.getPOV() == 270;};//ControllerUtil.toCond(Constants.ControlConds.overshoot);//new Trigger(RLst).negate().and(mOperatorController::getRightBumper).and(mOperatorController::getXButton);
 
   public RobotContainer() {
 
@@ -217,9 +217,19 @@ public class RobotContainer {
 
     new Trigger(conditionReload).onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OUTTAKE))).whileTrue(new OuttakeCommand(shooter, intake));
 
-    new Trigger(conditionOverShoot).onTrue(new ShootWithTrajectory(shooter, armPoseCommand, () -> {
-      return new Translation2d(drivetrainSubsystem.getPose().getTranslation().getDistance(GeomUtil.GetStageTranslation().toTranslation2d()) - 0.6 -  1 - 1, 1.8);
-    }));//new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 50));
+    new Trigger(conditionOverShoot).whileTrue(new ShootWithTrajectory(shooter, armPoseCommand, () -> {
+      final Pose2d robotPose = drivetrainSubsystem.getPose();
+      final boolean onBlueAlliance = robotPose.getX()<5.838526;
+      final boolean onRedAlliance = robotPose.getX()>10.685367;
+      SmartDashboard.putBoolean("Drive/onBlueAlliance", onBlueAlliance);
+      SmartDashboard.putBoolean("Drive/onRedAlliance", onRedAlliance);
+      if((onBlueAlliance && Robot.isRedAlliance()) || (onRedAlliance && !Robot.isRedAlliance()))
+      {
+        SmartDashboard.putBoolean("Drive/onOppositeAlliance", onRedAlliance);
+        return new Translation2d(6, 0);
+      }
+      return new Translation2d(robotPose.getTranslation().getDistance(GeomUtil.GetStageTranslation().toTranslation2d()) - 0.6 -  1 - 1, 1.8);
+    }));//.onTrue(new InstantCommand(() -> armPoseCommand.setPose(ArmSystemState.OVERSHOOT))).whileTrue(new ShootCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.OVERSHOOT, 50));
 
     new Trigger(conditionGoAMP).whileTrue(new AmpCommand(shooter, armPoseCommand, () -> armPoseCommand.getArmState() == ArmSystemState.AMP, -30, false));
 
