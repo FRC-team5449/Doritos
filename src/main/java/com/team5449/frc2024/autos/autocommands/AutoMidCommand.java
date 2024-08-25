@@ -125,7 +125,7 @@ public class AutoMidCommand extends SequentialCommandGroup{
         ).raceWith(new IntakeCommand(s, i, m, false)));
         addCommands(
             new InstantCommand(() -> {
-                if(NoteI == 5){
+                /*if(NoteI == 5){
                     mDrive.setTargetVelocity(new ChassisSpeeds());
                     return;
                 }
@@ -140,7 +140,14 @@ public class AutoMidCommand extends SequentialCommandGroup{
                 
                 // sequenceRun.accept(mCmd.raceWith(new IntakeCommand(s, i, m, false)).andThen(new InstantCommand(() -> sequenceRun.accept(Commands.none()))));
                 // sequenceRun.accept(mCmd);
-                sequenceRun.accept(Commands.none());
+                sequenceRun.accept(Commands.none());*/
+                Commands.sequence(
+                    AutoBuilder.followPath(getAllianceSpecifiedPath(M5SHOOT)),
+                    new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 40, true), m, 2),
+                    AutoBuilder.followPath(getAllianceSpecifiedPath(Q4SHOOTM4)).raceWith(new IntakeCommand(s, i, m, false)),
+                    AutoBuilder.followPath(getAllianceSpecifiedPath(M4SHOOT)),
+                    new AutoShootCommand(new ShootCommand(s, m, ()-> m.getArmState()==ArmSystemState.SHOOTING, 40, true), m, 2)
+                ).schedule();
                 // mCmd.schedule();
             })
         );
