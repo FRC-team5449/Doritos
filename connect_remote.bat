@@ -1,2 +1,0 @@
-start ssh -J o7un79x2g2rvqj9cbtssrnruid9jsarckkxvrybabneoxcb3k4hisj6oco4jg31gw@ssh-j.com -C -L2000:0:2000 -L5900:0:5900 -D localhost:1080 -L1110:10.54.49.2:1110 -L7750:10.54.49.2:7750 -L1735:10.54.49.2:1735 -L3079:10.54.49.2:3079 -L2343:10.54.49.2:2343 -L21:10.54.49.2:21 -L22:10.54.49.2:22 -L1250:10.54.49.2:1250 -L5810:10.54.49.2:5810 prototype
-@REM ssh -J o7un79x2g2rvqj9cbtssrnruid9jsarckkxvrybabneoxcb3k4hisj6oco4jg31gw@ssh-j.com,prototype robot
