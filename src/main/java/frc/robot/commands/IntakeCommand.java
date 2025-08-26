@@ -8,6 +8,7 @@ public class IntakeCommand extends Command {
 
     public IntakeCommand(Intake intake) {
         this.intake = intake;
+        addRequirements(this.intake);
     }
 
     @Override

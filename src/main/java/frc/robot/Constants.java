@@ -116,7 +116,7 @@ public class Constants {
 
 
     public static class Ports {
-        public static final String kCANBusFDName = "rio";//isOfficialbot ? "canivore" : "rio";
+        public static final String kCANBusFDName = isOfficialbot ? "canivore" : "rio";
         public static final String kCANBusDefault = "rio";
         public static final String visionName = "limelight";
         
@@ -138,8 +138,8 @@ public class Constants {
         public static final int kBackRightAziId = 22;
         public static final int kBackRightEncoderId = 32;
 
-        // public static final int kShooterLeftId = 41;
-        // public static final int kShooterRightId = 40;
+        public static final int kShooterLeftId = 41;
+        public static final int kShooterRightId = 40;
 
         public static final int kShooterUpId = 60;
         public static final int kShooterLowId = 61;
