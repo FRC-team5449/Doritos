@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.subsystems.drive.TunerConstants;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Telemetry;
@@ -43,6 +44,7 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public final Intake intake = new Intake();
+    public final Shooter shooter = new Shooter();
 
     public RobotContainer() {
         configureBindings();
@@ -84,7 +86,7 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.square().whileTrue(new IntakeCommand(intake));
+        joystick.square().whileTrue(new IntakeCommand(intake, shooter));
         // joystick.square().onTrue(new InstantCommand(() -> System.out.println("HELLLLLLLLOOOOOOO")));
     }
 

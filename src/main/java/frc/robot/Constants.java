@@ -140,14 +140,14 @@ public class Constants {
         public static final int kBackRightAziId = 22;
         public static final int kBackRightEncoderId = 32;
 
-        // public static final int kShooterLeftId = 41;
-        // public static final int kShooterRightId = 40;
+        public static final int kShooter2Id = 41;
+        public static final int kShooter1Id = 40;
 
         public static final int kShooterUpId = 60;
         public static final int kShooterLowId = 61;
 
-        public static final int kIntake1Id = 40;
-        public static final int kIntake2Id = 41;
+        // public static final int kIntake1Id = 50;
+        // public static final int kIntake2Id = 51;
 
         public static final int kTransId = 51;
 
