@@ -84,7 +84,7 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.square().onTrue(new IntakeCommand(intake));
+        joystick.square().whileTrue(new IntakeCommand(intake));
         // joystick.square().onTrue(new InstantCommand(() -> System.out.println("HELLLLLLLLOOOOOOO")));
     }
 
