@@ -19,13 +19,15 @@ public class IntakeCommand extends Command {
     @Override
     public void execute() {
         intake.setIntakeSpeed(0.6);
-        shooter.setShooterSpeed(0.2);
+        shooter.setShooterOpenloop(0.2);
+        shooter.setTransitSpeed(0.2);
     }
 
     @Override
     public void end(boolean interrupted) {
         intake.setIntakeSpeed(0);
-        shooter.setShooterSpeed(0);
+        shooter.setShooterOpenloop(0);
+        shooter.setTransitSpeed(0);
     }
 
     // Returns true when the command should end.
