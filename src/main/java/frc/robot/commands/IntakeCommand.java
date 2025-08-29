@@ -11,7 +11,6 @@ public class IntakeCommand extends Command {
     public IntakeCommand(Intake intake, Shooter shooter) {
         this.intake = intake;
         this.shooter = shooter;
-        addRequirements(this.intake);
     }
 
     @Override

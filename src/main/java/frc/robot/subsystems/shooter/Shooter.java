@@ -8,17 +8,24 @@ import frc.robot.subsystems.shooter.ShooterConstants;
 public class Shooter extends SubsystemBase{
     private final TalonFX upShooter;
     private final TalonFX lowShooter;
+    private final TalonFX transit;
 
     public Shooter() {
         upShooter = new TalonFX(ShooterConstants.upShooterCanId, ShooterConstants.CanBusName);
         lowShooter = new TalonFX(ShooterConstants.lowShooterCanId, ShooterConstants.CanBusName);
+        transit = new TalonFX(ShooterConstants.transitCanId, ShooterConstants.CanBusName);
         upShooter.setInverted(ShooterConstants.upShooterInversed);
         lowShooter.setInverted(ShooterConstants.lowShooterInversed);
+        transit.setInverted(ShooterConstants.tansitInversed);
     }
 
     public void setShooterSpeed(double percent) {
         upShooter.set(percent);
         lowShooter.set(percent);
+    }
+
+    public void setTransitSpeed(double percent) {
+        transit.set(percent);
     }
 
     @Override
