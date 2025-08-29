@@ -45,12 +45,17 @@ public class Arm extends SubsystemBase {
     }
 
     private void setArmPositionCommon(double position) {
-
+        position = 
+        position = UtilDecompositons_CDRM.limit(Constants.maxArmPosition, Constants.minArmPosition, position);
+        
+        
     }
 
     public void setArmPosition(double position) {
-        setArmPositionCommon(position);
+        position = Math.max(Math.min(ArmConstants.maxArmPosition, position), ArmConstants.minArmPosition);
+        position -= ManualOffset;
         motionMagicDutyCycle = motionMagicDutyCycle.withSlot(0);
+        setPoint = position;
     }
 
 

@@ -18,6 +18,9 @@ public class ArmConstants {
     public static TalonFXConfiguration config = new TalonFXConfiguration();
     public static CANcoderConfiguration mEncoderConfig = new CANcoderConfiguration();
 
+    public static final double maxArmPosition = 0.5;
+    public static final double minArmPosition = 0.02;
+
     public static TalonFXConfiguration getConfigs() {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
