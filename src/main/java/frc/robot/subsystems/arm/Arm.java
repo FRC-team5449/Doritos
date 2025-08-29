@@ -26,7 +26,7 @@ public class Arm extends SubsystemBase {
     private final TalonFX rightArmSlave;
     private final CANcoder armCanCoder;
 
-    private double setPoint;
+    private double setPoint = 0;
 
     private TalonFXConfiguration config = new TalonFXConfiguration();
     private MotionMagicDutyCycle motionMagicDutyCycle = new MotionMagicDutyCycle(0);
@@ -44,22 +44,12 @@ public class Arm extends SubsystemBase {
         armCanCoder.getConfigurator().apply(encoderConfig);
     }
 
-    private void setArmPositionCommon(double position) {
-        position = 
-        position = UtilDecompositons_CDRM.limit(Constants.maxArmPosition, Constants.minArmPosition, position);
-        
-        
-    }
-
     public void setArmPosition(double position) {
         position = Math.max(Math.min(ArmConstants.maxArmPosition, position), ArmConstants.minArmPosition);
-        position -= ManualOffset;
+        position -= ArmConstants.ManualOffset;
         motionMagicDutyCycle = motionMagicDutyCycle.withSlot(0);
         setPoint = position;
     }
-
-
-
     
     @Override
     public void periodic() {

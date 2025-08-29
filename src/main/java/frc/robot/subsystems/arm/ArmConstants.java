@@ -20,6 +20,7 @@ public class ArmConstants {
 
     public static final double maxArmPosition = 0.5;
     public static final double minArmPosition = 0.02;
+    public static final double ManualOffset = 0.708740234375 - 0.6083984375;
 
     public static TalonFXConfiguration getConfigs() {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
