@@ -50,6 +50,10 @@ public class Arm extends SubsystemBase {
         motionMagicDutyCycle = motionMagicDutyCycle.withSlot(0);
         setPoint = position;
     }
+
+    public void plusArmPosition() {
+        setPoint += 0.5;
+    }
     
     @Override
     public void periodic() {
