@@ -26,7 +26,7 @@ public class Arm extends SubsystemBase {
     private final TalonFX rightArmSlave;
     private final CANcoder armCanCoder;
 
-    private double setPoint = 0;
+    private double setPoint = -ArmConstants.ManualOffset;
 
     private TalonFXConfiguration config = new TalonFXConfiguration();
     private MotionMagicDutyCycle motionMagicDutyCycle = new MotionMagicDutyCycle(0);
@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void plusArmPosition() {
-        setPoint += 0.5;
+        setPoint += 0.001;
     }
     
     @Override
