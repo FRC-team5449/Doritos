@@ -29,8 +29,17 @@ public class ShooterConstants {
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         config.MotionMagic.MotionMagicCruiseVelocity = 0.75;
         config.MotionMagic.MotionMagicAcceleration = 7.5;
-        config.Slot0.kP = 0.03;
+        config.Slot0.kP = 1;
         config.Slot0.kV = 0.11;
+        config.Slot0.kI = 0.0;
+        config.Slot0.kD = 0.03;
+        
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    
+        config.CurrentLimits.StatorCurrentLimit = 40;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+
         config.Feedback.FeedbackRemoteSensorID = 12;
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         config.Feedback.FeedbackRotorOffset = -0.57763671875;

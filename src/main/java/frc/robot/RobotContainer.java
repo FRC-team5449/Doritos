@@ -23,6 +23,7 @@ import frc.robot.subsystems.drive.TunerConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.Telemetry;
@@ -90,8 +91,13 @@ public class RobotContainer {
 
         joystick.square().whileTrue(new IntakeCommand(intake, shooter));
         // joystick.square().onTrue(new InstantCommand(() -> System.out.println("HELLLLLLLLOOOOOOO")));
+
+        joystick.triangle().whileTrue(new ShootCommand(arm, shooter, -30));
+
         joystick.pov(0).onTrue(new InstantCommand(() -> arm.setArmPosition(0.2)));
         joystick.pov(180).onTrue(new InstantCommand(() -> arm.setArmPosition(0)));
+
+        
     }
 
     public Command getAutonomousCommand() {

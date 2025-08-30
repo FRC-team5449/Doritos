@@ -1,6 +1,10 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -23,12 +27,14 @@ public class Shooter extends SubsystemBase{
     private final TalonFX lowShooter;
     private final TalonFX transit;
     private TalonFXConfiguration config = new TalonFXConfiguration();
-    private MotionMagicDutyCycle motionMagicDutyCycle = new MotionMagicDutyCycle(0);
     private final VelocityTorqueCurrentFOC velocityControl = new VelocityTorqueCurrentFOC(0);
+    @AutoLogOutput(key = "RobotState")
     private final StatusSignal<AngularVelocity> upShooterVelocity;
+    @AutoLogOutput(key = "RobotState")
     private final StatusSignal<AngularVelocity> lowShooterVelocity;
     private double upShooterSetpoint;
     private double lowShooterSetpoint;
+    
 
     public Shooter() {
         upShooter = new TalonFX(ShooterConstants.upShooterCanId, ShooterConstants.CanBusName);
@@ -46,29 +52,26 @@ public class Shooter extends SubsystemBase{
         lowShooter.getConfigurator().apply(config);
     }
 
-    public void setShooterOpenloop(double percent) {
-        upShooter.set(percent);
-        lowShooter.setControl(new Follower(ShooterConstants.upShooterCanId, true));
-    }
 
     public void setTransitSpeed(double percent) {
         transit.set(percent);
     }
 
     public void setShooterRPM(double speed) {
-        upShooterSetpoint = -speed;
-        lowShooterSetpoint = speed;
-        upShooter.setControl(velocityControl.withVelocity(upShooterSetpoint).withSlot(0));
-        lowShooter.setControl(velocityControl.withVelocity(lowShooterSetpoint).withSlot(0));
-
-        
+        upShooterSetpoint = speed;
+        lowShooterSetpoint = -speed;
     }
 
     public boolean isShooterAtSetpoint(){
-        return Util.epsilonEquals(upShooterSetpoint, upShooterVelocity.getValue().in(RotationsPerSecond), 5) && Util.epsilonEquals(lowShooterSetpoint, lowShooterVelocity.getValue().in(RotationsPerSecond), 5);
+        return Util.epsilonEquals(upShooterSetpoint, upShooter.getVelocity().getValue().in(RPM),7);
       }
 
     @Override
     public void periodic() {
+        //System.out.println(upShooterVelocity.getValue().in(RotationsPerSecond));
+        //System.out.println(upShooter.getVelocity().getValue().in(RPM));
+        System.out.println(isShooterAtSetpoint());
+        upShooter.setControl(velocityControl.withVelocity(upShooterSetpoint).withSlot(0));
+        lowShooter.setControl(new Follower(ShooterConstants.upShooterCanId, true));
     }
 }

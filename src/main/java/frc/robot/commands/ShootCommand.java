@@ -18,7 +18,6 @@ public class ShootCommand extends Command {
         this.arm = arm;
         this.shooter = shooter;
         this.shooterSetpoint = shooterSetpoint;
-        addRequirements(this.arm);
     }
 
     @Override
@@ -30,15 +29,14 @@ public class ShootCommand extends Command {
     @Override
     public void execute() {
     shooter.setShooterRPM(shooterSetpoint);
-    SmartDashboard.putBoolean("isShooterAtSetpoint", shooter.isShooterAtSetpoint());
-    if(!shooter.isShooterAtSetpoint() && isTransitRunning){
-        shooter.setTransitSpeed(0);
-        isTransitRunning = false;
-        isNoteOuted = true;
-        System.out.println("Shoot!!!");
-        }
+    // if(!shooter.isShooterAtSetpoint() && isTransitRunning){
+    //     shooter.setTransitSpeed(0);
+    //     isTransitRunning = false;
+    //     isNoteOuted = true;
+    //     System.out.println("Shoot!!!");
+    //     }
     if(shooter.isShooterAtSetpoint()/* && isArmSet.getAsBoolean()*/ /*&& !isTransitRunning*/){
-        shooter.setTransitSpeed(1);
+        shooter.setTransitSpeed(-0.5);
         isTransitRunning = true;
     }
     else{
@@ -49,7 +47,7 @@ public class ShootCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setShooterOpenloop(0);
+        shooter.setShooterRPM(0);
         shooter.setTransitSpeed(0);
     }
 
