@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -89,13 +90,16 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.square().whileTrue(new IntakeCommand(intake, shooter));
-        // joystick.square().onTrue(new InstantCommand(() -> System.out.println("HELLLLLLLLOOOOOOO")));
+        joystick.square()
+            .onTrue(new InstantCommand(() -> arm.setArmPosition(0)))
+            .whileTrue(new IntakeCommand(arm, intake, shooter));
 
-        joystick.triangle().whileTrue(new ShootCommand(arm, shooter, -50));
+        joystick.triangle()
+            .onTrue(new InstantCommand(() -> arm.setArmPosition(0.2)))
+            .whileTrue(new ShootCommand(arm, shooter, -50));
 
-        joystick.pov(0).onTrue(new InstantCommand(() -> arm.setArmPosition(0.2)));
-        joystick.pov(180).onTrue(new InstantCommand(() -> arm.setArmPosition(0)));
+        //joystick.pov(0).onTrue(new InstantCommand(() -> arm.setArmPosition(0.2)));
+        //joystick.pov(180).onTrue(new InstantCommand(() -> arm.setArmPosition(0)));
 
         
     }

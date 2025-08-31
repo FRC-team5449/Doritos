@@ -18,7 +18,7 @@ import com.google.flatbuffers.Constants;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.lib.util.Util;
 import frc.robot.subsystems.arm.ArmConstants;
 
 public class Arm extends SubsystemBase {
@@ -51,6 +51,10 @@ public class Arm extends SubsystemBase {
         setPoint = position;
     }
 
+    public boolean isArmReady() {
+        return Util.epsilonEquals(setPoint, rightArmSlave.getPosition().getValueAsDouble(), 0.02);
+    }
+
     public void plusArmPosition() {
         setPoint += 0.001;
     }
@@ -59,5 +63,8 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         rightArmSlave.setControl(motionMagicDutyCycle.withPosition(setPoint));
         leftArmSlave.setControl(new Follower(ArmConstants.rightArmSlaveCanId, true));
+
+        SmartDashboard.putNumber("Arm/setPoint", setPoint);
+        SmartDashboard.putNumber("Arm/armPose", rightArmSlave.getPosition().getValueAsDouble());
     }
 }

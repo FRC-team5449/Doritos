@@ -35,7 +35,7 @@ public class ShootCommand extends Command {
     //     isNoteOuted = true;
     //     System.out.println("Shoot!!!");
     //     }
-    if(shooter.isShooterAtSetpoint()/* && isArmSet.getAsBoolean()*/ /*&& !isTransitRunning*/){
+    if(shooter.isShooterAtSetpoint() && arm.isArmReady() /*&& !isTransitRunning*/){
         shooter.setTransitSpeed(-0.5);
         isTransitRunning = true;
     }
