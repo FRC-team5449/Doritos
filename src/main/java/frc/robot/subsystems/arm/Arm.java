@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isArmReady() {
-        return Util.epsilonEquals(setPoint, rightArmSlave.getPosition().getValueAsDouble(), 0.02);
+        return Util.epsilonEquals(setPoint, armCanCoder.getPosition().getValueAsDouble(), 0.02);
     }
 
     public void plusArmPosition() {
@@ -65,6 +65,6 @@ public class Arm extends SubsystemBase {
         leftArmSlave.setControl(new Follower(ArmConstants.rightArmSlaveCanId, true));
 
         SmartDashboard.putNumber("Arm/setPoint", setPoint);
-        SmartDashboard.putNumber("Arm/armPose", rightArmSlave.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Arm/armPose", armCanCoder.getPosition().getValueAsDouble());
     }
 }
