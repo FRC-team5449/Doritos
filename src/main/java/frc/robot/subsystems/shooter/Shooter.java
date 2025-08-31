@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import org.littletonrobotics.junction.AutoLog;
@@ -12,11 +13,14 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.lib.util.Util;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -27,13 +31,19 @@ public class Shooter extends SubsystemBase{
     private final TalonFX lowShooter;
     private final TalonFX transit;
     private TalonFXConfiguration config = new TalonFXConfiguration();
-    private final VelocityTorqueCurrentFOC velocityControl = new VelocityTorqueCurrentFOC(0);
+    private final PIDController velocityPID;
     @AutoLogOutput(key = "RobotState")
     private final StatusSignal<AngularVelocity> upShooterVelocity;
     @AutoLogOutput(key = "RobotState")
     private final StatusSignal<AngularVelocity> lowShooterVelocity;
     private double upShooterSetpoint;
     private double lowShooterSetpoint;
+    private double currentVelocity;
+    private double currentPosition;
+    private double lastPosition;
+    @AutoLogOutput(key = "RobotState")
+    private double output;
+    private double feedforward;
     
 
     public Shooter() {
@@ -50,6 +60,13 @@ public class Shooter extends SubsystemBase{
 
         upShooter.getConfigurator().apply(config);
         lowShooter.getConfigurator().apply(config);
+
+        velocityPID = new PIDController(
+            ShooterConstants.kP0, 
+            ShooterConstants.kI0, 
+            ShooterConstants.kD0
+        );
+
     }
 
 
@@ -59,19 +76,34 @@ public class Shooter extends SubsystemBase{
 
     public void setShooterRPM(double speed) {
         upShooterSetpoint = speed;
-        lowShooterSetpoint = -speed;
     }
 
     public boolean isShooterAtSetpoint(){
-        return Util.epsilonEquals(upShooterSetpoint, upShooter.getVelocity().getValue().in(RPM),7);
+        return Util.epsilonEquals(upShooterSetpoint, getShooterVelocity(),3);
       }
+
+    public double getShooterVelocity() {
+        return currentVelocity;
+    }
 
     @Override
     public void periodic() {
         //System.out.println(upShooterVelocity.getValue().in(RotationsPerSecond));
         //System.out.println(upShooter.getVelocity().getValue().in(RPM));
-        System.out.println(isShooterAtSetpoint());
-        upShooter.setControl(velocityControl.withVelocity(upShooterSetpoint).withSlot(0));
+        currentPosition = upShooter.getPosition().getValue().in(Rotation);
+        currentVelocity = (currentPosition - lastPosition) / ShooterConstants.timeElasp;
+        output = velocityPID.calculate(currentVelocity, upShooterSetpoint);
+        feedforward = ShooterConstants.kV0 * upShooterSetpoint;
+        
+            
+        upShooter.setVoltage(output + feedforward);
         lowShooter.setControl(new Follower(ShooterConstants.upShooterCanId, true));
+
+        SmartDashboard.putNumber("Shooter/upShooterSetpoint", upShooterSetpoint);
+        SmartDashboard.putNumber("Shooter/upShooterVelocity", upShooterVelocity.getValue().in(RPM));
+        SmartDashboard.putNumber("Shooter/upShooterCalculatedVelocity", getShooterVelocity());
+        SmartDashboard.putNumber("Output", output);
+
+        lastPosition = currentPosition;
     }
 }

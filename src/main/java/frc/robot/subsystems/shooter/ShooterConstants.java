@@ -23,27 +23,22 @@ public class ShooterConstants {
     public static final boolean lowShooterInversed = true;
     public static final boolean tansitInversed = true;
 
+    public static final double kV0 = 0.125;
+    public static final double kP0 = 0.1;
+    public static final double kI0 = 0.0;
+    public static final double kD0 = 0.0;
+
+    public static final double timeElasp = 0.02;
+
     public static TalonFXConfiguration getConfigs() {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        config.MotionMagic.MotionMagicCruiseVelocity = 0.75;
-        config.MotionMagic.MotionMagicAcceleration = 7.5;
-        config.Slot0.kP = 1;
-        config.Slot0.kV = 0.11;
-        config.Slot0.kI = 0.0;
-        config.Slot0.kD = 0.03;
-        
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    
-        config.CurrentLimits.StatorCurrentLimit = 40;
-        config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        config.Feedback.FeedbackRemoteSensorID = 12;
-        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        config.Feedback.FeedbackRotorOffset = -0.57763671875;
-        config.Feedback.RotorToSensorRatio = 192 * 0.75;
+        config.Slot0.kV = kV0;
+        config.Slot0.kP = kP0;
+        config.Slot0.kI = kI0;
+        config.Slot0.kD = kD0;
 
         return config;
     }

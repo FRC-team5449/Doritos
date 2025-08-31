@@ -92,7 +92,7 @@ public class RobotContainer {
         joystick.square().whileTrue(new IntakeCommand(intake, shooter));
         // joystick.square().onTrue(new InstantCommand(() -> System.out.println("HELLLLLLLLOOOOOOO")));
 
-        joystick.triangle().whileTrue(new ShootCommand(arm, shooter, -30));
+        joystick.triangle().whileTrue(new ShootCommand(arm, shooter, -50));
 
         joystick.pov(0).onTrue(new InstantCommand(() -> arm.setArmPosition(0.2)));
         joystick.pov(180).onTrue(new InstantCommand(() -> arm.setArmPosition(0)));

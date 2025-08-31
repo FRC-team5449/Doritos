@@ -19,8 +19,8 @@ public class IntakeCommand extends Command {
     @Override
     public void execute() {
         intake.setIntakeSpeed(0.6);
-        shooter.setShooterRPM(18);
-        shooter.setTransitSpeed(0.2);
+        shooter.setShooterRPM(25);
+        shooter.setTransitSpeed(0.4);
     }
 
     @Override
