@@ -24,6 +24,7 @@ import frc.robot.subsystems.drive.TunerConstants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
@@ -95,9 +96,12 @@ public class RobotContainer {
             .whileTrue(new IntakeCommand(arm, intake, shooter));
 
         joystick.triangle()
-            .onTrue(new InstantCommand(() -> arm.setArmPosition(0.2)))
-            .whileTrue(new ShootCommand(arm, shooter, -50));
+            .onTrue(new InstantCommand(() -> arm.setArmPosition(0.21)))
+            .whileTrue(new ShootCommand(arm, shooter, -70));
 
+        joystick.cross()
+            .onTrue(new InstantCommand(() -> arm.setArmPosition(0.06)))
+            .whileTrue(new OuttakeCommand(arm, shooter));
         //joystick.pov(0).onTrue(new InstantCommand(() -> arm.setArmPosition(0.2)));
         //joystick.pov(180).onTrue(new InstantCommand(() -> arm.setArmPosition(0)));
 
