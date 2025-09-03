@@ -23,8 +23,8 @@ public class ShooterConstants {
     public static final boolean lowShooterInversed = true;
     public static final boolean tansitInversed = true;
 
-    public static final double kV0 = 0.16;
-    public static final double kP0 = 0.11;
+    public static final double kV0 = 0.125;
+    public static final double kP0 = 0.1;
     public static final double kI0 = 0.0;
     public static final double kD0 = 0.0;
 
