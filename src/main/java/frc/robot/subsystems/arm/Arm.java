@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isArmReady() {
-        return Util.epsilonEquals(setPoint, armCanCoder.getPosition().getValueAsDouble(), 0.02);
+        return Util.epsilonEquals(setPoint, armCanCoder.getPosition().getValueAsDouble(), 0.01);
     }
 
     public void plusArmPosition() {
